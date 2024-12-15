@@ -1,0 +1,27 @@
+{
+  "name": "grid-canvas-system",
+  "version": "0.0.1",
+  "type": "module",
+  "private": false,
+  "description": "A library for creating canvas-based grids",
+  "main": "dist/grid-canvas-system.umd.js",
+  "module": "dist/grid-canvas-system.es.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "files": ["dist"],
+  "keywords": [
+    "canvas",
+    "grid",
+    "library",
+    "vite"
+  ],
+  "author": "Josue Oroya",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^6.0.1",
+    "typescript": "~5.6.2"
+  }
+}
