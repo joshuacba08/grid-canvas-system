@@ -1,3 +1,3 @@
 import GridCanvasSystem from "./modules/vanilla/GridCanvasSystem";
 
-export { GridCanvasSystem };
+export default GridCanvasSystem;

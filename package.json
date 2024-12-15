@@ -1,6 +1,6 @@
 {
   "name": "grid-canvas-system",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "private": false,
   "description": "A library for creating canvas-based grids",
@@ -11,7 +11,9 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "canvas",
     "grid",

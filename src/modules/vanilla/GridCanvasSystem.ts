@@ -1,6 +1,6 @@
 class GridCanvasSystem {
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
+  public canvas: HTMLCanvasElement;
+  public ctx: CanvasRenderingContext2D;
 
   constructor(id: string, width?: number, height?: number) {
     this.canvas = document.getElementById(id) as HTMLCanvasElement;
@@ -10,9 +10,11 @@ class GridCanvasSystem {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     this.canvas.width = width || 400;
     this.canvas.height = height || 400;
+    this.canvas.style.backgroundColor = "#000000";
+    this.drawGridSystem();
   }
 
-  drawGridSystem() {
+  private drawGridSystem() {
     this.ctx.strokeStyle = "#00FF00";
     this.ctx.lineWidth = 0.25;
     this.ctx.fillStyle = "#009900";
@@ -39,10 +41,6 @@ class GridCanvasSystem {
   drawCoordinate(ctx: CanvasRenderingContext2D, x: number, y: number) {
     ctx.fillStyle = "#00FF00";
     ctx.fillText(`(${x},${y})`, x, y);
-  }
-
-  errorDispatch() {
-    throw new Error("Canvas context not found");
   }
 }
 
