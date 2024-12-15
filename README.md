@@ -13,7 +13,7 @@ To install the library, you can follow these steps:
 ### Installation via CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/grid-canvas-system@latest/dist/grid-canvas-system.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
 ```
 
 ### Installation with NPM
@@ -46,7 +46,7 @@ To use the library, you can follow these steps:
 
   <body>
     <canvas id="canvas"></canvas>
-    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system@latest/dist/grid-canvas-system.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
     <script>
       const newCanvas = new GridCanvasSystem("canvas");
       newCanvas.drawCoordinate(25, 60);
@@ -76,3 +76,57 @@ The library accepts the following parameters:
 The library has the following methods:
 
 - `drawCoordinates()`: Draws a coordinate axis on the canvas.
+
+## Examples
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Canvas System</title>
+  </head>
+
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
+    <script>
+      const newCanvas = new GridCanvasSystem("canvas");
+      const { canvas, ctx } = newCanvas;
+
+      ctx.beginPath();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#FFFFFF";
+
+      ctx.moveTo(100, 200);
+      newCanvas.drawCoordinate(100, 200);
+
+      ctx.lineTo(120, 300);
+      newCanvas.drawCoordinate(120, 300);
+
+      ctx.lineTo(250, 150);
+      newCanvas.drawCoordinate(250, 150);
+
+      ctx.closePath();
+
+      ctx.stroke();
+    </script>
+  </body>
+</html>
+```
+
+### Output
+
+Image preview
+![image](https://i.ibb.co/jHRJn7k/image.png)
+
+## License
+
+This project is licensed under the MIT License
+
+## Author
+
+- [Josue Oroya](https://www.linkedin.com/in/josue-oroya/)
