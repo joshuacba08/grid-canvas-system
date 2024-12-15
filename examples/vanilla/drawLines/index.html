@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Draw Lines</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
+    <script>
+      const newCanvas = new GridCanvasSystem("canvas");
+      const { canvas, ctx } = newCanvas;
+
+      ctx.beginPath();
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#FFFFFF";
+
+      ctx.moveTo(100, 200);
+      newCanvas.drawCoordinate(100, 200);
+
+      ctx.lineTo(120, 300);
+      newCanvas.drawCoordinate(120, 300);
+
+      ctx.lineTo(250, 150);
+      newCanvas.drawCoordinate(250, 150);
+
+      ctx.closePath();
+
+      ctx.stroke();
+    </script>
+  </body>
+</html>

@@ -37,10 +37,14 @@ class GridCanvasSystem {
       if (y % 50 === 0) this.ctx.fillText(y.toString(), 0, y + 10);
     }
   }
-
   drawCoordinate(x: number, y: number) {
     this.ctx.fillStyle = "#00FF00";
     this.ctx.fillText(`(${x},${y})`, x, y);
+  }
+
+  clearCanvas() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.drawGridSystem();
   }
 }
 

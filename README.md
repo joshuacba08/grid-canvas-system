@@ -76,6 +76,7 @@ The library accepts the following parameters:
 The library has the following methods:
 
 - `drawCoordinates()`: Draws a coordinate axis on the canvas.
+- `clearCanvas()`: Clears the canvas.
 
 ## Examples
 
