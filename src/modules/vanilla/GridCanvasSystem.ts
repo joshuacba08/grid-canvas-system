@@ -38,9 +38,9 @@ class GridCanvasSystem {
     }
   }
 
-  drawCoordinate(ctx: CanvasRenderingContext2D, x: number, y: number) {
-    ctx.fillStyle = "#00FF00";
-    ctx.fillText(`(${x},${y})`, x, y);
+  drawCoordinate(x: number, y: number) {
+    this.ctx.fillStyle = "#00FF00";
+    this.ctx.fillText(`(${x},${y})`, x, y);
   }
 }
 

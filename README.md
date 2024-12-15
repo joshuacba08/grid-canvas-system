@@ -13,7 +13,7 @@ To install the library, you can follow these steps:
 ### Installation via CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/grid-canvas-system@0.0.1/dist/grid-canvas-system.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/grid-canvas-system@latest/dist/grid-canvas-system.umd.js"></script>
 ```
 
 ### Installation with NPM
@@ -42,13 +42,14 @@ To use the library, you can follow these steps:
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grid Canvas System</title>
-    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system@0.0.1/dist/grid-canvas-system.umd.js"></script>
   </head>
 
   <body>
     <canvas id="canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system@latest/dist/grid-canvas-system.umd.js"></script>
     <script>
       const newCanvas = new GridCanvasSystem("canvas");
+      newCanvas.drawCoordinate(25, 60);
     </script>
   </body>
 </html>
