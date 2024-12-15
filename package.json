@@ -1,6 +1,6 @@
 {
   "name": "grid-canvas-system",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "private": false,
   "description": "A library for creating canvas-based grids",
