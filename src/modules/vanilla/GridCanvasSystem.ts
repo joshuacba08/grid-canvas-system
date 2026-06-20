@@ -51,6 +51,17 @@ export interface GridCanvasPacmanOptions extends GridCanvasShapeOptions {
   maxMouthAngle?: number;
 }
 
+export interface GridCanvasShipOptions extends GridCanvasShapeOptions {
+  angle?: number;
+  curve1?: number;
+  curve2?: number;
+  guide?: boolean;
+  guideColor?: string;
+  guideFillColor?: string;
+  guideLineWidth?: number;
+  rotation?: number;
+}
+
 export interface GridCanvasSystemResolvedOptions {
   width: number;
   height: number;
@@ -88,6 +99,15 @@ class GridCanvasSystem {
   private static readonly DEFAULT_PACMAN_STROKE = "#000000";
   private static readonly DEFAULT_PACMAN_LINE_WIDTH = 2;
   private static readonly DEFAULT_PACMAN_MAX_MOUTH_ANGLE = Math.PI * 0.4;
+  private static readonly DEFAULT_SHIP_FILL = "#111111";
+  private static readonly DEFAULT_SHIP_STROKE = "#FFFFFF";
+  private static readonly DEFAULT_SHIP_LINE_WIDTH = 2;
+  private static readonly DEFAULT_SHIP_ANGLE = Math.PI * 0.5;
+  private static readonly DEFAULT_SHIP_CURVE1 = 0.5;
+  private static readonly DEFAULT_SHIP_CURVE2 = 0.75;
+  private static readonly DEFAULT_GUIDE_STROKE = "rgba(255, 255, 255, 0.7)";
+  private static readonly DEFAULT_GUIDE_FILL = "rgba(255, 255, 255, 0.08)";
+  private static readonly DEFAULT_GUIDE_LINE_WIDTH = 0.5;
 
   /**
    * Official public extension point for DOM integration and sizing workflows.
@@ -293,6 +313,20 @@ class GridCanvasSystem {
     return resolvedValue;
   }
 
+  private resolvePoint(
+    point: GridCanvasPoint,
+    name: string,
+  ): GridCanvasPoint {
+    if (point === null || typeof point !== "object") {
+      throw new Error(`${name} must be an object with finite x and y values`);
+    }
+
+    return {
+      x: this.resolveFiniteNumber(point.x, 0, `${name}.x`),
+      y: this.resolveFiniteNumber(point.y, 0, `${name}.y`),
+    };
+  }
+
   private resolveUnitInterval(
     value: number,
     name: string,
@@ -350,14 +384,32 @@ class GridCanvasSystem {
     y: number,
     options?: GridCanvasTextOptions,
   ): void {
+    const resolvedX = this.resolveFiniteNumber(x, 0, "x");
+    const resolvedY = this.resolveFiniteNumber(y, 0, "y");
+
     this.withManagedContext(() => {
       this.ctx.fillStyle = options?.color ?? this.options.coordinateLabelColor;
       this.ctx.font = options?.font ?? this.options.coordinateFont;
       this.ctx.textAlign = options?.textAlign ?? "start";
       this.ctx.textBaseline = options?.textBaseline ?? "alphabetic";
 
-      this.ctx.fillText(text, x, y);
+      this.ctx.fillText(text, resolvedX, resolvedY);
     });
+  }
+
+  polarToCartesian(
+    center: GridCanvasPoint,
+    radius: number,
+    angle: number,
+  ): GridCanvasPoint {
+    const resolvedCenter = this.resolvePoint(center, "center");
+    const resolvedRadius = this.resolveFiniteNumber(radius, 0, "radius");
+    const resolvedAngle = this.resolveFiniteNumber(angle, 0, "angle");
+
+    return {
+      x: resolvedCenter.x + Math.cos(resolvedAngle) * resolvedRadius,
+      y: resolvedCenter.y + Math.sin(resolvedAngle) * resolvedRadius,
+    };
   }
 
   drawCircleSector(
@@ -367,6 +419,7 @@ class GridCanvasSystem {
     endAngle: number,
     options?: GridCanvasCircleSectorOptions,
   ): void {
+    const resolvedCenter = this.resolvePoint(center, "center");
     const resolvedRadius = this.resolvePositiveNumber(radius, 1, "radius");
     const resolvedStartAngle = this.resolveFiniteNumber(
       startAngle,
@@ -386,19 +439,19 @@ class GridCanvasSystem {
       this.ctx.beginPath();
 
       if (shouldConnectToCenter) {
-        this.ctx.moveTo(center.x, center.y);
+        this.ctx.moveTo(resolvedCenter.x, resolvedCenter.y);
       }
 
       this.ctx.arc(
-        center.x,
-        center.y,
+        resolvedCenter.x,
+        resolvedCenter.y,
         resolvedRadius,
         resolvedStartAngle,
         resolvedEndAngle,
       );
 
       if (shouldConnectToCenter) {
-        this.ctx.lineTo(center.x, center.y);
+        this.ctx.lineTo(resolvedCenter.x, resolvedCenter.y);
       }
 
       this.ctx.fillStyle = fillColor;
@@ -453,6 +506,144 @@ class GridCanvasSystem {
     );
   }
 
+  drawShip(
+    center: GridCanvasPoint,
+    radius: number,
+    options?: GridCanvasShipOptions,
+  ): void {
+    const resolvedCenter = this.resolvePoint(center, "center");
+    const resolvedRadius = this.resolvePositiveNumber(radius, 1, "radius");
+    const resolvedRotation = this.resolveFiniteNumber(
+      options?.rotation,
+      0,
+      "rotation",
+    );
+    const resolvedAngle = this.resolvePositiveNumber(
+      options?.angle,
+      GridCanvasSystem.DEFAULT_SHIP_ANGLE,
+      "angle",
+    );
+    const halfAngle = resolvedAngle / 2;
+    const curve1 = this.resolveFiniteNumber(
+      options?.curve1,
+      GridCanvasSystem.DEFAULT_SHIP_CURVE1,
+      "curve1",
+    );
+    const curve2 = this.resolveFiniteNumber(
+      options?.curve2,
+      GridCanvasSystem.DEFAULT_SHIP_CURVE2,
+      "curve2",
+    );
+    const guideColor =
+      options?.guideColor ?? GridCanvasSystem.DEFAULT_GUIDE_STROKE;
+    const guideFillColor =
+      options?.guideFillColor ?? GridCanvasSystem.DEFAULT_GUIDE_FILL;
+    const guideLineWidth = this.resolvePositiveNumber(
+      options?.guideLineWidth,
+      GridCanvasSystem.DEFAULT_GUIDE_LINE_WIDTH,
+      "guideLineWidth",
+    );
+    const lowerRear = this.polarToCartesian(
+      { x: 0, y: 0 },
+      resolvedRadius,
+      Math.PI - halfAngle,
+    );
+    const upperRear = this.polarToCartesian(
+      { x: 0, y: 0 },
+      resolvedRadius,
+      Math.PI + halfAngle,
+    );
+    const lowerSideControl = this.polarToCartesian(
+      { x: 0, y: 0 },
+      resolvedRadius * curve2,
+      halfAngle,
+    );
+    const upperSideControl = this.polarToCartesian(
+      { x: 0, y: 0 },
+      resolvedRadius * curve2,
+      Math.PI * 2 - halfAngle,
+    );
+    const rearControl = {
+      x: resolvedRadius * curve1 - resolvedRadius,
+      y: 0,
+    };
+
+    this.withManagedContext(() => {
+      this.ctx.translate(resolvedCenter.x, resolvedCenter.y);
+      this.ctx.rotate(resolvedRotation);
+
+      if (options?.guide === true) {
+        this.ctx.strokeStyle = guideColor;
+        this.ctx.fillStyle = guideFillColor;
+        this.ctx.lineWidth = guideLineWidth;
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, resolvedRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+      }
+
+      this.ctx.fillStyle =
+        options?.fillColor ?? GridCanvasSystem.DEFAULT_SHIP_FILL;
+      this.ctx.strokeStyle =
+        options?.strokeColor ??
+        options?.color ??
+        GridCanvasSystem.DEFAULT_SHIP_STROKE;
+      this.ctx.lineWidth = this.resolvePositiveNumber(
+        options?.lineWidth,
+        GridCanvasSystem.DEFAULT_SHIP_LINE_WIDTH,
+        "lineWidth",
+      );
+      this.ctx.beginPath();
+      this.ctx.moveTo(resolvedRadius, 0);
+      this.ctx.quadraticCurveTo(
+        lowerSideControl.x,
+        lowerSideControl.y,
+        lowerRear.x,
+        lowerRear.y,
+      );
+      this.ctx.quadraticCurveTo(
+        rearControl.x,
+        rearControl.y,
+        upperRear.x,
+        upperRear.y,
+      );
+      this.ctx.quadraticCurveTo(
+        upperSideControl.x,
+        upperSideControl.y,
+        resolvedRadius,
+        0,
+      );
+      this.ctx.closePath();
+      this.ctx.fill();
+      this.ctx.stroke();
+
+      if (options?.guide === true) {
+        this.ctx.strokeStyle = guideColor;
+        this.ctx.fillStyle = guideColor;
+        this.ctx.lineWidth = guideLineWidth;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(-resolvedRadius, 0);
+        this.ctx.lineTo(0, 0);
+        this.ctx.stroke();
+
+        const controlPoints = [rearControl, lowerSideControl, upperSideControl];
+
+        for (const controlPoint of controlPoints) {
+          this.ctx.beginPath();
+          this.ctx.arc(
+            controlPoint.x,
+            controlPoint.y,
+            resolvedRadius / 40,
+            0,
+            Math.PI * 2,
+          );
+          this.ctx.fill();
+        }
+      }
+    });
+  }
+
   drawLine(
     start: GridCanvasPoint,
     end: GridCanvasPoint,
@@ -469,12 +660,16 @@ class GridCanvasSystem {
       return;
     }
 
+    const resolvedPoints = points.map((point, index) =>
+      this.resolvePoint(point, `points[${index}]`),
+    );
+
     this.withManagedContext(() => {
       this.ctx.beginPath();
-      this.ctx.moveTo(points[0].x, points[0].y);
+      this.ctx.moveTo(resolvedPoints[0].x, resolvedPoints[0].y);
 
-      for (let index = 1; index < points.length; index += 1) {
-        this.ctx.lineTo(points[index].x, points[index].y);
+      for (let index = 1; index < resolvedPoints.length; index += 1) {
+        this.ctx.lineTo(resolvedPoints[index].x, resolvedPoints[index].y);
       }
 
       if (options?.closePath === true) {

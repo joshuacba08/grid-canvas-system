@@ -70,6 +70,22 @@ const PACMAN_OPTIONS = {
   devicePixelRatio: 1,
 };
 
+const SHIP_OPTIONS = {
+  width: 220,
+  height: 220,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
 function installDomGlobals(window) {
   globalThis.window = window;
   globalThis.document = window.document;
@@ -171,6 +187,26 @@ function renderPacmanScenario() {
   return backingCanvas;
 }
 
+function renderShipScenario() {
+  const { backingCanvas, grid } = renderScenario("ship", SHIP_OPTIONS);
+
+  grid.drawShip(
+    { x: 110, y: 110 },
+    70,
+    {
+      rotation: -Math.PI / 2,
+      curve1: 0.45,
+      curve2: 0.8,
+      guide: true,
+      fillColor: "#111111",
+      strokeColor: "#ffffff",
+      lineWidth: 2,
+    },
+  );
+
+  return backingCanvas;
+}
+
 async function writeSnapshot(name, options) {
   const { backingCanvas } = renderScenario(name, options);
   const snapshotUrl = new URL(`${name}.png`, SNAPSHOT_DIR);
@@ -192,8 +228,16 @@ async function writePacmanSnapshot() {
   await writeFile(snapshotUrl, backingCanvas.toBuffer("image/png"));
 }
 
+async function writeShipSnapshot() {
+  const snapshotUrl = new URL("ship.png", SNAPSHOT_DIR);
+  const backingCanvas = renderShipScenario();
+
+  await writeFile(snapshotUrl, backingCanvas.toBuffer("image/png"));
+}
+
 await mkdir(SNAPSHOT_DIR, { recursive: true });
 await writeSnapshot("grid-baseline", BASELINE_OPTIONS);
 await writeSnapshot("grid-hidpi", HIDPI_OPTIONS);
 await writeEncapsulatedDrawingSnapshot();
 await writePacmanSnapshot();
+await writeShipSnapshot();

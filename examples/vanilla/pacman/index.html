@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pac-Man</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
+    <script>
+      const grid = new GridCanvasSystem("canvas", {
+        width: 220,
+        height: 220,
+      });
+
+      grid.drawPacman(110, 110, 70, 1, {
+        fillColor: "#FFFF00",
+        strokeColor: "#000000",
+        lineWidth: 2,
+      });
+    </script>
+  </body>
+</html>

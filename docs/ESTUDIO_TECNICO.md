@@ -76,6 +76,8 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 ### Metodos publicos
 
 - `drawText(text: string, x: number, y: number, options?: GridCanvasTextOptions)`: dibuja texto usando el estado gestionado por la libreria.
+- `drawCircleSector(center: GridCanvasPoint, radius: number, startAngle: number, endAngle: number, options?: GridCanvasCircleSectorOptions)`: dibuja una primitiva de sector circular reutilizable.
+- `drawPacman(x: number, y: number, radius: number, mouthOpen: number, options?: GridCanvasPacmanOptions)`: dibuja un Pac-Man parametrizable sobre la cuadricula.
 - `drawLine(start: GridCanvasPoint, end: GridCanvasPoint, options?: GridCanvasStrokeOptions)`: dibuja una linea simple sin necesidad de tocar `ctx`.
 - `drawPolyline(points: GridCanvasPoint[], options?: GridCanvasPolylineOptions)`: dibuja una polilinea o ruta cerrada mediante una API encapsulada.
 - `drawCoordinate(x: number, y: number, options?: GridCanvasTextOptions)`: dibuja el texto `(${x},${y})` en la posicion recibida.
@@ -95,7 +97,7 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 La libreria ofrece dos capas complementarias:
 
 1. Capa encapsulada recomendada para el uso comun:
-   `drawText()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
+   `drawText()`, `drawCircleSector()`, `drawPacman()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
 2. Capa avanzada basada en `canvas` y `ctx`:
    pensada para integraciones y dibujo manual mas libre.
 
@@ -136,6 +138,7 @@ Pruebas automatizadas:
 - Comportamiento base de `drawCoordinate()` y `clearCanvas()`.
 - Verificacion visual real de lineas de cuadricula y restauracion del bitmap tras `clearCanvas()`.
 - Comparacion contra snapshots PNG versionados en el repositorio.
+- Cobertura de primitives reutilizables y del render de Pac-Man.
 
 ### Verificacion realizada
 
@@ -155,6 +158,7 @@ Se valido localmente que:
 - Tipos TypeScript listos para consumidores del paquete.
 - API configurable sin romper compatibilidad con la firma anterior.
 - Capa encapsulada para dibujo comun sin depender de `ctx` directamente.
+- Primitive reutilizable para sectores circulares y una shape oficial construida sobre ella.
 - Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
 - Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
 - Soporte HiDPI para mejorar nitidez en pantallas de alta densidad.

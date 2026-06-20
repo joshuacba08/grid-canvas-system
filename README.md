@@ -1,8 +1,8 @@
 # Grid System for Canvas
 
-This library allows you to create grids easily on an HTML5 canvas. The goal is to simplify the creation of a canvas with a grid that enables precise positioning of elements and keeps track of their coordinates.
+This library allows you to create managed grids on an HTML5 canvas and then draw on top of them through a small high-level API.
 
-Additionally, a function to draw a coordinate axis is included.
+In addition to the grid itself, the library now includes reusable drawing helpers, coordinate labels, line primitives, circular sectors, Pac-Man, and a configurable spaceship shape.
 
 In my professional use, I have found this tool very useful for education and game development. Students or animators can position elements precisely and visualize their coordinates.
 
@@ -112,6 +112,45 @@ grid.drawCoordinate(120, 300);
 grid.drawCoordinate(250, 150);
 ```
 
+### Pac-Man example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 220,
+  height: 220,
+});
+
+grid.drawPacman(110, 110, 70, 1, {
+  fillColor: "#FFFF00",
+  strokeColor: "#000000",
+  lineWidth: 2,
+});
+```
+
+### Spaceship example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 240,
+  height: 240,
+});
+
+grid.drawShip(
+  { x: 120, y: 120 },
+  70,
+  {
+    rotation: -Math.PI / 2,
+    curve1: 0.45,
+    curve2: 0.8,
+    guide: true,
+  },
+);
+```
+
 ## Documentation
 
 - [Documentation index](./docs/README.md)
@@ -159,6 +198,10 @@ The constructor throws an error when:
 The library has the following methods:
 
 - `drawText(text, x, y, options?)`: Draws text using the managed canvas state.
+- `polarToCartesian(center, radius, angle)`: Converts polar coordinates into a canvas point.
+- `drawCircleSector(center, radius, startAngle, endAngle, options?)`: Draws a filled sector or wedge shape.
+- `drawPacman(x, y, radius, mouthOpen, options?)`: Draws a Pac-Man shape over the managed grid.
+- `drawShip(center, radius, options?)`: Draws a configurable spaceship with optional guide overlays and rotation.
 - `drawLine(start, end, options?)`: Draws a line without manipulating `ctx` directly.
 - `drawPolyline(points, options?)`: Draws a polyline or closed path through a high-level API.
 - `drawCoordinate(x, y, options?)`: Draws the coordinate label at the provided position.
@@ -166,7 +209,7 @@ The library has the following methods:
 
 ## Advanced Usage
 
-The preferred path for common drawing is the encapsulated API: `drawText`, `drawLine`, `drawPolyline`, `drawCoordinate`, and `clearCanvas()`.
+The preferred path for common drawing is the encapsulated API: `drawText`, `polarToCartesian`, `drawCircleSector`, `drawPacman`, `drawShip`, `drawLine`, `drawPolyline`, `drawCoordinate`, and `clearCanvas()`.
 
 `canvas` and `ctx` remain intentionally exposed as advanced extension points.
 
@@ -179,8 +222,12 @@ The preferred path for common drawing is the encapsulated API: `drawText`, `draw
 
 The package exports:
 
+- `GridCanvasCircleSectorOptions`
+- `GridCanvasPacmanOptions`
+- `GridCanvasShipOptions`
 - `GridCanvasSystem`
 - `GridCanvasPoint`
+- `GridCanvasShapeOptions`
 - `GridCanvasStrokeOptions`
 - `GridCanvasPolylineOptions`
 - `GridCanvasSystemOptions`
@@ -244,10 +291,22 @@ pnpm test
 </html>
 ```
 
+See also:
+
+- [Pac-Man example](./examples/vanilla/pacman/index.html)
+- [Spaceship example](./examples/vanilla/spaceship/index.html)
+
 ### Output
 
 Image preview
 ![image](https://i.ibb.co/jHRJn7k/image.png)
+
+## Ideas
+
+- Build reusable shapes like Pac-Man on top of `drawCircleSector()`.
+- Reuse `polarToCartesian()` and `drawShip()` to prototype Asteroids-style actors.
+- Combine `drawPacman()` with loops or randomization to generate simple scenes.
+- Use the encapsulated API for most drawing, and drop to `ctx` only for advanced custom work.
 
 ## License
 

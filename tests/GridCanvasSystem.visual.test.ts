@@ -77,6 +77,22 @@ const PACMAN_OPTIONS: GridCanvasSystemOptions = {
   devicePixelRatio: 1,
 };
 
+const SHIP_OPTIONS: GridCanvasSystemOptions = {
+  width: 220,
+  height: 220,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
 function attachBackingCanvas(element: HTMLCanvasElement): BackingCanvas {
   let width = element.width || 300;
   let height = element.height || 150;
@@ -178,6 +194,29 @@ function renderPacmanScenario(): BackingCanvas {
   return backingCanvas;
 }
 
+function renderShipScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-ship",
+    SHIP_OPTIONS,
+  );
+
+  grid.drawShip(
+    { x: 110, y: 110 },
+    70,
+    {
+      rotation: -Math.PI / 2,
+      curve1: 0.45,
+      curve2: 0.8,
+      guide: true,
+      fillColor: "#111111",
+      strokeColor: "#ffffff",
+      lineWidth: 2,
+    },
+  );
+
+  return backingCanvas;
+}
+
 async function toPixelBuffer(pngBuffer: Buffer): Promise<Buffer> {
   const image = await loadImage(pngBuffer);
   const decodedCanvas = createCanvas(image.width, image.height);
@@ -256,5 +295,11 @@ describe("GridCanvasSystem visual snapshots", () => {
     const backingCanvas = renderPacmanScenario();
 
     await expectCanvasToMatchSnapshot(backingCanvas, "pacman");
+  });
+
+  it("matches the ship snapshot", async () => {
+    const backingCanvas = renderShipScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "ship");
   });
 });

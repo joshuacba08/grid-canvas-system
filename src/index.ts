@@ -6,6 +6,7 @@ export type {
   GridCanvasPacmanOptions,
   GridCanvasPoint,
   GridCanvasShapeOptions,
+  GridCanvasShipOptions,
   GridCanvasPolylineOptions,
   GridCanvasStrokeOptions,
   GridCanvasSystemOptions,

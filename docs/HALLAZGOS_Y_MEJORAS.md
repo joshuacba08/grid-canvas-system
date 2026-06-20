@@ -72,6 +72,10 @@ Ahora existen snapshots PNG versionados en el repositorio, junto con una prueba 
 
 La libreria ahora ofrece una capa de mas alto nivel con `drawText()`, `drawLine()` y `drawPolyline()`, de modo que los casos comunes ya no necesitan depender de `ctx` directamente.
 
+#### 16. Primitive reutilizable para sectores y shape oficial de Pac-Man
+
+La libreria ahora incorpora `drawCircleSector()` como primitive general y `drawPacman()` como shape parametrizable construida sobre esa base.
+
 ## Hallazgos priorizados pendientes
 
 ### Prioridad baja
@@ -100,4 +104,4 @@ Mejora sugerida:
 
 1. Incorporar diffs visuales o artefactos comparativos mas explicitos para fallos de snapshot.
 2. Evaluar si conviene separar tambien otras opciones de texto, como alineacion o baseline, entre cuadricula y coordenadas.
-3. Evaluar si la capa encapsulada deberia crecer con primitivas adicionales, como rectangulos, circulos o flechas.
+3. Evaluar si la capa encapsulada deberia crecer con primitivas adicionales, como rectangulos, circulos completos o flechas.

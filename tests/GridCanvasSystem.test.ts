@@ -12,9 +12,12 @@ interface MockCanvasContext {
   setTransform: ReturnType<typeof vi.fn>;
   save: ReturnType<typeof vi.fn>;
   restore: ReturnType<typeof vi.fn>;
+  translate: ReturnType<typeof vi.fn>;
+  rotate: ReturnType<typeof vi.fn>;
   beginPath: ReturnType<typeof vi.fn>;
   moveTo: ReturnType<typeof vi.fn>;
   lineTo: ReturnType<typeof vi.fn>;
+  quadraticCurveTo: ReturnType<typeof vi.fn>;
   arc: ReturnType<typeof vi.fn>;
   closePath: ReturnType<typeof vi.fn>;
   fill: ReturnType<typeof vi.fn>;
@@ -34,9 +37,12 @@ function createMockContext(): MockCanvasContext {
     setTransform: vi.fn(),
     save: vi.fn(),
     restore: vi.fn(),
+    translate: vi.fn(),
+    rotate: vi.fn(),
     beginPath: vi.fn(),
     moveTo: vi.fn(),
     lineTo: vi.fn(),
+    quadraticCurveTo: vi.fn(),
     arc: vi.fn(),
     closePath: vi.fn(),
     fill: vi.fn(),
@@ -255,6 +261,19 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.stroke).toHaveBeenCalledTimes(1);
   });
 
+  it("polarToCartesian converts polar coordinates into canvas coordinates", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    const point = grid.polarToCartesian(
+      { x: 100, y: 60 },
+      50,
+      Math.PI / 2,
+    );
+
+    expect(point.x).toBeCloseTo(100);
+    expect(point.y).toBeCloseTo(110);
+  });
+
   it("drawPacman uses the sector primitive with default visual styling", () => {
     const grid = new GridCanvasSystem("canvas");
 
@@ -303,6 +322,59 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.strokeStyle).toBe("#333333");
     expect(mockContext.lineWidth).toBe(5);
     expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawShip encapsulates translation, rotation and quadratic curves", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.save.mockClear();
+    mockContext.restore.mockClear();
+    mockContext.translate.mockClear();
+    mockContext.rotate.mockClear();
+    mockContext.beginPath.mockClear();
+    mockContext.moveTo.mockClear();
+    mockContext.lineTo.mockClear();
+    mockContext.quadraticCurveTo.mockClear();
+    mockContext.arc.mockClear();
+    mockContext.closePath.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawShip(
+      { x: 80, y: 90 },
+      30,
+      {
+        rotation: -Math.PI / 2,
+        curve1: 0.4,
+        curve2: 0.8,
+        guide: true,
+        fillColor: "#101010",
+        strokeColor: "#ffffff",
+        lineWidth: 4,
+      },
+    );
+
+    expect(mockContext.save).toHaveBeenCalledTimes(1);
+    expect(mockContext.restore).toHaveBeenCalledTimes(1);
+    expect(mockContext.translate).toHaveBeenCalledWith(80, 90);
+    expect(mockContext.rotate).toHaveBeenCalledWith(-Math.PI / 2);
+    expect(mockContext.moveTo).toHaveBeenNthCalledWith(1, 30, 0);
+    expect(mockContext.quadraticCurveTo).toHaveBeenCalledTimes(3);
+    expect(mockContext.closePath).toHaveBeenCalledTimes(1);
+    expect(mockContext.arc).toHaveBeenCalledTimes(4);
+    expect(mockContext.arc).toHaveBeenNthCalledWith(1, 0, 0, 30, 0, Math.PI * 2);
+
+    const [firstControlX, firstControlY, firstEndX, firstEndY] =
+      mockContext.quadraticCurveTo.mock.calls[0];
+    const [rearControlX, rearControlY] =
+      mockContext.quadraticCurveTo.mock.calls[1];
+
+    expect(firstControlX).toBeCloseTo(Math.cos(Math.PI / 4) * 24);
+    expect(firstControlY).toBeCloseTo(Math.sin(Math.PI / 4) * 24);
+    expect(firstEndX).toBeCloseTo(Math.cos(Math.PI * 0.75) * 30);
+    expect(firstEndY).toBeCloseTo(Math.sin(Math.PI * 0.75) * 30);
+    expect(rearControlX).toBeCloseTo(-18);
+    expect(rearControlY).toBeCloseTo(0);
   });
 
   it("drawPolyline can close the path in the encapsulated API", () => {
