@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import GridCanvasSystem from "../src";
 
+const runtime = GridCanvasSystem.runtime;
 const {
   angleToPoint,
   circlesIntersect,
@@ -18,6 +19,13 @@ const {
 describe("runtime and utility exports", () => {
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  it("groups the optional runtime layer under GridCanvasSystem.runtime without breaking direct aliases", () => {
+    expect(runtime.createAnimationLoop).toBe(createAnimationLoop);
+    expect(runtime.createKeyTracker).toBe(createKeyTracker);
+    expect(runtime.MassBody).toBe(MassBody);
+    expect(runtime.wrapPoint).toBe(wrapPoint);
   });
 
   it("provides vector, angle, oscillation and collision helpers", () => {

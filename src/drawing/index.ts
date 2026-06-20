@@ -1,0 +1,17 @@
+export type {
+  GridCanvasAsteroidOptions,
+  GridCanvasAsteroidShape,
+  GridCanvasBarIndicatorOptions,
+  GridCanvasCircleSectorOptions,
+  GridCanvasGhostOptions,
+  GridCanvasMessageOptions,
+  GridCanvasPacmanOptions,
+  GridCanvasPoint,
+  GridCanvasPolylineOptions,
+  GridCanvasProjectileOptions,
+  GridCanvasShapeOptions,
+  GridCanvasShipOptions,
+  GridCanvasStrokeOptions,
+  GridCanvasTextOptions,
+  GridCanvasValueLabelOptions,
+} from "../modules/vanilla/GridCanvasSystem";

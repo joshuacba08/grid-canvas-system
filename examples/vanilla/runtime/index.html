@@ -30,20 +30,20 @@
         width: 420,
         height: 260,
       });
-      const body = new GridCanvasSystem.MassBody({
+      const body = new GridCanvasSystem.runtime.MassBody({
         x: 210,
         y: 130,
         mass: 10,
         radius: 20,
         angle: 0,
       });
-      const keys = GridCanvasSystem.createKeyTracker(grid.canvas, {
+      const keys = GridCanvasSystem.runtime.createKeyTracker(grid.canvas, {
         autoFocus: true,
         preventDefaultKeys: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
       });
       let time = 0;
 
-      GridCanvasSystem.createAnimationLoop({
+      GridCanvasSystem.runtime.createAnimationLoop({
         autoStart: true,
         update(elapsed) {
           time += elapsed;
@@ -75,7 +75,7 @@
             body.x,
             body.y,
             body.radius,
-            GridCanvasSystem.oscillate01(time, 2),
+            GridCanvasSystem.runtime.oscillate01(time, 2),
             {
               direction: body.angle,
             },

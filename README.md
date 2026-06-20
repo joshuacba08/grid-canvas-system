@@ -63,6 +63,14 @@ import GridCanvasSystem from "grid-canvas-system";
 const newCanvas = new GridCanvasSystem("canvas");
 ```
 
+## Layers
+
+The library is now organized around three simple layers:
+
+1. Core canvas layer: initialization, DOM validation, sizing, HiDPI setup, `canvas`, `ctx`, and `options`.
+2. Drawing layer: grid configuration plus reusable drawing methods like `drawPacman()`, `drawShip()`, `drawProjectile()`, and HUD-style overlays.
+3. Optional runtime layer: animation, input, and simple physics through `GridCanvasSystem.runtime`.
+
 ### Usage with options
 
 ```js
@@ -237,19 +245,19 @@ const grid = new GridCanvasSystem("canvas", {
   width: 420,
   height: 260,
 });
-const body = new GridCanvasSystem.MassBody({
+const body = new GridCanvasSystem.runtime.MassBody({
   x: 210,
   y: 130,
   mass: 10,
   radius: 20,
 });
-const keys = GridCanvasSystem.createKeyTracker(grid.canvas, {
+const keys = GridCanvasSystem.runtime.createKeyTracker(grid.canvas, {
   autoFocus: true,
   preventDefaultKeys: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
 });
 let time = 0;
 
-GridCanvasSystem.createAnimationLoop({
+GridCanvasSystem.runtime.createAnimationLoop({
   autoStart: true,
   update(elapsed) {
     time += elapsed;
@@ -265,9 +273,15 @@ GridCanvasSystem.createAnimationLoop({
   },
   draw() {
     grid.clearCanvas();
-    grid.drawPacman(body.x, body.y, body.radius, GridCanvasSystem.oscillate01(time, 2), {
+    grid.drawPacman(
+      body.x,
+      body.y,
+      body.radius,
+      GridCanvasSystem.runtime.oscillate01(time, 2),
+      {
       direction: body.angle,
-    });
+      },
+    );
   },
 });
 ```
@@ -337,7 +351,7 @@ The library has the following methods:
 
 ## Runtime And Utilities
 
-Static utilities exposed on the main `GridCanvasSystem` export:
+Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime`:
 
 - `createAnimationLoop(options)`: Lightweight `requestAnimationFrame` loop with elapsed seconds.
 - `MassBody`: Reusable physics/movement body with `update`, `push`, `twist`, `speed`, and `movementAngle`.
@@ -349,6 +363,8 @@ Static utilities exposed on the main `GridCanvasSystem` export:
 - `distanceBetweenPoints(a, b)`: Calculates Euclidean distance.
 - `circlesIntersect(a, b)`: Detects circular collision overlap.
 - `wrapPoint(point, bounds, radius?)`: Applies wrap-around positioning inside rectangular bounds.
+
+For backward compatibility, those helpers also remain mirrored as direct static properties on `GridCanvasSystem`.
 
 ## Advanced Usage
 

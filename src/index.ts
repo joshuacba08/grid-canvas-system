@@ -1,61 +1,41 @@
-import GridCanvasSystem from "./modules/vanilla/GridCanvasSystem";
-import { createAnimationLoop } from "./runtime/createAnimationLoop";
-import { createKeyTracker, normalizeKeyIdentifier } from "./runtime/createKeyTracker";
-import { MassBody } from "./runtime/MassBody";
-import {
-  angleToPoint,
-  circlesIntersect,
-  distanceBetweenPoints,
-  oscillate01,
-  vectorFromAngle,
-  wrapPoint,
-} from "./runtime/motion";
+import GridCanvasSystem from "./core";
+import { GridCanvasRuntime } from "./runtime";
 
 const GridCanvasSystemLibrary = Object.assign(GridCanvasSystem, {
-  angleToPoint,
-  circlesIntersect,
-  createAnimationLoop,
-  createKeyTracker,
-  distanceBetweenPoints,
-  MassBody,
-  normalizeKeyIdentifier,
-  oscillate01,
-  vectorFromAngle,
-  wrapPoint,
+  ...GridCanvasRuntime,
+  runtime: GridCanvasRuntime,
 });
 
 export default GridCanvasSystemLibrary;
 export type {
   GridCanvasClearOptions,
+  GridCanvasSystemOptions,
+  GridCanvasSystemResolvedOptions,
+} from "./core";
+export type {
   GridCanvasAsteroidOptions,
   GridCanvasAsteroidShape,
+  GridCanvasBarIndicatorOptions,
   GridCanvasCircleSectorOptions,
   GridCanvasGhostOptions,
   GridCanvasMessageOptions,
   GridCanvasPacmanOptions,
   GridCanvasPoint,
+  GridCanvasPolylineOptions,
   GridCanvasProjectileOptions,
   GridCanvasShapeOptions,
   GridCanvasShipOptions,
-  GridCanvasBarIndicatorOptions,
-  GridCanvasPolylineOptions,
   GridCanvasStrokeOptions,
-  GridCanvasSystemOptions,
-  GridCanvasSystemResolvedOptions,
   GridCanvasTextOptions,
   GridCanvasValueLabelOptions,
-} from "./modules/vanilla/GridCanvasSystem";
+} from "./drawing";
 export type {
   GridCanvasAnimationLoop,
   GridCanvasAnimationLoopOptions,
-} from "./runtime/createAnimationLoop";
-export type {
   GridCanvasKeyTracker,
   GridCanvasKeyTrackerOptions,
-} from "./runtime/createKeyTracker";
-export type { GridCanvasMassBodyOptions } from "./runtime/MassBody";
-export type {
+  GridCanvasMassBodyOptions,
   GridCanvasBounds,
   GridCanvasCircleLike,
   GridCanvasVelocity,
-} from "./runtime/types";
+} from "./runtime";
