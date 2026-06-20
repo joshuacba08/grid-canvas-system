@@ -38,6 +38,13 @@ export type {
   GridCanvasBounds,
   GridCanvasCircleLike,
   GridCanvasCollisionTarget,
+  GridCanvasParticle,
+  GridCanvasParticleBurstOptions,
+  GridCanvasParticleStepOptions,
   GridCanvasRectangleLike,
+  GridCanvasSize,
+  GridCanvasStackAlign,
+  GridCanvasStackDirection,
+  GridCanvasStackLayoutOptions,
   GridCanvasVelocity,
 } from "./runtime";

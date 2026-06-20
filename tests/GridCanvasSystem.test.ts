@@ -137,6 +137,10 @@ describe("GridCanvasSystem", () => {
       coordinateLabelColor: "#654321",
       gridLabelFont: "11px monospace",
       coordinateFont: "13px serif",
+      gridLabelTextAlign: "center",
+      coordinateTextAlign: "end",
+      gridLabelTextBaseline: "middle",
+      coordinateTextBaseline: "top",
       cellSize: 20,
       majorStep: 40,
       minorLineWidth: 1,
@@ -154,7 +158,35 @@ describe("GridCanvasSystem", () => {
     expect(grid.options.coordinateLabelColor).toBe("#654321");
     expect(grid.options.gridLabelFont).toBe("11px monospace");
     expect(grid.options.coordinateFont).toBe("13px serif");
+    expect(grid.options.gridLabelTextAlign).toBe("center");
+    expect(grid.options.coordinateTextAlign).toBe("end");
+    expect(grid.options.gridLabelTextBaseline).toBe("middle");
+    expect(grid.options.coordinateTextBaseline).toBe("top");
     expect(mockContext.setTransform).toHaveBeenCalledWith(2, 0, 0, 2, 0, 0);
+  });
+
+  it("supports independent text alignment and baseline for grid and coordinate labels", () => {
+    const grid = new GridCanvasSystem("canvas", {
+      width: 120,
+      height: 60,
+      cellSize: 20,
+      majorStep: 40,
+      gridLabelTextAlign: "center",
+      gridLabelTextBaseline: "middle",
+      coordinateTextAlign: "end",
+      coordinateTextBaseline: "top",
+    });
+
+    expect(mockContext.textAlign).toBe("center");
+    expect(mockContext.textBaseline).toBe("middle");
+
+    mockContext.fillText.mockClear();
+
+    grid.drawCoordinate(10, 20);
+
+    expect(mockContext.textAlign).toBe("end");
+    expect(mockContext.textBaseline).toBe("top");
+    expect(mockContext.fillText).toHaveBeenCalledWith("(10,20)", 10, 20);
   });
 
   it("drawCoordinate uses the configured baseline transform and coordinate label style", () => {
@@ -178,6 +210,8 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.setTransform).toHaveBeenCalledWith(2, 0, 0, 2, 0, 0);
     expect(mockContext.fillStyle).toBe("#ffffff");
     expect(mockContext.font).toBe("14px serif");
+    expect(mockContext.textAlign).toBe("start");
+    expect(mockContext.textBaseline).toBe("alphabetic");
     expect(mockContext.fillText).toHaveBeenCalledWith("(10,20)", 10, 20);
   });
 

@@ -14,19 +14,29 @@ import {
   vectorFromAngle,
   wrapPoint,
 } from "./motion";
+import {
+  appendTrailPoint,
+  createParticleBurst,
+  layoutStack,
+  stepParticles,
+} from "./scene";
 
 export const GridCanvasRuntime = Object.freeze({
   angleToPoint,
+  appendTrailPoint,
   circlesIntersect,
   createAnimationLoop,
   createKeyTracker,
+  createParticleBurst,
   distanceBetweenPoints,
   hitTestCircleRectangle,
   hitTestPoint,
   hitTestRectangle,
+  layoutStack,
   MassBody,
   normalizeKeyIdentifier,
   oscillate01,
+  stepParticles,
   vectorFromAngle,
   wrapPoint,
 });
@@ -36,6 +46,12 @@ export {
   hitTestPoint,
   hitTestRectangle,
 } from "./collision";
+export {
+  appendTrailPoint,
+  createParticleBurst,
+  layoutStack,
+  stepParticles,
+} from "./scene";
 export type {
   GridCanvasAnimationLoop,
   GridCanvasAnimationLoopOptions,
@@ -49,6 +65,13 @@ export type {
   GridCanvasBounds,
   GridCanvasCircleLike,
   GridCanvasCollisionTarget,
+  GridCanvasParticle,
+  GridCanvasParticleBurstOptions,
+  GridCanvasParticleStepOptions,
   GridCanvasRectangleLike,
+  GridCanvasSize,
+  GridCanvasStackAlign,
+  GridCanvasStackDirection,
+  GridCanvasStackLayoutOptions,
   GridCanvasVelocity,
 } from "./types";

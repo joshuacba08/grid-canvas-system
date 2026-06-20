@@ -9,6 +9,10 @@ export interface GridCanvasSystemOptions {
   font?: string;
   gridLabelFont?: string;
   coordinateFont?: string;
+  gridLabelTextAlign?: CanvasTextAlign;
+  coordinateTextAlign?: CanvasTextAlign;
+  gridLabelTextBaseline?: CanvasTextBaseline;
+  coordinateTextBaseline?: CanvasTextBaseline;
   cellSize?: number;
   majorStep?: number;
   minorLineWidth?: number;
@@ -125,6 +129,10 @@ export interface GridCanvasSystemResolvedOptions {
   coordinateLabelColor: string;
   gridLabelFont: string;
   coordinateFont: string;
+  gridLabelTextAlign: CanvasTextAlign;
+  coordinateTextAlign: CanvasTextAlign;
+  gridLabelTextBaseline: CanvasTextBaseline;
+  coordinateTextBaseline: CanvasTextBaseline;
   cellSize: number;
   majorStep: number;
   minorLineWidth: number;
@@ -141,6 +149,10 @@ const DEFAULT_OPTIONS: GridCanvasSystemResolvedOptions = {
   coordinateLabelColor: "#009900",
   gridLabelFont: "10px sans-serif",
   coordinateFont: "10px sans-serif",
+  gridLabelTextAlign: "start",
+  coordinateTextAlign: "start",
+  gridLabelTextBaseline: "alphabetic",
+  coordinateTextBaseline: "alphabetic",
   cellSize: 10,
   majorStep: 50,
   minorLineWidth: 0.25,
@@ -258,6 +270,17 @@ class GridCanvasSystem {
         inputOptions.gridLabelFont ?? sharedFont,
       coordinateFont:
         inputOptions.coordinateFont ?? sharedFont,
+      gridLabelTextAlign:
+        inputOptions.gridLabelTextAlign ?? DEFAULT_OPTIONS.gridLabelTextAlign,
+      coordinateTextAlign:
+        inputOptions.coordinateTextAlign ??
+        DEFAULT_OPTIONS.coordinateTextAlign,
+      gridLabelTextBaseline:
+        inputOptions.gridLabelTextBaseline ??
+        DEFAULT_OPTIONS.gridLabelTextBaseline,
+      coordinateTextBaseline:
+        inputOptions.coordinateTextBaseline ??
+        DEFAULT_OPTIONS.coordinateTextBaseline,
       cellSize: this.resolvePositiveNumber(
         inputOptions.cellSize,
         DEFAULT_OPTIONS.cellSize,
@@ -491,14 +514,16 @@ class GridCanvasSystem {
       minorLineWidth,
       majorLineWidth,
       gridLabelFont,
+      gridLabelTextAlign,
+      gridLabelTextBaseline,
     } = this.options;
 
     this.withManagedContext(() => {
       this.ctx.strokeStyle = gridColor;
       this.ctx.fillStyle = gridLabelColor;
       this.ctx.font = gridLabelFont;
-      this.ctx.textAlign = "start";
-      this.ctx.textBaseline = "alphabetic";
+      this.ctx.textAlign = gridLabelTextAlign;
+      this.ctx.textBaseline = gridLabelTextBaseline;
 
       for (let x = 0; x < width; x += cellSize) {
         this.ctx.beginPath();
@@ -532,8 +557,10 @@ class GridCanvasSystem {
     this.withManagedContext(() => {
       this.ctx.fillStyle = options?.color ?? this.options.coordinateLabelColor;
       this.ctx.font = options?.font ?? this.options.coordinateFont;
-      this.ctx.textAlign = options?.textAlign ?? "start";
-      this.ctx.textBaseline = options?.textBaseline ?? "alphabetic";
+      this.ctx.textAlign =
+        options?.textAlign ?? this.options.coordinateTextAlign;
+      this.ctx.textBaseline =
+        options?.textBaseline ?? this.options.coordinateTextBaseline;
 
       this.ctx.fillText(text, resolvedX, resolvedY);
     });

@@ -4,7 +4,7 @@
 
 `grid-canvas-system` es una libreria pequena enfocada en preparar un `canvas` HTML con una cuadricula visible y ofrecer una capa encapsulada de dibujo para casos comunes.
 
-La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, shapes reutilizables, overlays de HUD, un runtime ligero para animacion y movimiento, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
+La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, shapes reutilizables, overlays de HUD, un runtime ligero para animacion, movimiento y helpers neutros de escena, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
 
 ## Estructura actual
 
@@ -24,6 +24,7 @@ src/
     index.ts
     MassBody.ts
     motion.ts
+    scene.ts
     types.ts
 examples/
   vanilla/
@@ -51,7 +52,7 @@ La libreria expone una clase principal, `GridCanvasSystem`, y consolida su uso e
 
 1. Capa core: inicializacion, validacion del DOM, ajuste del canvas, soporte HiDPI y contrato base (`canvas`, `ctx`, `options`).
 2. Capa visual: configuracion de la cuadricula y methods encapsulados de dibujo.
-3. Capa runtime opcional: animacion, input y fisica ligera accesibles como `GridCanvasSystem.runtime`.
+3. Capa runtime opcional: animacion, input, fisica ligera y helpers neutros de escena accesibles como `GridCanvasSystem.runtime`.
 
 Archivo principal:
 
@@ -137,6 +138,10 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 - `hitTestPoint(point, target)`: detecta si un punto toca un circulo o un rectangulo axis-aligned.
 - `hitTestRectangle(a, b)`: detecta solape entre dos rectangulos axis-aligned.
 - `hitTestCircleRectangle(circle, rectangle)`: detecta contacto entre un circulo y un rectangulo axis-aligned.
+- `appendTrailPoint(trail, point, maxPoints)`: mantiene un trail acotado sin mutar el array original.
+- `createParticleBurst(origin, count, options?)`: genera particulas simples con control de angulo, spread, velocidad, tamano y vida.
+- `stepParticles(particles, elapsed, options?)`: avanza particulas simples con gravedad y drag opcionales.
+- `layoutStack(origin, itemSizes, options?)`: calcula posiciones reutilizables para stacks verticales u horizontales de overlays.
 - `normalizeKeyIdentifier(key)`: normaliza `key` y `keyCode` legados.
 - `vectorFromAngle(angle, magnitude?)`, `angleToPoint(from, to)`, `oscillate01(time, frequency?)`, `distanceBetweenPoints(a, b)`, `circlesIntersect(a, b)` y `wrapPoint(point, bounds, radius?)`: utilidades de movimiento, oscilacion y colision.
 
@@ -150,6 +155,10 @@ Por compatibilidad, estas utilidades tambien siguen disponibles como propiedades
 - `gridLabelFont`: fuente de las etiquetas numericas de la cuadricula.
 - `coordinateFont`: fuente de las coordenadas dibujadas con `drawCoordinate()`.
 - `font`: alias de compatibilidad que aplica la misma fuente a ambos tipos de etiqueta.
+- `gridLabelTextAlign`: alineacion de las etiquetas numericas de la cuadricula.
+- `coordinateTextAlign`: alineacion por defecto para `drawCoordinate()`, `drawText()` y overlays basados en texto.
+- `gridLabelTextBaseline`: baseline de las etiquetas numericas de la cuadricula.
+- `coordinateTextBaseline`: baseline por defecto para `drawCoordinate()`, `drawText()` y overlays basados en texto.
 
 ## Capas de uso
 
@@ -207,6 +216,8 @@ Pruebas automatizadas:
 - Cobertura del helper geometrico polar-cartesiano, del render de la nave y de su thruster opcional.
 - Cobertura de snapshots PNG para proyectiles y HUD arcade.
 - Cobertura de helpers de deteccion para punto, rectangulo y circulo vs rectangulo.
+- Artefactos `expected`, `actual` y `diff` cuando falla un snapshot visual.
+- Cobertura de helpers neutros de escena para trails, particulas simples y layout de overlays.
 
 ### Verificacion realizada
 
@@ -217,6 +228,7 @@ Se valido localmente que:
 - `npm run build` compila correctamente y genera los bundles junto con las declaraciones TypeScript en `dist/`.
 - `npm test` ejecuta correctamente la bateria de pruebas.
 - `npm run test:visual` compara el render actual contra snapshots PNG versionados.
+- Si `npm run test:visual` detecta una regresion, genera artefactos comparativos explicitos en `tests/__artifacts__/`.
 
 ## Fortalezas actuales
 
@@ -235,8 +247,10 @@ Se valido localmente que:
 - Overlays reutilizables para HUD y estados de escena.
 - Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y colisiones circulares.
 - Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y deteccion geometrica simple entre puntos, rectangulos y circulos.
+- Helpers neutros de escena para trails acotados, bursts de particulas y layout de overlays.
 - Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
 - Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
+- Alineacion y baseline separados entre etiquetas de cuadricula y texto/coords del usuario.
 - Soporte HiDPI para mejorar nitidez en pantallas de alta densidad.
 - Metodos internos que preservan mejor el estado del contexto.
 - Pruebas automatizadas para regresiones basicas.
@@ -250,7 +264,7 @@ Se valido localmente que:
 
 - Solo existe una implementacion "vanilla".
 - La libreria mezcla inicializacion del canvas con decisiones visuales fijas.
-- Aun no existe una estrategia de diffs visuales mas avanzada que destaque exactamente que region cambio cuando falla un snapshot.
+- Los diffs visuales siguen siendo pixel-perfect; aun no existe una comparacion perceptual o con tolerancias.
 
 ## Recomendacion de evolucion
 

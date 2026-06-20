@@ -8,6 +8,11 @@ import { describe, expect, it } from "vitest";
 import GridCanvasSystem, { type GridCanvasSystemOptions } from "../src";
 
 type BackingCanvas = ReturnType<typeof createCanvas>;
+interface DecodedPng {
+  width: number;
+  height: number;
+  pixels: Buffer;
+}
 
 const TEST_DIR = dirname(fileURLToPath(import.meta.url));
 const SNAPSHOT_DIR = resolve(TEST_DIR, "__snapshots__");
@@ -393,16 +398,83 @@ function renderHudScenario(): BackingCanvas {
   return backingCanvas;
 }
 
-async function toPixelBuffer(pngBuffer: Buffer): Promise<Buffer> {
+async function decodePng(pngBuffer: Buffer): Promise<DecodedPng> {
   const image = await loadImage(pngBuffer);
   const decodedCanvas = createCanvas(image.width, image.height);
   const decodedCtx = decodedCanvas.getContext("2d");
 
   decodedCtx.drawImage(image, 0, 0);
 
-  return Buffer.from(
-    decodedCtx.getImageData(0, 0, image.width, image.height).data,
-  );
+  return {
+    width: image.width,
+    height: image.height,
+    pixels: Buffer.from(
+      decodedCtx.getImageData(0, 0, image.width, image.height).data,
+    ),
+  };
+}
+
+async function toPixelBuffer(pngBuffer: Buffer): Promise<Buffer> {
+  return (await decodePng(pngBuffer)).pixels;
+}
+
+async function createDiffPng(
+  expected: DecodedPng,
+  actual: DecodedPng,
+): Promise<Buffer> {
+  const width = Math.max(expected.width, actual.width);
+  const height = Math.max(expected.height, actual.height);
+  const diffCanvas = createCanvas(width, height);
+  const diffCtx = diffCanvas.getContext("2d");
+  const diffImageData = diffCtx.getImageData(0, 0, width, height);
+  const diffPixels = diffImageData.data;
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const diffOffset = (y * width + x) * 4;
+      const expectedInside = x < expected.width && y < expected.height;
+      const actualInside = x < actual.width && y < actual.height;
+      const expectedOffset = expectedInside ? (y * expected.width + x) * 4 : -1;
+      const actualOffset = actualInside ? (y * actual.width + x) * 4 : -1;
+      const expectedRed = expectedInside ? expected.pixels[expectedOffset] : 0;
+      const expectedGreen = expectedInside
+        ? expected.pixels[expectedOffset + 1]
+        : 0;
+      const expectedBlue = expectedInside
+        ? expected.pixels[expectedOffset + 2]
+        : 0;
+      const expectedAlpha = expectedInside
+        ? expected.pixels[expectedOffset + 3]
+        : 0;
+      const actualRed = actualInside ? actual.pixels[actualOffset] : 0;
+      const actualGreen = actualInside ? actual.pixels[actualOffset + 1] : 0;
+      const actualBlue = actualInside ? actual.pixels[actualOffset + 2] : 0;
+      const actualAlpha = actualInside ? actual.pixels[actualOffset + 3] : 0;
+      const matches =
+        expectedInside === actualInside &&
+        expectedRed === actualRed &&
+        expectedGreen === actualGreen &&
+        expectedBlue === actualBlue &&
+        expectedAlpha === actualAlpha;
+
+      if (matches) {
+        diffPixels[diffOffset] = Math.round(actualRed * 0.2);
+        diffPixels[diffOffset + 1] = Math.round(actualGreen * 0.2);
+        diffPixels[diffOffset + 2] = Math.round(actualBlue * 0.2);
+        diffPixels[diffOffset + 3] = actualAlpha === 0 ? 0 : 96;
+        continue;
+      }
+
+      diffPixels[diffOffset] = 255;
+      diffPixels[diffOffset + 1] = 0;
+      diffPixels[diffOffset + 2] = 255;
+      diffPixels[diffOffset + 3] = 255;
+    }
+  }
+
+  diffCtx.putImageData(diffImageData, 0, 0);
+
+  return diffCanvas.toBuffer("image/png");
 }
 
 async function expectCanvasToMatchSnapshot(
@@ -413,16 +485,34 @@ async function expectCanvasToMatchSnapshot(
   const snapshotPath = resolve(SNAPSHOT_DIR, `${snapshotName}.png`);
   const expectedPng = readFileSync(snapshotPath);
 
-  const actualPixels = await toPixelBuffer(actualPng);
-  const expectedPixels = await toPixelBuffer(expectedPng);
+  const actualImage = await decodePng(actualPng);
+  const expectedImage = await decodePng(expectedPng);
+  const matches =
+    actualImage.width === expectedImage.width &&
+    actualImage.height === expectedImage.height &&
+    actualImage.pixels.equals(expectedImage.pixels);
 
-  if (!actualPixels.equals(expectedPixels)) {
-    const artifactPath = resolve(ARTIFACT_DIR, `${snapshotName}.actual.png`);
-    await mkdir(dirname(artifactPath), { recursive: true });
-    await writeFile(artifactPath, actualPng);
+  if (!matches) {
+    const actualArtifactPath = resolve(ARTIFACT_DIR, `${snapshotName}.actual.png`);
+    const expectedArtifactPath = resolve(
+      ARTIFACT_DIR,
+      `${snapshotName}.expected.png`,
+    );
+    const diffArtifactPath = resolve(ARTIFACT_DIR, `${snapshotName}.diff.png`);
+
+    await mkdir(dirname(actualArtifactPath), { recursive: true });
+    await Promise.all([
+      writeFile(actualArtifactPath, actualPng),
+      writeFile(expectedArtifactPath, expectedPng),
+      createDiffPng(expectedImage, actualImage).then((diffPng) =>
+        writeFile(diffArtifactPath, diffPng),
+      ),
+    ]);
+
+    throw new Error(
+      `Snapshot "${snapshotName}" mismatch. Review ${snapshotName}.expected.png, ${snapshotName}.actual.png and ${snapshotName}.diff.png in tests/__artifacts__.`,
+    );
   }
-
-  expect(actualPixels.equals(expectedPixels)).toBe(true);
 }
 
 describe("GridCanvasSystem visual snapshots", () => {

@@ -120,21 +120,23 @@ La shape oficial de nave ahora acepta un thruster visual parametrizable, de modo
 
 La libreria ahora incorpora `hitTestPoint()`, `hitTestRectangle()` y `hitTestCircleRectangle()` dentro de `GridCanvasSystem.runtime`, rescatando lo mas reusable del enfoque del libro sin dar el salto a un wrapper universal ni a resolucion fisica compleja.
 
+#### 28. Artefactos visuales explicitos para fallos de snapshot
+
+Las pruebas visuales ahora generan `expected`, `actual` y `diff` PNG dentro de `tests/__artifacts__/` cuando aparece una regresion, reduciendo mucho el tiempo para localizar que cambio.
+
+#### 29. Alineacion y baseline separados entre cuadricula y coordenadas
+
+La libreria ahora diferencia `gridLabelTextAlign`, `gridLabelTextBaseline`, `coordinateTextAlign` y `coordinateTextBaseline`, de modo que la cuadricula y el texto dibujado por el consumidor ya no comparten esas decisiones tipograficas finas.
+
+#### 30. Helpers neutros de escena en el runtime opcional
+
+La libreria ahora incorpora `appendTrailPoint()`, `createParticleBurst()`, `stepParticles()` y `layoutStack()` para cubrir trails acotados, particulas simples y layout reutilizable de overlays sin meter logica cerrada de juego.
+
 ## Hallazgos priorizados pendientes
 
 ### Prioridad baja
 
-#### 1. No hay diffs visuales enriquecidos cuando falla un snapshot
-
-Impacto:
-
-- Cuando un snapshot visual falla, hoy sabemos que la imagen cambio, pero no se genera automaticamente una imagen diff para localizar la region exacta.
-
-Mejora sugerida:
-
-- Incorporar diffs visuales o artefactos comparativos mas explicitos si el proyecto empieza a depender mucho de la estabilidad grafica.
-
-#### 2. La API publica expone `ctx` y `canvas` sin encapsulacion
+#### 1. La API publica expone `ctx` y `canvas` sin encapsulacion
 
 Impacto:
 
@@ -144,8 +146,18 @@ Mejora sugerida:
 
 - Mantener documentado este contrato y seguir recomendando la capa encapsulada para el uso comun.
 
+#### 2. Los diffs visuales siguen siendo estrictamente pixel-perfect
+
+Impacto:
+
+- La generacion de `diff` ya hace mucho mas facil localizar cambios, pero todavia no existe tolerancia perceptual para pequenas variaciones de rasterizado.
+
+Mejora sugerida:
+
+- Evaluar un diff perceptual o con umbral si la libreria empieza a renderizar en mas entornos o motores de canvas.
+
 ## Siguientes pasos recomendados
 
-1. Incorporar diffs visuales o artefactos comparativos mas explicitos para fallos de snapshot.
-2. Evaluar si conviene separar tambien otras opciones de texto, como alineacion o baseline, entre cuadricula y coordenadas.
-3. Evaluar si conviene sumar mas helpers neutros para escenas, por ejemplo trails, particulas simples o utilidades de layout para overlays.
+1. Seguir ampliando la capa encapsulada para que mas ejemplos puedan resolverse sin tocar `ctx`.
+2. Evaluar un diff visual perceptual si la estabilidad grafica pasa a ser aun mas critica.
+3. Mantener el runtime ligero y sumar helpers solo cuando aporten reutilizacion clara sin convertir la libreria en un engine.

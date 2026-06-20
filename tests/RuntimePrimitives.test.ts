@@ -5,16 +5,20 @@ import GridCanvasSystem from "../src";
 const runtime = GridCanvasSystem.runtime;
 const {
   angleToPoint,
+  appendTrailPoint,
   circlesIntersect,
   createAnimationLoop,
   createKeyTracker,
+  createParticleBurst,
   distanceBetweenPoints,
   hitTestCircleRectangle,
   hitTestPoint,
   hitTestRectangle,
+  layoutStack,
   MassBody,
   normalizeKeyIdentifier,
   oscillate01,
+  stepParticles,
   vectorFromAngle,
   wrapPoint,
 } = GridCanvasSystem;
@@ -27,10 +31,14 @@ describe("runtime and utility exports", () => {
   it("groups the optional runtime layer under GridCanvasSystem.runtime without breaking direct aliases", () => {
     expect(runtime.createAnimationLoop).toBe(createAnimationLoop);
     expect(runtime.createKeyTracker).toBe(createKeyTracker);
+    expect(runtime.appendTrailPoint).toBe(appendTrailPoint);
+    expect(runtime.createParticleBurst).toBe(createParticleBurst);
     expect(runtime.hitTestPoint).toBe(hitTestPoint);
     expect(runtime.hitTestRectangle).toBe(hitTestRectangle);
     expect(runtime.hitTestCircleRectangle).toBe(hitTestCircleRectangle);
+    expect(runtime.layoutStack).toBe(layoutStack);
     expect(runtime.MassBody).toBe(MassBody);
+    expect(runtime.stepParticles).toBe(stepParticles);
     expect(runtime.wrapPoint).toBe(wrapPoint);
   });
 
@@ -98,6 +106,75 @@ describe("runtime and utility exports", () => {
         { x: 20, y: 10, width: 12, height: 12 },
       ),
     ).toBe(false);
+  });
+
+  it("provides simple trail, particle and overlay layout helpers", () => {
+    expect(
+      appendTrailPoint(
+        [
+          { x: 0, y: 0 },
+          { x: 10, y: 10 },
+        ],
+        { x: 20, y: 20 },
+        2,
+      ),
+    ).toEqual([
+      { x: 10, y: 10 },
+      { x: 20, y: 20 },
+    ]);
+
+    const burst = createParticleBurst(
+      { x: 5, y: 6 },
+      2,
+      {
+        angle: Math.PI / 2,
+        spread: 0,
+        speed: 10,
+        life: 1,
+        size: 3,
+        random: () => 0.5,
+      },
+    );
+
+    expect(burst).toHaveLength(2);
+    expect(burst[0].x).toBe(5);
+    expect(burst[0].y).toBe(6);
+    expect(burst[0].xSpeed).toBeCloseTo(0);
+    expect(burst[0].ySpeed).toBeCloseTo(10);
+    expect(burst[0].life).toBe(1);
+    expect(burst[0].maxLife).toBe(1);
+    expect(burst[0].size).toBe(3);
+
+    const steppedParticles = stepParticles(burst, 0.25, {
+      gravityY: 8,
+      drag: 0.2,
+    });
+
+    expect(steppedParticles).toHaveLength(2);
+    expect(steppedParticles[0].x).toBeCloseTo(5);
+    expect(steppedParticles[0].y).toBeCloseTo(8.85);
+    expect(steppedParticles[0].xSpeed).toBeCloseTo(0);
+    expect(steppedParticles[0].ySpeed).toBeCloseTo(11.4);
+    expect(steppedParticles[0].life).toBeCloseTo(0.75);
+    expect(steppedParticles[0].maxLife).toBe(1);
+    expect(steppedParticles[0].size).toBe(3);
+
+    expect(
+      layoutStack(
+        { x: 100, y: 12 },
+        [
+          { width: 80, height: 16 },
+          { width: 40, height: 12 },
+        ],
+        {
+          gap: 6,
+          align: "end",
+        },
+      ),
+    ).toEqual([
+      { x: 20, y: 12 },
+      { x: 60, y: 34 },
+    ]);
   });
 
   it("MassBody updates, wraps and responds to push/twist forces", () => {

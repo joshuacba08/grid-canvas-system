@@ -2,7 +2,7 @@
 
 This library allows you to create managed grids on an HTML5 canvas and then draw on top of them through a small high-level API.
 
-In addition to the grid itself, the library now includes reusable drawing helpers, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, collision/motion utilities, keyboard tracking, and a lightweight animation runtime.
+In addition to the grid itself, the library now includes reusable drawing helpers, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, collision/motion utilities, keyboard tracking, lightweight scene helpers, and an optional animation runtime.
 
 In my professional use, I have found this tool very useful for education and game development. Students or animators can position elements precisely and visualize their coordinates.
 
@@ -69,7 +69,7 @@ The library is now organized around three simple layers:
 
 1. Core canvas layer: initialization, DOM validation, sizing, HiDPI setup, `canvas`, `ctx`, and `options`.
 2. Drawing layer: grid configuration plus reusable drawing methods like `drawPacman()`, `drawShip()`, `drawProjectile()`, and HUD-style overlays.
-3. Optional runtime layer: animation, input, and simple physics through `GridCanvasSystem.runtime`.
+3. Optional runtime layer: animation, input, simple physics, and scene helpers through `GridCanvasSystem.runtime`.
 
 ### Usage with options
 
@@ -85,6 +85,10 @@ const newCanvas = new GridCanvasSystem("canvas", {
   coordinateLabelColor: "#ccfbf1",
   gridLabelFont: "11px monospace",
   coordinateFont: "13px serif",
+  gridLabelTextAlign: "start",
+  coordinateTextAlign: "end",
+  gridLabelTextBaseline: "alphabetic",
+  coordinateTextBaseline: "top",
   cellSize: 20,
   majorStep: 100,
   minorLineWidth: 0.5,
@@ -307,6 +311,53 @@ const shipTouchesWall = GridCanvasSystem.runtime.hitTestCircleRectangle(
 );
 ```
 
+### Scene helpers example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+let trail = [];
+
+trail = GridCanvasSystem.runtime.appendTrailPoint(
+  trail,
+  { x: 140, y: 90 },
+  12,
+);
+
+const particles = GridCanvasSystem.runtime.createParticleBurst(
+  { x: 140, y: 90 },
+  6,
+  {
+    angle: -Math.PI / 2,
+    spread: Math.PI / 3,
+    speed: 90,
+    life: 0.8,
+    size: 3,
+  },
+);
+
+const nextParticles = GridCanvasSystem.runtime.stepParticles(
+  particles,
+  1 / 60,
+  {
+    gravityY: 40,
+    drag: 0.15,
+  },
+);
+
+const hudSlots = GridCanvasSystem.runtime.layoutStack(
+  { x: 312, y: 12 },
+  [
+    { width: 92, height: 16 },
+    { width: 70, height: 16 },
+  ],
+  {
+    align: "end",
+    gap: 8,
+  },
+);
+```
+
 ## Documentation
 
 - [Documentation index](./docs/README.md)
@@ -334,6 +385,10 @@ Available options:
 - `gridLabelFont`: Grid label font. Defaults to `10px sans-serif`.
 - `coordinateFont`: Coordinate label font. Defaults to `10px sans-serif`.
 - `font`: Legacy alias that applies the same font to both kinds of labels.
+- `gridLabelTextAlign`: Grid label alignment. Defaults to `start`.
+- `coordinateTextAlign`: Default alignment for `drawCoordinate()`, `drawText()`, and text-based overlay helpers. Defaults to `start`.
+- `gridLabelTextBaseline`: Grid label baseline. Defaults to `alphabetic`.
+- `coordinateTextBaseline`: Default baseline for `drawCoordinate()`, `drawText()`, and text-based overlay helpers. Defaults to `alphabetic`.
 - `cellSize`: Space between grid lines. Defaults to `10`.
 - `majorStep`: Distance between emphasized lines and numeric labels. Defaults to `50`.
 - `minorLineWidth`: Width of regular grid lines. Defaults to `0.25`.
@@ -377,10 +432,14 @@ Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime
 - `createAnimationLoop(options)`: Lightweight `requestAnimationFrame` loop with elapsed seconds.
 - `MassBody`: Reusable physics/movement body with `update`, `push`, `twist`, `speed`, and `movementAngle`.
 - `createKeyTracker(target, options?)`: Tracks pressed keys on a specific target.
+- `appendTrailPoint(trail, point, maxPoints)`: Keeps a bounded point trail without mutating the original array.
+- `createParticleBurst(origin, count, options?)`: Creates a simple particle burst with angle, spread, speed, size, and lifetime controls.
 - `hitTestPoint(point, target)`: Checks a point against either a circle or an axis-aligned rectangle.
 - `hitTestRectangle(a, b)`: Checks overlap between two axis-aligned rectangles.
 - `hitTestCircleRectangle(circle, rectangle)`: Checks a circle against an axis-aligned rectangle.
+- `layoutStack(origin, itemSizes, options?)`: Computes reusable positions for vertical or horizontal overlay stacks.
 - `normalizeKeyIdentifier(key)`: Normalizes modern keys and legacy key codes.
+- `stepParticles(particles, elapsed, options?)`: Advances simple particles with optional gravity and drag.
 - `vectorFromAngle(angle, magnitude?)`: Converts an angle and magnitude to `{ x, y }`.
 - `angleToPoint(from, to)`: Calculates the angle from one point to another.
 - `oscillate01(time, frequency?)`: Produces a 0..1 oscillation useful for repeated animation cycles.
@@ -416,6 +475,9 @@ The package exports:
 - `GridCanvasBounds`
 - `GridCanvasCircleLike`
 - `GridCanvasCollisionTarget`
+- `GridCanvasParticle`
+- `GridCanvasParticleBurstOptions`
+- `GridCanvasParticleStepOptions`
 - `GridCanvasKeyTracker`
 - `GridCanvasKeyTrackerOptions`
 - `GridCanvasMassBodyOptions`
@@ -424,6 +486,10 @@ The package exports:
 - `GridCanvasProjectileOptions`
 - `GridCanvasRectangleLike`
 - `GridCanvasShipOptions`
+- `GridCanvasSize`
+- `GridCanvasStackAlign`
+- `GridCanvasStackDirection`
+- `GridCanvasStackLayoutOptions`
 - `GridCanvasSystem`
 - `GridCanvasPoint`
 - `GridCanvasShapeOptions`
@@ -447,6 +513,8 @@ npm run test:visual
 ```bash
 npm run test:visual:update
 ```
+
+When a visual snapshot fails, the test runner now writes `expected`, `actual`, and `diff` PNG artifacts into `tests/__artifacts__/` to make regressions easier to inspect.
 
 ```bash
 pnpm install --frozen-lockfile
