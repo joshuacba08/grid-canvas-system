@@ -6,12 +6,14 @@ export interface GridCanvasSystemOptions {
   labelColor?: string;
   gridLabelColor?: string;
   coordinateLabelColor?: string;
+  font?: string;
+  gridLabelFont?: string;
+  coordinateFont?: string;
   cellSize?: number;
   majorStep?: number;
   minorLineWidth?: number;
   majorLineWidth?: number;
   devicePixelRatio?: number;
-  font?: string;
 }
 
 export interface GridCanvasSystemResolvedOptions {
@@ -21,12 +23,13 @@ export interface GridCanvasSystemResolvedOptions {
   gridColor: string;
   gridLabelColor: string;
   coordinateLabelColor: string;
+  gridLabelFont: string;
+  coordinateFont: string;
   cellSize: number;
   majorStep: number;
   minorLineWidth: number;
   majorLineWidth: number;
   devicePixelRatio: number;
-  font: string;
 }
 
 const DEFAULT_OPTIONS: GridCanvasSystemResolvedOptions = {
@@ -36,17 +39,29 @@ const DEFAULT_OPTIONS: GridCanvasSystemResolvedOptions = {
   gridColor: "#00FF00",
   gridLabelColor: "#009900",
   coordinateLabelColor: "#009900",
+  gridLabelFont: "10px sans-serif",
+  coordinateFont: "10px sans-serif",
   cellSize: 10,
   majorStep: 50,
   minorLineWidth: 0.25,
   majorLineWidth: 0.5,
   devicePixelRatio: 1,
-  font: "10px sans-serif",
 };
 
 class GridCanvasSystem {
+  /**
+   * Official public extension point for DOM integration and sizing workflows.
+   * This reference is intended to remain part of the supported API.
+   */
   public readonly canvas: HTMLCanvasElement;
+
+  /**
+   * Official public extension point for advanced drawing scenarios.
+   * Consumers may draw directly on this context, but visual state mutations are
+   * then part of the consumer-owned rendering contract.
+   */
   public readonly ctx: CanvasRenderingContext2D;
+
   public readonly options: Readonly<GridCanvasSystemResolvedOptions>;
 
   constructor(id: string, width?: number, height?: number);
@@ -90,6 +105,8 @@ class GridCanvasSystem {
         : (widthOrOptions ?? {});
     const sharedLabelColor =
       inputOptions.labelColor ?? DEFAULT_OPTIONS.gridLabelColor;
+    const sharedFont =
+      inputOptions.font ?? DEFAULT_OPTIONS.gridLabelFont;
 
     const resolvedOptions: GridCanvasSystemResolvedOptions = {
       width: this.resolveNonNegativeDimension(
@@ -109,6 +126,10 @@ class GridCanvasSystem {
         inputOptions.gridLabelColor ?? sharedLabelColor,
       coordinateLabelColor:
         inputOptions.coordinateLabelColor ?? sharedLabelColor,
+      gridLabelFont:
+        inputOptions.gridLabelFont ?? sharedFont,
+      coordinateFont:
+        inputOptions.coordinateFont ?? sharedFont,
       cellSize: this.resolvePositiveNumber(
         inputOptions.cellSize,
         DEFAULT_OPTIONS.cellSize,
@@ -134,7 +155,6 @@ class GridCanvasSystem {
         DEFAULT_OPTIONS.devicePixelRatio,
         "devicePixelRatio",
       ),
-      font: inputOptions.font ?? DEFAULT_OPTIONS.font,
     };
 
     if (resolvedOptions.majorStep < resolvedOptions.cellSize) {
@@ -218,14 +238,14 @@ class GridCanvasSystem {
       gridLabelColor,
       minorLineWidth,
       majorLineWidth,
-      font,
+      gridLabelFont,
     } = this.options;
 
     this.ctx.save();
     this.applyBaselineTransform();
     this.ctx.strokeStyle = gridColor;
     this.ctx.fillStyle = gridLabelColor;
-    this.ctx.font = font;
+    this.ctx.font = gridLabelFont;
 
     for (let x = 0; x < width; x += cellSize) {
       this.ctx.beginPath();
@@ -252,7 +272,7 @@ class GridCanvasSystem {
     this.ctx.save();
     this.applyBaselineTransform();
     this.ctx.fillStyle = this.options.coordinateLabelColor;
-    this.ctx.font = this.options.font;
+    this.ctx.font = this.options.coordinateFont;
     this.ctx.fillText(`(${x},${y})`, x, y);
     this.ctx.restore();
   }

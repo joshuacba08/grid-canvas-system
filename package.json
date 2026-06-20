@@ -12,10 +12,13 @@
     "build": "vite build && tsc -p tsconfig.build.json",
     "preview": "vite preview",
     "test": "vitest run",
+    "test:visual": "vitest run tests/GridCanvasSystem.visual.test.ts",
+    "test:visual:update": "npm run build && node scripts/update-visual-snapshots.mjs",
     "test:watch": "vitest"
   },
   "files": [
-    "dist",
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
     "docs"
   ],
   "keywords": [
@@ -27,6 +30,7 @@
   "author": "Josue Oroya",
   "license": "MIT",
   "devDependencies": {
+    "@napi-rs/canvas": "^1.0.0",
     "jsdom": "^29.1.1",
     "typescript": "~5.6.2",
     "vite": "^6.0.1",

@@ -4,7 +4,7 @@
 
 `grid-canvas-system` es una libreria pequena enfocada en un caso de uso puntual: preparar un `canvas` HTML con una cuadricula visible y ofrecer utilidades basicas para dibujar etiquetas de coordenadas.
 
-La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, pruebas automatizadas y compatibilidad actualizada con `pnpm`.
+La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
 
 ## Estructura actual
 
@@ -71,10 +71,21 @@ Firma alternativa:
 
 Ambas propiedades se exponen como `readonly`, lo que evita reasignaciones accidentales sobre las referencias principales de la instancia.
 
+Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos de extension avanzados y forman parte del contrato publico soportado de la libreria. La libreria conserva una experiencia simple, pero deja espacio para que el consumidor dibuje manualmente sobre la cuadricula. El costo de esa flexibilidad es que, si el consumidor altera el estado del contexto, el resultado visual pasa a depender tambien de ese codigo externo.
+
 ### Metodos publicos
 
 - `drawCoordinate(x: number, y: number)`: dibuja el texto `(${x},${y})` en la posicion recibida.
 - `clearCanvas()`: limpia el contenido actual y vuelve a dibujar la cuadricula.
+
+### Configuracion visual relevante
+
+- `gridColor`: color de lineas de la cuadricula.
+- `gridLabelColor`: color de las etiquetas numericas de la cuadricula.
+- `coordinateLabelColor`: color de las coordenadas dibujadas con `drawCoordinate()`.
+- `gridLabelFont`: fuente de las etiquetas numericas de la cuadricula.
+- `coordinateFont`: fuente de las coordenadas dibujadas con `drawCoordinate()`.
+- `font`: alias de compatibilidad que aplica la misma fuente a ambos tipos de etiqueta.
 
 ## Flujo de renderizado
 
@@ -97,7 +108,7 @@ Ambas propiedades se exponen como `readonly`, lo que evita reasignaciones accide
 - `main`: `dist/grid-canvas-system.umd.js`
 - `module`: `dist/grid-canvas-system.es.js`
 - `types`: `dist/index.d.ts`
-- `files`: `["dist"]`
+- `files`: globs explicitos para `dist/**/*.js`, `dist/**/*.d.ts` y `docs`
 
 La build se genera en dos pasos:
 
@@ -111,6 +122,8 @@ Pruebas automatizadas:
 - Compatibilidad de la firma antigua.
 - Configuracion visual e inicializacion HiDPI.
 - Comportamiento base de `drawCoordinate()` y `clearCanvas()`.
+- Verificacion visual real de lineas de cuadricula y restauracion del bitmap tras `clearCanvas()`.
+- Comparacion contra snapshots PNG versionados en el repositorio.
 
 ### Verificacion realizada
 
@@ -120,6 +133,7 @@ Se valido localmente que:
 - `pnpm install --frozen-lockfile` funciona con la configuracion actual del repositorio.
 - `npm run build` compila correctamente y genera los bundles junto con las declaraciones TypeScript en `dist/`.
 - `npm test` ejecuta correctamente la bateria de pruebas.
+- `npm run test:visual` compara el render actual contra snapshots PNG versionados.
 
 ## Fortalezas actuales
 
@@ -128,9 +142,13 @@ Se valido localmente que:
 - Validaciones mas claras sobre el elemento DOM y el contexto 2D.
 - Tipos TypeScript listos para consumidores del paquete.
 - API configurable sin romper compatibilidad con la firma anterior.
+- Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
+- Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
 - Soporte HiDPI para mejorar nitidez en pantallas de alta densidad.
 - Metodos internos que preservan mejor el estado del contexto.
 - Pruebas automatizadas para regresiones basicas.
+- Prueba visual real sobre el render del canvas.
+- Snapshots PNG versionados para detectar regresiones visuales completas.
 - Ejemplo de uso sencillo para CDN.
 - Build de libreria ya configurada para `es` y `umd`.
 - Flujo reproducible con `npm` y `pnpm`.
@@ -139,8 +157,7 @@ Se valido localmente que:
 
 - Solo existe una implementacion "vanilla".
 - La libreria mezcla inicializacion del canvas con decisiones visuales fijas.
-- `drawCoordinate()` reutiliza `labelColor`, por lo que aun no hay separacion entre color de etiquetas de cuadricula y color de coordenadas del usuario.
-- No hay pruebas visuales reales sobre pixeles renderizados.
+- Aun no existe una estrategia de diffs visuales mas avanzada que destaque exactamente que region cambio cuando falla un snapshot.
 
 ## Recomendacion de evolucion
 

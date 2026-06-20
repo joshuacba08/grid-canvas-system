@@ -81,19 +81,47 @@ describe("GridCanvasSystem", () => {
     expect(grid.canvas.style.height).toBe("180px");
   });
 
+  it("keeps canvas and ctx as official public extension points", () => {
+    const grid = new GridCanvasSystem("canvas");
+    const domCanvas = document.getElementById("canvas");
+
+    expect(grid.canvas).toBe(domCanvas);
+    expect(grid.ctx).toBe(mockContext);
+  });
+
+  it("keeps compatibility with the legacy labelColor option", () => {
+    const grid = new GridCanvasSystem("canvas", {
+      labelColor: "#fedcba",
+    });
+
+    expect(grid.options.gridLabelColor).toBe("#fedcba");
+    expect(grid.options.coordinateLabelColor).toBe("#fedcba");
+  });
+
+  it("keeps compatibility with the legacy font option", () => {
+    const grid = new GridCanvasSystem("canvas", {
+      font: "16px fantasy",
+    });
+
+    expect(grid.options.gridLabelFont).toBe("16px fantasy");
+    expect(grid.options.coordinateFont).toBe("16px fantasy");
+  });
+
   it("supports visual options and hidpi scaling", () => {
     const grid = new GridCanvasSystem("canvas", {
       width: 200,
       height: 100,
       backgroundColor: "red",
       gridColor: "#123456",
-      labelColor: "#abcdef",
+      gridLabelColor: "#abcdef",
+      coordinateLabelColor: "#654321",
+      gridLabelFont: "11px monospace",
+      coordinateFont: "13px serif",
       cellSize: 20,
       majorStep: 40,
       minorLineWidth: 1,
       majorLineWidth: 2,
       devicePixelRatio: 2,
-      font: "12px monospace",
     });
 
     expect(grid.options.devicePixelRatio).toBe(2);
@@ -102,13 +130,19 @@ describe("GridCanvasSystem", () => {
     expect(grid.canvas.style.width).toBe("200px");
     expect(grid.canvas.style.height).toBe("100px");
     expect(grid.canvas.style.backgroundColor).toBe("red");
+    expect(grid.options.gridLabelColor).toBe("#abcdef");
+    expect(grid.options.coordinateLabelColor).toBe("#654321");
+    expect(grid.options.gridLabelFont).toBe("11px monospace");
+    expect(grid.options.coordinateFont).toBe("13px serif");
     expect(mockContext.setTransform).toHaveBeenCalledWith(2, 0, 0, 2, 0, 0);
   });
 
-  it("drawCoordinate uses the configured baseline transform and label style", () => {
+  it("drawCoordinate uses the configured baseline transform and coordinate label style", () => {
     const grid = new GridCanvasSystem("canvas", {
-      labelColor: "#ffffff",
-      font: "14px serif",
+      gridLabelColor: "#00ff00",
+      coordinateLabelColor: "#ffffff",
+      gridLabelFont: "12px monospace",
+      coordinateFont: "14px serif",
       devicePixelRatio: 2,
     });
 
@@ -127,6 +161,27 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.fillText).toHaveBeenCalledWith("(10,20)", 10, 20);
   });
 
+  it("draws major grid labels using the grid label color", () => {
+    new GridCanvasSystem("canvas", {
+      width: 120,
+      height: 60,
+      cellSize: 20,
+      majorStep: 40,
+      gridLabelColor: "#112233",
+      gridLabelFont: "15px cursive",
+    });
+
+    expect(mockContext.fillStyle).toBe("#112233");
+    expect(mockContext.font).toBe("15px cursive");
+    expect(mockContext.fillText.mock.calls).toEqual([
+      ["0", 0, 10],
+      ["40", 40, 10],
+      ["80", 80, 10],
+      ["0", 0, 10],
+      ["40", 0, 50],
+    ]);
+  });
+
   it("clearCanvas clears using logical dimensions and redraws the grid", () => {
     const grid = new GridCanvasSystem("canvas", {
       width: 120,
@@ -143,6 +198,24 @@ describe("GridCanvasSystem", () => {
 
     expect(mockContext.clearRect).toHaveBeenCalledWith(0, 0, 120, 60);
     expect(mockContext.stroke).toHaveBeenCalled();
+  });
+
+  it("clearCanvas redraws the expected number of grid lines and labels", () => {
+    const grid = new GridCanvasSystem("canvas", {
+      width: 120,
+      height: 60,
+      cellSize: 20,
+      majorStep: 40,
+    });
+
+    mockContext.clearRect.mockClear();
+    mockContext.stroke.mockClear();
+    mockContext.fillText.mockClear();
+
+    grid.clearCanvas();
+
+    expect(mockContext.stroke).toHaveBeenCalledTimes(9);
+    expect(mockContext.fillText).toHaveBeenCalledTimes(5);
   });
 
   it("rejects invalid majorStep values", () => {

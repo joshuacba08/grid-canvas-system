@@ -73,13 +73,15 @@ const newCanvas = new GridCanvasSystem("canvas", {
   height: 500,
   backgroundColor: "#101820",
   gridColor: "#5eead4",
-  labelColor: "#ccfbf1",
+  gridLabelColor: "#5eead4",
+  coordinateLabelColor: "#ccfbf1",
+  gridLabelFont: "11px monospace",
+  coordinateFont: "13px serif",
   cellSize: 20,
   majorStep: 100,
   minorLineWidth: 0.5,
   majorLineWidth: 1.25,
   devicePixelRatio: window.devicePixelRatio,
-  font: "12px monospace",
 });
 ```
 
@@ -104,13 +106,17 @@ Available options:
 - `height`: Logical canvas height in CSS pixels. Defaults to `400`.
 - `backgroundColor`: Canvas background color. Defaults to `#000000`.
 - `gridColor`: Grid line color. Defaults to `#00FF00`.
-- `labelColor`: Label text color. Defaults to `#009900`.
+- `gridLabelColor`: Grid label text color. Defaults to `#009900`.
+- `coordinateLabelColor`: Coordinate label text color. Defaults to `#009900`.
+- `labelColor`: Legacy alias that applies the same color to both kinds of labels.
+- `gridLabelFont`: Grid label font. Defaults to `10px sans-serif`.
+- `coordinateFont`: Coordinate label font. Defaults to `10px sans-serif`.
+- `font`: Legacy alias that applies the same font to both kinds of labels.
 - `cellSize`: Space between grid lines. Defaults to `10`.
 - `majorStep`: Distance between emphasized lines and numeric labels. Defaults to `50`.
 - `minorLineWidth`: Width of regular grid lines. Defaults to `0.25`.
 - `majorLineWidth`: Width of emphasized grid lines. Defaults to `0.5`.
 - `devicePixelRatio`: Pixel ratio used for HiDPI rendering. Defaults to `window.devicePixelRatio` when available.
-- `font`: Font used for labels. Defaults to `10px sans-serif`.
 
 The constructor throws an error when:
 
@@ -128,10 +134,35 @@ The library has the following methods:
 - `drawCoordinate(x, y)`: Draws the coordinate label at the provided position.
 - `clearCanvas()`: Clears the canvas.
 
+## Advanced Usage
+
+`canvas` and `ctx` are intentionally exposed as advanced extension points.
+
+- `canvas` lets you integrate the instance with DOM or sizing logic outside the library.
+- `ctx` lets you draw your own shapes on top of the grid.
+- Both references are treated as part of the supported public API.
+- If you mutate the rendering context state directly, the visual result becomes your responsibility.
+
+## TypeScript
+
+The package exports:
+
+- `GridCanvasSystem`
+- `GridCanvasSystemOptions`
+- `GridCanvasSystemResolvedOptions`
+
 ## Testing
 
 ```bash
 npm test
+```
+
+```bash
+npm run test:visual
+```
+
+```bash
+npm run test:visual:update
 ```
 
 ```bash

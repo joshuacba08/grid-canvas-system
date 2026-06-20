@@ -2,7 +2,7 @@
 
 ## Resumen
 
-La libreria funciona en su escenario base, pero hoy depende de supuestos fragiles sobre el DOM, tiene una API poco configurable y presenta diferencias entre la documentacion y la implementacion real.
+La libreria funciona bien en su escenario base y ya resolvio varios puntos importantes de robustez, configuracion y tooling. Lo que queda pendiente esta mas enfocado en refinamientos de API y verificacion visual.
 
 ## Mejoras aplicadas en esta iteracion
 
@@ -44,48 +44,56 @@ Se incorporo una bateria inicial con Vitest y `jsdom` para validar inicializacio
 
 Se regenero `pnpm-lock.yaml` y se anadio configuracion de `allowBuilds` para que `pnpm install --frozen-lockfile` funcione con `pnpm 11`.
 
+#### 9. Colores separados para etiquetas
+
+La libreria ahora diferencia entre `gridLabelColor` y `coordinateLabelColor`, manteniendo `labelColor` como alias de compatibilidad.
+
+#### 10. Fuentes separadas para etiquetas
+
+La libreria ahora diferencia entre `gridLabelFont` y `coordinateFont`, manteniendo `font` como alias de compatibilidad.
+
+#### 11. Documentacion explicita sobre `ctx` y `canvas`
+
+La documentacion ahora deja claro que ambas propiedades siguen expuestas como puntos de extension avanzados y que mutar el contexto puede afectar el resultado visual final.
+
+#### 12. Prueba visual real de render
+
+Se incorporo una prueba visual que usa un canvas real en Node para validar posiciones visibles de la cuadricula y que `clearCanvas()` restaura el bitmap esperado.
+
+#### 13. `ctx` y `canvas` como contrato publico oficial
+
+La libreria ya no deja este punto como una ambiguedad de implementacion: `canvas` y `ctx` se sostienen de forma explicita como extension points avanzados y como parte del contrato publico soportado.
+
+#### 14. Snapshots visuales versionados
+
+Ahora existen snapshots PNG versionados en el repositorio, junto con una prueba que compara el render actual contra esas referencias y un script para regenerarlas cuando el resultado esperado cambie deliberadamente.
+
 ## Hallazgos priorizados pendientes
 
-### Prioridad media
+### Prioridad baja
 
-#### 1. `drawCoordinate()` y la cuadricula comparten el mismo `labelColor`
-
-Estado actual:
-
-- `labelColor` se usa tanto para los valores de la cuadricula como para las coordenadas dibujadas manualmente.
+#### 1. No hay diffs visuales enriquecidos cuando falla un snapshot
 
 Impacto:
 
-- Si un consumidor quiere estilos distintos para ambos tipos de etiqueta, hoy no puede hacerlo sin cambiar el codigo fuente.
+- Cuando un snapshot visual falla, hoy sabemos que la imagen cambio, pero no se genera automaticamente una imagen diff para localizar la region exacta.
 
 Mejora sugerida:
 
-- Separar `gridLabelColor` y `coordinateLabelColor`.
-
-### Prioridad baja
+- Incorporar diffs visuales o artefactos comparativos mas explicitos si el proyecto empieza a depender mucho de la estabilidad grafica.
 
 #### 2. La API publica expone `ctx` y `canvas` sin encapsulacion
 
 Impacto:
 
-- Aporta flexibilidad, pero deja abierta la posibilidad de estados visuales inesperados.
+- La decision de mantener estos extension points como contrato oficial conserva flexibilidad, pero tambien deja espacio para estados visuales inesperados cuando el consumidor muta el contexto directamente.
 
 Mejora sugerida:
 
-- Mantener la exposicion si se desea una API simple, pero documentar claramente que el consumidor puede alterar el estado del contexto.
-
-#### 3. No hay pruebas visuales de renderizado real
-
-Impacto:
-
-- Cambios en la cuadricula o en alineacion de texto podrian pasar las pruebas actuales aunque el resultado visual cambie.
-
-Mejora sugerida:
-
-- Incorporar pruebas visuales o snapshots de render cuando el proyecto tenga una API visual mas estable.
+- Mantener documentado este contrato y evitar cambios sorpresivos de semantica en futuras versiones mayores o menores.
 
 ## Siguientes pasos recomendados
 
-1. Separar opciones de color entre etiquetas de cuadricula y coordenadas del usuario.
-2. Evaluar si conviene encapsular mas el acceso a `ctx` o mantenerlo como extension point oficial.
-3. Incorporar pruebas visuales cuando la API grafica se estabilice un poco mas.
+1. Incorporar diffs visuales o artefactos comparativos mas explicitos para fallos de snapshot.
+2. Evaluar si conviene separar tambien otras opciones de texto, como alineacion o baseline, entre cuadricula y coordenadas.
+3. Decidir si en una futura version conviene ofrecer una capa mas encapsulada ademas del contrato actual basado en `ctx` y `canvas`.
