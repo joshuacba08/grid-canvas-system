@@ -116,6 +116,10 @@ La libreria ahora incorpora `drawValueLabel()`, `drawBarIndicator()` y `drawMess
 
 La shape oficial de nave ahora acepta un thruster visual parametrizable, de modo que los ejemplos tipo Asteroids ya no necesitan dibujar la llama trasera tocando `ctx` directamente.
 
+#### 27. Deteccion minima de colisiones en el runtime opcional
+
+La libreria ahora incorpora `hitTestPoint()`, `hitTestRectangle()` y `hitTestCircleRectangle()` dentro de `GridCanvasSystem.runtime`, rescatando lo mas reusable del enfoque del libro sin dar el salto a un wrapper universal ni a resolucion fisica compleja.
+
 ## Hallazgos priorizados pendientes
 
 ### Prioridad baja

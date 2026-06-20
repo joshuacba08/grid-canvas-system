@@ -279,11 +279,32 @@ GridCanvasSystem.runtime.createAnimationLoop({
       body.radius,
       GridCanvasSystem.runtime.oscillate01(time, 2),
       {
-      direction: body.angle,
+        direction: body.angle,
       },
     );
   },
 });
+```
+
+### Collision helpers example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const pointHitsGhost = GridCanvasSystem.runtime.hitTestPoint(
+  { x: 120, y: 130 },
+  { x: 120, y: 130, radius: 24 },
+);
+
+const rectanglesOverlap = GridCanvasSystem.runtime.hitTestRectangle(
+  { x: 20, y: 20, width: 40, height: 30 },
+  { x: 50, y: 30, width: 60, height: 20 },
+);
+
+const shipTouchesWall = GridCanvasSystem.runtime.hitTestCircleRectangle(
+  { x: 110, y: 110, radius: 18 },
+  { x: 140, y: 80, width: 30, height: 80 },
+);
 ```
 
 ## Documentation
@@ -356,6 +377,9 @@ Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime
 - `createAnimationLoop(options)`: Lightweight `requestAnimationFrame` loop with elapsed seconds.
 - `MassBody`: Reusable physics/movement body with `update`, `push`, `twist`, `speed`, and `movementAngle`.
 - `createKeyTracker(target, options?)`: Tracks pressed keys on a specific target.
+- `hitTestPoint(point, target)`: Checks a point against either a circle or an axis-aligned rectangle.
+- `hitTestRectangle(a, b)`: Checks overlap between two axis-aligned rectangles.
+- `hitTestCircleRectangle(circle, rectangle)`: Checks a circle against an axis-aligned rectangle.
 - `normalizeKeyIdentifier(key)`: Normalizes modern keys and legacy key codes.
 - `vectorFromAngle(angle, magnitude?)`: Converts an angle and magnitude to `{ x, y }`.
 - `angleToPoint(from, to)`: Calculates the angle from one point to another.
@@ -391,12 +415,14 @@ The package exports:
 - `GridCanvasAnimationLoopOptions`
 - `GridCanvasBounds`
 - `GridCanvasCircleLike`
+- `GridCanvasCollisionTarget`
 - `GridCanvasKeyTracker`
 - `GridCanvasKeyTrackerOptions`
 - `GridCanvasMassBodyOptions`
 - `GridCanvasMessageOptions`
 - `GridCanvasPacmanOptions`
 - `GridCanvasProjectileOptions`
+- `GridCanvasRectangleLike`
 - `GridCanvasShipOptions`
 - `GridCanvasSystem`
 - `GridCanvasPoint`

@@ -1,3 +1,8 @@
+import {
+  hitTestCircleRectangle,
+  hitTestPoint,
+  hitTestRectangle,
+} from "./collision";
 import { createAnimationLoop } from "./createAnimationLoop";
 import { createKeyTracker, normalizeKeyIdentifier } from "./createKeyTracker";
 import { MassBody } from "./MassBody";
@@ -16,6 +21,9 @@ export const GridCanvasRuntime = Object.freeze({
   createAnimationLoop,
   createKeyTracker,
   distanceBetweenPoints,
+  hitTestCircleRectangle,
+  hitTestPoint,
+  hitTestRectangle,
   MassBody,
   normalizeKeyIdentifier,
   oscillate01,
@@ -23,6 +31,11 @@ export const GridCanvasRuntime = Object.freeze({
   wrapPoint,
 });
 
+export {
+  hitTestCircleRectangle,
+  hitTestPoint,
+  hitTestRectangle,
+} from "./collision";
 export type {
   GridCanvasAnimationLoop,
   GridCanvasAnimationLoopOptions,
@@ -35,5 +48,7 @@ export type { GridCanvasMassBodyOptions } from "./MassBody";
 export type {
   GridCanvasBounds,
   GridCanvasCircleLike,
+  GridCanvasCollisionTarget,
+  GridCanvasRectangleLike,
   GridCanvasVelocity,
 } from "./types";

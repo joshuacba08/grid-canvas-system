@@ -9,6 +9,9 @@ const {
   createAnimationLoop,
   createKeyTracker,
   distanceBetweenPoints,
+  hitTestCircleRectangle,
+  hitTestPoint,
+  hitTestRectangle,
   MassBody,
   normalizeKeyIdentifier,
   oscillate01,
@@ -24,6 +27,9 @@ describe("runtime and utility exports", () => {
   it("groups the optional runtime layer under GridCanvasSystem.runtime without breaking direct aliases", () => {
     expect(runtime.createAnimationLoop).toBe(createAnimationLoop);
     expect(runtime.createKeyTracker).toBe(createKeyTracker);
+    expect(runtime.hitTestPoint).toBe(hitTestPoint);
+    expect(runtime.hitTestRectangle).toBe(hitTestRectangle);
+    expect(runtime.hitTestCircleRectangle).toBe(hitTestCircleRectangle);
     expect(runtime.MassBody).toBe(MassBody);
     expect(runtime.wrapPoint).toBe(wrapPoint);
   });
@@ -47,6 +53,51 @@ describe("runtime and utility exports", () => {
     expect(
       wrapPoint({ x: 120, y: 50 }, { width: 100, height: 100 }, 10),
     ).toEqual({ x: -10, y: 50 });
+  });
+
+  it("provides minimal point, rectangle, and circle-rectangle collision helpers", () => {
+    expect(
+      hitTestPoint(
+        { x: 15, y: 15 },
+        { x: 10, y: 10, width: 20, height: 20 },
+      ),
+    ).toBe(true);
+    expect(
+      hitTestPoint(
+        { x: 35, y: 35 },
+        { x: 10, y: 10, width: 20, height: 20 },
+      ),
+    ).toBe(false);
+    expect(
+      hitTestPoint(
+        { x: 8, y: 5 },
+        { x: 5, y: 5, radius: 3 },
+      ),
+    ).toBe(true);
+    expect(
+      hitTestRectangle(
+        { x: 0, y: 0, width: 10, height: 10 },
+        { x: 10, y: 4, width: 8, height: 8 },
+      ),
+    ).toBe(true);
+    expect(
+      hitTestRectangle(
+        { x: 0, y: 0, width: 10, height: 10 },
+        { x: 11, y: 0, width: 8, height: 8 },
+      ),
+    ).toBe(false);
+    expect(
+      hitTestCircleRectangle(
+        { x: 15, y: 15, radius: 5 },
+        { x: 20, y: 10, width: 12, height: 12 },
+      ),
+    ).toBe(true);
+    expect(
+      hitTestCircleRectangle(
+        { x: 4, y: 4, radius: 2 },
+        { x: 20, y: 10, width: 12, height: 12 },
+      ),
+    ).toBe(false);
   });
 
   it("MassBody updates, wraps and responds to push/twist forces", () => {

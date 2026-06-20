@@ -37,5 +37,7 @@ export type {
   GridCanvasMassBodyOptions,
   GridCanvasBounds,
   GridCanvasCircleLike,
+  GridCanvasCollisionTarget,
+  GridCanvasRectangleLike,
   GridCanvasVelocity,
 } from "./runtime";

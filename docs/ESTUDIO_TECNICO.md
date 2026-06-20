@@ -10,6 +10,10 @@ La implementacion actual sigue siendo simple y directa, pero ya incorpora una ba
 
 ```text
 src/
+  core/
+    index.ts
+  drawing/
+    index.ts
   index.ts
   modules/
     vanilla/
@@ -17,6 +21,7 @@ src/
   runtime/
     createAnimationLoop.ts
     createKeyTracker.ts
+    index.ts
     MassBody.ts
     motion.ts
     types.ts
@@ -42,11 +47,21 @@ examples/
 
 ## Arquitectura
 
-La libreria expone una clase principal, `GridCanvasSystem`, y una capa adicional de utilidades runtime montadas como propiedades estaticas sobre el export principal para animacion, movimiento, input y fisica ligera.
+La libreria expone una clase principal, `GridCanvasSystem`, y consolida su uso en tres capas simples:
+
+1. Capa core: inicializacion, validacion del DOM, ajuste del canvas, soporte HiDPI y contrato base (`canvas`, `ctx`, `options`).
+2. Capa visual: configuracion de la cuadricula y methods encapsulados de dibujo.
+3. Capa runtime opcional: animacion, input y fisica ligera accesibles como `GridCanvasSystem.runtime`.
 
 Archivo principal:
 
 - `src/modules/vanilla/GridCanvasSystem.ts`
+
+Barrels por capa:
+
+- `src/core/index.ts`
+- `src/drawing/index.ts`
+- `src/runtime/index.ts`
 
 Punto de entrada:
 
@@ -63,7 +78,7 @@ Punto de entrada:
 7. Resaltar lineas mayores con una linea mas gruesa y una etiqueta numerica.
 8. Permitir dibujar una etiqueta de coordenadas manualmente.
 9. Exponer una capa de dibujo encapsulada para texto, lineas, sectores y shapes reutilizables.
-10. Exponer utilidades runtime reutilizables para bucles de animacion, seguimiento de teclado, movimiento y colision circular.
+10. Exponer utilidades runtime reutilizables para bucles de animacion, seguimiento de teclado, movimiento y colisiones geometricas simples.
 11. Limpiar el canvas y volver a dibujar la cuadricula.
 
 ## API publica real
@@ -114,13 +129,18 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 - `drawCoordinate(x: number, y: number, options?: GridCanvasTextOptions)`: dibuja el texto `(${x},${y})` en la posicion recibida.
 - `clearCanvas(options?: GridCanvasClearOptions)`: limpia el contenido actual y puede omitir el redibujado de la cuadricula para flujos de animacion.
 
-### Utilidades runtime expuestas en el export principal
+### Utilidades runtime expuestas en `GridCanvasSystem.runtime`
 
 - `createAnimationLoop(options: GridCanvasAnimationLoopOptions): GridCanvasAnimationLoop`: crea un bucle basado en `requestAnimationFrame` con `elapsed` en segundos.
 - `MassBody`: clase reutilizable para posicion, velocidad, giro, empuje y wrap-around.
 - `createKeyTracker(target, options?)`: rastrea teclas pulsadas sobre un `target` concreto.
+- `hitTestPoint(point, target)`: detecta si un punto toca un circulo o un rectangulo axis-aligned.
+- `hitTestRectangle(a, b)`: detecta solape entre dos rectangulos axis-aligned.
+- `hitTestCircleRectangle(circle, rectangle)`: detecta contacto entre un circulo y un rectangulo axis-aligned.
 - `normalizeKeyIdentifier(key)`: normaliza `key` y `keyCode` legados.
 - `vectorFromAngle(angle, magnitude?)`, `angleToPoint(from, to)`, `oscillate01(time, frequency?)`, `distanceBetweenPoints(a, b)`, `circlesIntersect(a, b)` y `wrapPoint(point, bounds, radius?)`: utilidades de movimiento, oscilacion y colision.
+
+Por compatibilidad, estas utilidades tambien siguen disponibles como propiedades estaticas directas del export principal.
 
 ### Configuracion visual relevante
 
@@ -133,14 +153,16 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 
 ## Capas de uso
 
-La libreria ofrece dos capas complementarias:
+La libreria queda consolidada alrededor de tres capas:
 
-1. Capa encapsulada recomendada para el uso comun:
+1. Capa de inicializacion y validacion del canvas:
+   constructor, resolucion de opciones, `canvas`, `ctx`, `options` y soporte HiDPI.
+2. Capa visual de cuadricula y shapes reutilizables:
    `drawText()`, `drawGhost()`, `drawProjectile()`, `polarToCartesian()`, `createAsteroidShape()`, `drawCircleSector()`, `drawPacman()`, `drawAsteroid()`, `drawShip()`, `drawValueLabel()`, `drawBarIndicator()`, `drawMessage()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
-2. Capa runtime ligera:
-   `createAnimationLoop()`, `MassBody`, `createKeyTracker()` y utilidades de movimiento/colision.
-3. Capa avanzada basada en `canvas` y `ctx`:
-   pensada para integraciones y dibujo manual mas libre.
+3. Capa runtime ligera opcional:
+   `GridCanvasSystem.runtime.createAnimationLoop()`, `GridCanvasSystem.runtime.MassBody`, `GridCanvasSystem.runtime.createKeyTracker()` y utilidades de movimiento/colision.
+
+`canvas` y `ctx` siguen disponibles como extension points avanzados dentro de la primera capa, pero la recomendacion para uso comun sigue siendo permanecer en la capa visual encapsulada.
 
 ## Flujo de renderizado
 
@@ -184,6 +206,7 @@ Pruebas automatizadas:
 - Cobertura del render de asteroides persistentes y sus guias de ruido.
 - Cobertura del helper geometrico polar-cartesiano, del render de la nave y de su thruster opcional.
 - Cobertura de snapshots PNG para proyectiles y HUD arcade.
+- Cobertura de helpers de deteccion para punto, rectangulo y circulo vs rectangulo.
 
 ### Verificacion realizada
 
@@ -211,6 +234,7 @@ Se valido localmente que:
 - Shape oficial de nave con rotacion encapsulada, curvas cuadraticas configurables y thruster opcional.
 - Overlays reutilizables para HUD y estados de escena.
 - Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y colisiones circulares.
+- Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y deteccion geometrica simple entre puntos, rectangulos y circulos.
 - Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
 - Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
 - Soporte HiDPI para mejorar nitidez en pantallas de alta densidad.

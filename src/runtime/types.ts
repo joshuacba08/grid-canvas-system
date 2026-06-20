@@ -13,3 +13,12 @@ export interface GridCanvasVelocity {
 export interface GridCanvasCircleLike extends GridCanvasPoint {
   radius: number;
 }
+
+export interface GridCanvasRectangleLike extends GridCanvasPoint {
+  width: number;
+  height: number;
+}
+
+export type GridCanvasCollisionTarget =
+  | GridCanvasCircleLike
+  | GridCanvasRectangleLike;
