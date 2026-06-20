@@ -2,7 +2,7 @@
 
 This library allows you to create managed grids on an HTML5 canvas and then draw on top of them through a small high-level API.
 
-In addition to the grid itself, the library now includes reusable drawing helpers, coordinate labels, line primitives, circular sectors, Pac-Man, and a configurable spaceship shape.
+In addition to the grid itself, the library now includes reusable drawing helpers, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, collision/motion utilities, keyboard tracking, and a lightweight animation runtime.
 
 In my professional use, I have found this tool very useful for education and game development. Students or animators can position elements precisely and visualize their coordinates.
 
@@ -151,6 +151,127 @@ grid.drawShip(
 );
 ```
 
+### Asteroid example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 260,
+  height: 260,
+});
+
+const shape = grid.createAsteroidShape(14);
+
+grid.drawAsteroid(
+  { x: 130, y: 130 },
+  75,
+  shape,
+  {
+    noise: 0.4,
+    rotation: Math.PI / 10,
+    guide: true,
+  },
+);
+```
+
+### Ghost example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 240,
+  height: 240,
+});
+
+grid.drawGhost(
+  { x: 120, y: 130 },
+  70,
+  {
+    feet: 5,
+    fillColor: "#ff0000",
+    strokeColor: "#ffffff",
+  },
+);
+```
+
+### HUD example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 320,
+  height: 180,
+});
+
+grid.drawShip(
+  { x: 160, y: 112 },
+  38,
+  {
+    rotation: -Math.PI / 2,
+    curve1: 0.45,
+    curve2: 0.8,
+    thruster: true,
+  },
+);
+
+grid.drawBarIndicator("health", 8, 8, 110, 12, 78, 100);
+grid.drawValueLabel("score", 2450, 312, 18, {
+  textAlign: "end",
+});
+grid.drawMessage(
+  "GAME OVER",
+  "Press space to play again",
+  { x: 160, y: 62 },
+);
+```
+
+### Runtime example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 420,
+  height: 260,
+});
+const body = new GridCanvasSystem.MassBody({
+  x: 210,
+  y: 130,
+  mass: 10,
+  radius: 20,
+});
+const keys = GridCanvasSystem.createKeyTracker(grid.canvas, {
+  autoFocus: true,
+  preventDefaultKeys: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
+});
+let time = 0;
+
+GridCanvasSystem.createAnimationLoop({
+  autoStart: true,
+  update(elapsed) {
+    time += elapsed;
+
+    if (keys.isPressed("ArrowLeft")) body.angle -= Math.PI * 1.5 * elapsed;
+    if (keys.isPressed("ArrowRight")) body.angle += Math.PI * 1.5 * elapsed;
+    if (keys.isPressed("ArrowUp")) body.push(body.angle, 1200, elapsed);
+
+    body.update(elapsed, {
+      width: grid.options.width,
+      height: grid.options.height,
+    });
+  },
+  draw() {
+    grid.clearCanvas();
+    grid.drawPacman(body.x, body.y, body.radius, GridCanvasSystem.oscillate01(time, 2), {
+      direction: body.angle,
+    });
+  },
+});
+```
+
 ## Documentation
 
 - [Documentation index](./docs/README.md)
@@ -198,18 +319,40 @@ The constructor throws an error when:
 The library has the following methods:
 
 - `drawText(text, x, y, options?)`: Draws text using the managed canvas state.
+- `drawGhost(center, radius, options?)`: Draws a configurable ghost silhouette with optional feet and eyes.
+- `drawProjectile(center, radius, life, options?)`: Draws a projectile with life-based default coloring.
 - `polarToCartesian(center, radius, angle)`: Converts polar coordinates into a canvas point.
+- `createAsteroidShape(segments, random?)`: Creates persistent asteroid shape data that can be reused across renders.
 - `drawCircleSector(center, radius, startAngle, endAngle, options?)`: Draws a filled sector or wedge shape.
 - `drawPacman(x, y, radius, mouthOpen, options?)`: Draws a Pac-Man shape over the managed grid.
-- `drawShip(center, radius, options?)`: Draws a configurable spaceship with optional guide overlays and rotation.
+- `drawAsteroid(center, radius, shape, options?)`: Draws a configurable asteroid from persisted shape data.
+- `drawShip(center, radius, options?)`: Draws a configurable spaceship with optional guide overlays, rotation, and thruster flame.
+- `drawValueLabel(label, value, x, y, options?)`: Draws a formatted numeric label for score, fps, level, or similar overlays.
+- `drawBarIndicator(label, x, y, width, height, value, max, options?)`: Draws a label plus a proportional status bar.
+- `drawMessage(mainText, subText, center, options?)`: Draws a two-line centered message overlay.
 - `drawLine(start, end, options?)`: Draws a line without manipulating `ctx` directly.
 - `drawPolyline(points, options?)`: Draws a polyline or closed path through a high-level API.
 - `drawCoordinate(x, y, options?)`: Draws the coordinate label at the provided position.
-- `clearCanvas()`: Clears the canvas.
+- `clearCanvas(options?)`: Clears the canvas and can optionally skip redrawing the grid for animation-oriented flows.
+
+## Runtime And Utilities
+
+Static utilities exposed on the main `GridCanvasSystem` export:
+
+- `createAnimationLoop(options)`: Lightweight `requestAnimationFrame` loop with elapsed seconds.
+- `MassBody`: Reusable physics/movement body with `update`, `push`, `twist`, `speed`, and `movementAngle`.
+- `createKeyTracker(target, options?)`: Tracks pressed keys on a specific target.
+- `normalizeKeyIdentifier(key)`: Normalizes modern keys and legacy key codes.
+- `vectorFromAngle(angle, magnitude?)`: Converts an angle and magnitude to `{ x, y }`.
+- `angleToPoint(from, to)`: Calculates the angle from one point to another.
+- `oscillate01(time, frequency?)`: Produces a 0..1 oscillation useful for repeated animation cycles.
+- `distanceBetweenPoints(a, b)`: Calculates Euclidean distance.
+- `circlesIntersect(a, b)`: Detects circular collision overlap.
+- `wrapPoint(point, bounds, radius?)`: Applies wrap-around positioning inside rectangular bounds.
 
 ## Advanced Usage
 
-The preferred path for common drawing is the encapsulated API: `drawText`, `polarToCartesian`, `drawCircleSector`, `drawPacman`, `drawShip`, `drawLine`, `drawPolyline`, `drawCoordinate`, and `clearCanvas()`.
+The preferred path for common drawing is the encapsulated API: `drawText`, `drawGhost`, `drawProjectile`, `polarToCartesian`, `createAsteroidShape`, `drawCircleSector`, `drawPacman`, `drawAsteroid`, `drawShip`, `drawValueLabel`, `drawBarIndicator`, `drawMessage`, `drawLine`, `drawPolyline`, `drawCoordinate`, and `clearCanvas()`.
 
 `canvas` and `ctx` remain intentionally exposed as advanced extension points.
 
@@ -222,8 +365,22 @@ The preferred path for common drawing is the encapsulated API: `drawText`, `pola
 
 The package exports:
 
+- `GridCanvasAsteroidOptions`
+- `GridCanvasAsteroidShape`
+- `GridCanvasBarIndicatorOptions`
+- `GridCanvasClearOptions`
 - `GridCanvasCircleSectorOptions`
+- `GridCanvasGhostOptions`
+- `GridCanvasAnimationLoop`
+- `GridCanvasAnimationLoopOptions`
+- `GridCanvasBounds`
+- `GridCanvasCircleLike`
+- `GridCanvasKeyTracker`
+- `GridCanvasKeyTrackerOptions`
+- `GridCanvasMassBodyOptions`
+- `GridCanvasMessageOptions`
 - `GridCanvasPacmanOptions`
+- `GridCanvasProjectileOptions`
 - `GridCanvasShipOptions`
 - `GridCanvasSystem`
 - `GridCanvasPoint`
@@ -233,6 +390,7 @@ The package exports:
 - `GridCanvasSystemOptions`
 - `GridCanvasSystemResolvedOptions`
 - `GridCanvasTextOptions`
+- `GridCanvasValueLabelOptions`
 
 ## Testing
 
@@ -293,7 +451,12 @@ pnpm test
 
 See also:
 
+- [Asteroid example](./examples/vanilla/asteroid/index.html)
+- [Ghost example](./examples/vanilla/ghost/index.html)
+- [HUD example](./examples/vanilla/hud/index.html)
 - [Pac-Man example](./examples/vanilla/pacman/index.html)
+- [Projectile example](./examples/vanilla/projectile/index.html)
+- [Runtime example](./examples/vanilla/runtime/index.html)
 - [Spaceship example](./examples/vanilla/spaceship/index.html)
 
 ### Output
@@ -304,8 +467,14 @@ Image preview
 ## Ideas
 
 - Build reusable shapes like Pac-Man on top of `drawCircleSector()`.
+- Add arcade overlays with `drawBarIndicator()`, `drawValueLabel()`, and `drawMessage()`.
+- Generate persistent asteroid `shape` data once and redraw it with different `noise` values.
+- Drive small scenes with `MassBody` plus `createAnimationLoop()` instead of hand-rolled timers.
 - Reuse `polarToCartesian()` and `drawShip()` to prototype Asteroids-style actors.
+- Use `drawProjectile()` together with `MassBody` or your own motion state for lightweight shooter prototypes.
+- Use `createKeyTracker()` to scope keyboard input to the canvas instead of the whole page.
 - Combine `drawPacman()` with loops or randomization to generate simple scenes.
+- Use `clearCanvas({ redrawGrid: false })` as a simpler base for custom animation loops.
 - Use the encapsulated API for most drawing, and drop to `ctx` only for advanced custom work.
 
 ## License

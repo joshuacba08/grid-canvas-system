@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arcade HUD</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
+    <script>
+      const grid = new GridCanvasSystem("canvas", {
+        width: 320,
+        height: 180,
+      });
+
+      grid.drawShip(
+        { x: 160, y: 112 },
+        38,
+        {
+          rotation: -Math.PI / 2,
+          curve1: 0.45,
+          curve2: 0.8,
+          thruster: true,
+          fillColor: "#111111",
+          strokeColor: "#ffffff",
+          lineWidth: 2,
+        },
+      );
+
+      grid.drawBarIndicator("health", 8, 8, 110, 12, 78, 100, {
+        fillColor: "#22c55e",
+        strokeColor: "#ffffff",
+        textColor: "#ffffff",
+        font: "12px sans-serif",
+        labelGap: 8,
+      });
+      grid.drawValueLabel("score", 2450, 312, 18, {
+        color: "#ffffff",
+        font: "12px sans-serif",
+        textAlign: "end",
+      });
+      grid.drawValueLabel("level", 3, 160, 18, {
+        color: "#ffffff",
+        font: "12px sans-serif",
+        textAlign: "center",
+      });
+      grid.drawMessage(
+        "GAME OVER",
+        "Press space to play again",
+        { x: 160, y: 62 },
+        {
+          color: "#ffffff",
+          subColor: "#d4d4d4",
+          mainFont: "28px sans-serif",
+          subFont: "16px sans-serif",
+        },
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asteroid Variations</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
+    <script>
+      const grid = new GridCanvasSystem("canvas", {
+        width: 420,
+        height: 260,
+      });
+
+      const shape = grid.createAsteroidShape(14);
+
+      grid.drawAsteroid(
+        { x: 90, y: 130 },
+        45,
+        shape,
+        {
+          noise: 0.15,
+          guide: true,
+        },
+      );
+
+      grid.drawAsteroid(
+        { x: 210, y: 130 },
+        50,
+        shape,
+        {
+          noise: 0.35,
+          rotation: Math.PI / 8,
+          fillColor: "#111111",
+          strokeColor: "#ffffff",
+          lineWidth: 2,
+        },
+      );
+
+      grid.drawAsteroid(
+        { x: 330, y: 130 },
+        55,
+        grid.createAsteroidShape(18),
+        {
+          noise: 0.5,
+          rotation: -Math.PI / 10,
+          fillColor: "#0f172a",
+          strokeColor: "#93c5fd",
+          lineWidth: 2,
+        },
+      );
+    </script>
+  </body>
+</html>

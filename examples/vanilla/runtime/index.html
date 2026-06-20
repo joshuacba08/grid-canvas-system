@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Runtime Loop</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+      }
+
+      canvas {
+        border: 6px solid white;
+        outline: none;
+      }
+
+      canvas:focus {
+        border-color: #facc15;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Arrow keys: left/right rotate, up/down thrust.</p>
+    <canvas id="canvas"></canvas>
+    <script type="module">
+      import GridCanvasSystem from "../../../dist/grid-canvas-system.es.js";
+
+      const grid = new GridCanvasSystem("canvas", {
+        width: 420,
+        height: 260,
+      });
+      const body = new GridCanvasSystem.MassBody({
+        x: 210,
+        y: 130,
+        mass: 10,
+        radius: 20,
+        angle: 0,
+      });
+      const keys = GridCanvasSystem.createKeyTracker(grid.canvas, {
+        autoFocus: true,
+        preventDefaultKeys: ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"],
+      });
+      let time = 0;
+
+      GridCanvasSystem.createAnimationLoop({
+        autoStart: true,
+        update(elapsed) {
+          time += elapsed;
+
+          if (keys.isPressed("ArrowLeft")) {
+            body.angle -= Math.PI * 1.5 * elapsed;
+          }
+
+          if (keys.isPressed("ArrowRight")) {
+            body.angle += Math.PI * 1.5 * elapsed;
+          }
+
+          if (keys.isPressed("ArrowUp")) {
+            body.push(body.angle, 1200, elapsed);
+          }
+
+          if (keys.isPressed("ArrowDown")) {
+            body.push(body.angle + Math.PI, 800, elapsed);
+          }
+
+          body.update(elapsed, {
+            width: grid.options.width,
+            height: grid.options.height,
+          });
+        },
+        draw() {
+          grid.clearCanvas();
+          grid.drawPacman(
+            body.x,
+            body.y,
+            body.radius,
+            GridCanvasSystem.oscillate01(time, 2),
+            {
+              direction: body.angle,
+            },
+          );
+          grid.drawCoordinate(Math.round(body.x), Math.round(body.y));
+        },
+      });
+    </script>
+  </body>
+</html>

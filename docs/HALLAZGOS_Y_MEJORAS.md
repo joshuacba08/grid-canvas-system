@@ -2,7 +2,7 @@
 
 ## Resumen
 
-La libreria funciona bien en su escenario base y ya resolvio varios puntos importantes de robustez, configuracion y tooling. Lo que queda pendiente esta mas enfocado en refinamientos de API y verificacion visual.
+La libreria funciona bien en su escenario base y ya resolvio varios puntos importantes de robustez, configuracion y tooling. En esta iteracion tambien crecio hacia primitives mas reutilizables para escenas arcade sin meter logica cerrada de juego.
 
 ## Mejoras aplicadas en esta iteracion
 
@@ -80,6 +80,42 @@ La libreria ahora incorpora `drawCircleSector()` como primitive general y `drawP
 
 La libreria ahora incorpora `polarToCartesian()` como helper geometrico reutilizable y `drawShip()` como shape parametrizable con rotacion encapsulada, curvas cuadraticas y guias opcionales inspiradas en el chapter 4 del libro.
 
+#### 18. Shape oficial de asteroide con shape data persistente
+
+La libreria ahora incorpora `createAsteroidShape()` para generar shape data reutilizable y `drawAsteroid()` como shape parametrizable con ruido, rotacion encapsulada y guias de depuracion inspiradas en el chapter 5 del libro.
+
+#### 19. Limpieza del canvas adaptable a animacion
+
+`clearCanvas()` ahora puede recibir `{ redrawGrid: false }`, lo que facilita flujos de animacion inspirados en el chapter 6 sin obligar a repintar la cuadricula en cada frame.
+
+#### 20. Shape oficial de ghost
+
+La libreria ahora incorpora `drawGhost()` como shape parametrizable inspirada en el chapter 8, con soporte para pies, ojos y rotacion opcional.
+
+#### 21. Runtime ligero basado en `requestAnimationFrame`
+
+La libreria ahora incorpora `createAnimationLoop()` como capa reutilizable para escenas animadas, con calculo de `elapsed` en segundos, `start()`, `stop()` y `reset()`.
+
+#### 22. Helpers reutilizables de movimiento, colision e input
+
+Se anadieron utilidades como `vectorFromAngle()`, `angleToPoint()`, `oscillate01()`, `distanceBetweenPoints()`, `circlesIntersect()`, `wrapPoint()` y `createKeyTracker()` para rescatar lo reusable de los chapters 8, 10 y 12 sin meter logica de juego cerrada.
+
+#### 23. `MassBody` como bloque base de fisica ligera
+
+La libreria ahora incorpora `MassBody` con `update()`, `push()`, `twist()`, `speed()` y `movementAngle()`, trasladando a una API reusable lo mas util del chapter 9.
+
+#### 24. `drawProjectile()` como primitive visual reutilizable
+
+La libreria ahora incorpora `drawProjectile()` inspirada en el chapter 11, con color por defecto ligado al nivel de vida y soporte opcional para guias visuales.
+
+#### 25. Overlays reutilizables para HUD y estados
+
+La libreria ahora incorpora `drawValueLabel()`, `drawBarIndicator()` y `drawMessage()` para rescatar lo reusable de los chapters 12 y 13: score, fps, level, barras de estado y mensajes de tipo game over o pausa.
+
+#### 26. `drawShip()` ahora puede mostrar thruster sin salir de la API encapsulada
+
+La shape oficial de nave ahora acepta un thruster visual parametrizable, de modo que los ejemplos tipo Asteroids ya no necesitan dibujar la llama trasera tocando `ctx` directamente.
+
 ## Hallazgos priorizados pendientes
 
 ### Prioridad baja
@@ -108,4 +144,4 @@ Mejora sugerida:
 
 1. Incorporar diffs visuales o artefactos comparativos mas explicitos para fallos de snapshot.
 2. Evaluar si conviene separar tambien otras opciones de texto, como alineacion o baseline, entre cuadricula y coordenadas.
-3. Evaluar si la capa encapsulada deberia crecer con primitivas adicionales, como rectangulos, circulos completos, flechas o asteroides parametrizables.
+3. Evaluar si conviene sumar mas helpers neutros para escenas, por ejemplo trails, particulas simples o utilidades de layout para overlays.

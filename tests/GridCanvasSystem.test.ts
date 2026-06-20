@@ -17,12 +17,14 @@ interface MockCanvasContext {
   beginPath: ReturnType<typeof vi.fn>;
   moveTo: ReturnType<typeof vi.fn>;
   lineTo: ReturnType<typeof vi.fn>;
+  rect: ReturnType<typeof vi.fn>;
   quadraticCurveTo: ReturnType<typeof vi.fn>;
   arc: ReturnType<typeof vi.fn>;
   closePath: ReturnType<typeof vi.fn>;
   fill: ReturnType<typeof vi.fn>;
   stroke: ReturnType<typeof vi.fn>;
   fillText: ReturnType<typeof vi.fn>;
+  measureText: ReturnType<typeof vi.fn>;
   clearRect: ReturnType<typeof vi.fn>;
 }
 
@@ -42,12 +44,14 @@ function createMockContext(): MockCanvasContext {
     beginPath: vi.fn(),
     moveTo: vi.fn(),
     lineTo: vi.fn(),
+    rect: vi.fn(),
     quadraticCurveTo: vi.fn(),
     arc: vi.fn(),
     closePath: vi.fn(),
     fill: vi.fn(),
     stroke: vi.fn(),
     fillText: vi.fn(),
+    measureText: vi.fn((text: string) => ({ width: text.length * 8 })),
     clearRect: vi.fn(),
   };
 }
@@ -274,6 +278,74 @@ describe("GridCanvasSystem", () => {
     expect(point.y).toBeCloseTo(110);
   });
 
+  it("createAsteroidShape returns persistent shape noise values", () => {
+    const grid = new GridCanvasSystem("canvas");
+    const sequence = [0, 0.25, 0.5, 0.75, 1];
+    let index = 0;
+
+    const shape = grid.createAsteroidShape(5, () => {
+      const value = sequence[index];
+      index += 1;
+
+      return value;
+    });
+
+    expect(shape).toEqual([-0.5, -0.25, 0, 0.25, 0.5]);
+  });
+
+  it("drawAsteroid uses persistent shape data with managed transforms", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.save.mockClear();
+    mockContext.restore.mockClear();
+    mockContext.translate.mockClear();
+    mockContext.rotate.mockClear();
+    mockContext.beginPath.mockClear();
+    mockContext.moveTo.mockClear();
+    mockContext.lineTo.mockClear();
+    mockContext.arc.mockClear();
+    mockContext.closePath.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawAsteroid(
+      { x: 100, y: 120 },
+      30,
+      [0, 0.5, -0.5, 0.25],
+      {
+        noise: 0.4,
+        rotation: Math.PI / 8,
+        guide: true,
+        fillColor: "#111111",
+        strokeColor: "#ffffff",
+        lineWidth: 3,
+      },
+    );
+
+    expect(mockContext.save).toHaveBeenCalledTimes(1);
+    expect(mockContext.restore).toHaveBeenCalledTimes(1);
+    expect(mockContext.translate).toHaveBeenCalledWith(100, 120);
+    expect(mockContext.rotate).toHaveBeenCalledWith(Math.PI / 8);
+    expect(mockContext.moveTo).toHaveBeenCalledWith(30, 0);
+    expect(mockContext.lineTo).toHaveBeenCalledTimes(3);
+    expect(mockContext.closePath).toHaveBeenCalledTimes(1);
+    expect(mockContext.fillStyle).toBe("#111111");
+    expect(mockContext.strokeStyle).toBe("rgba(255, 255, 255, 0.7)");
+    expect(mockContext.lineWidth).toBe(0.5);
+    expect(mockContext.arc).toHaveBeenCalledTimes(3);
+    expect(mockContext.arc).toHaveBeenNthCalledWith(1, 0, 0, 24, 0, Math.PI * 2);
+    expect(mockContext.arc).toHaveBeenNthCalledWith(2, 0, 0, 30, 0, Math.PI * 2);
+    expect(mockContext.arc).toHaveBeenNthCalledWith(3, 0, 0, 36, 0, Math.PI * 2);
+
+    const [secondX, secondY] = mockContext.lineTo.mock.calls[0];
+    const [thirdX, thirdY] = mockContext.lineTo.mock.calls[1];
+
+    expect(secondX).toBeCloseTo(0);
+    expect(secondY).toBeCloseTo(36);
+    expect(thirdX).toBeCloseTo(-24);
+    expect(thirdY).toBeCloseTo(0, 5);
+  });
+
   it("drawPacman uses the sector primitive with default visual styling", () => {
     const grid = new GridCanvasSystem("canvas");
 
@@ -322,6 +394,150 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.strokeStyle).toBe("#333333");
     expect(mockContext.lineWidth).toBe(5);
     expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawProjectile renders a filled projectile whose default color fades with life", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.arc.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+    mockContext.closePath.mockClear();
+
+    grid.drawProjectile(
+      { x: 70, y: 80 },
+      12,
+      0.5,
+    );
+
+    expect(mockContext.arc).toHaveBeenCalledWith(70, 80, 12, 0, Math.PI * 2);
+    expect(mockContext.fillStyle).toBe("rgb(255, 255, 128)");
+    expect(mockContext.strokeStyle).toBe("#FFFFFF");
+    expect(mockContext.lineWidth).toBe(1);
+    expect(mockContext.closePath).toHaveBeenCalledTimes(1);
+    expect(mockContext.fill).toHaveBeenCalledTimes(1);
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawGhost creates the ghost silhouette and eyes through the managed context", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.save.mockClear();
+    mockContext.restore.mockClear();
+    mockContext.translate.mockClear();
+    mockContext.rotate.mockClear();
+    mockContext.beginPath.mockClear();
+    mockContext.lineTo.mockClear();
+    mockContext.arc.mockClear();
+    mockContext.closePath.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawGhost(
+      { x: 60, y: 80 },
+      30,
+      {
+        feet: 5,
+        fillColor: "#ff0000",
+        strokeColor: "#ffffff",
+        rotation: Math.PI / 6,
+      },
+    );
+
+    expect(mockContext.save).toHaveBeenCalledTimes(1);
+    expect(mockContext.restore).toHaveBeenCalledTimes(1);
+    expect(mockContext.translate).toHaveBeenCalledWith(60, 80);
+    expect(mockContext.rotate).toHaveBeenCalledWith(Math.PI / 6);
+    expect(mockContext.arc).toHaveBeenCalledTimes(10);
+    expect(mockContext.closePath).toHaveBeenCalledTimes(1);
+    expect(mockContext.fillStyle).toBe("#000000");
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+    expect(mockContext.fill).toHaveBeenCalledTimes(3);
+
+    const [firstArcX, firstArcY, firstArcRadius, firstArcStart, firstArcEnd] =
+      mockContext.arc.mock.calls[0];
+
+    expect(firstArcX).toBeCloseTo(19.2);
+    expect(firstArcY).toBeCloseTo(25.2);
+    expect(firstArcRadius).toBeCloseTo(4.8);
+    expect(firstArcStart).toBe(0);
+    expect(firstArcEnd).toBe(Math.PI);
+  });
+
+  it("drawValueLabel formats numeric overlays without exposing ctx", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.fillText.mockClear();
+
+    grid.drawValueLabel("fps", 59.456, 180, 24, {
+      digits: 2,
+      textAlign: "end",
+      color: "#ffffff",
+      font: "14px monospace",
+    });
+
+    expect(mockContext.fillStyle).toBe("#ffffff");
+    expect(mockContext.font).toBe("14px monospace");
+    expect(mockContext.textAlign).toBe("end");
+    expect(mockContext.fillText).toHaveBeenCalledWith("fps: 59.46", 180, 24);
+  });
+
+  it("drawBarIndicator draws label, frame and fill ratio through the managed context", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.fillText.mockClear();
+    mockContext.measureText.mockClear();
+    mockContext.rect.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawBarIndicator("health", 10, 6, 100, 12, 75, 100, {
+      fillColor: "#22c55e",
+      strokeColor: "#ffffff",
+      trackColor: "rgba(255, 255, 255, 0.2)",
+      textColor: "#ffffff",
+      font: "12px sans-serif",
+      labelGap: 10,
+      lineWidth: 2,
+    });
+
+    expect(mockContext.fillText).toHaveBeenCalledWith("health", 10, 17);
+    expect(mockContext.measureText).toHaveBeenCalledWith("health");
+    expect(mockContext.rect).toHaveBeenNthCalledWith(1, 68, 6, 100, 12);
+    expect(mockContext.rect).toHaveBeenNthCalledWith(2, 68, 6, 75, 12);
+    expect(mockContext.strokeStyle).toBe("#ffffff");
+    expect(mockContext.lineWidth).toBe(2);
+    expect(mockContext.fill).toHaveBeenCalledTimes(2);
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawMessage renders primary and secondary lines with independent fonts", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.fillText.mockClear();
+
+    grid.drawMessage(
+      "GAME OVER",
+      "Press space to play again",
+      { x: 120, y: 90 },
+      {
+        color: "#ffffff",
+        subColor: "#cccccc",
+        mainFont: "28px sans-serif",
+        subFont: "16px sans-serif",
+      },
+    );
+
+    expect(mockContext.textAlign).toBe("center");
+    expect(mockContext.fillText).toHaveBeenNthCalledWith(1, "GAME OVER", 120, 90);
+    expect(mockContext.fillText).toHaveBeenNthCalledWith(
+      2,
+      "Press space to play again",
+      120,
+      118,
+    );
+    expect(mockContext.fillStyle).toBe("#cccccc");
+    expect(mockContext.font).toBe("16px sans-serif");
   });
 
   it("drawShip encapsulates translation, rotation and quadratic curves", () => {
@@ -375,6 +591,40 @@ describe("GridCanvasSystem", () => {
     expect(firstEndY).toBeCloseTo(Math.sin(Math.PI * 0.75) * 30);
     expect(rearControlX).toBeCloseTo(-18);
     expect(rearControlY).toBeCloseTo(0);
+  });
+
+  it("drawShip can render a rear thruster flame before the hull", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.moveTo.mockClear();
+    mockContext.quadraticCurveTo.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawShip(
+      { x: 80, y: 90 },
+      30,
+      {
+        thruster: true,
+        thrusterFillColor: "#ff3300",
+        thrusterStrokeColor: "#ffee00",
+      },
+    );
+
+    expect(mockContext.moveTo).toHaveBeenNthCalledWith(
+      1,
+      Math.cos(Math.PI + Math.PI * 0.2) * 15,
+      Math.sin(Math.PI + Math.PI * 0.2) * 15,
+    );
+    expect(mockContext.quadraticCurveTo).toHaveBeenNthCalledWith(
+      1,
+      -60,
+      0,
+      Math.cos(Math.PI - Math.PI * 0.2) * 15,
+      Math.sin(Math.PI - Math.PI * 0.2) * 15,
+    );
+    expect(mockContext.fill).toHaveBeenCalledTimes(2);
+    expect(mockContext.stroke).toHaveBeenCalledTimes(2);
   });
 
   it("drawPolyline can close the path in the encapsulated API", () => {
@@ -472,6 +722,25 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.fillText).toHaveBeenCalledTimes(5);
   });
 
+  it("clearCanvas can skip grid redraw for animation-oriented flows", () => {
+    const grid = new GridCanvasSystem("canvas", {
+      width: 120,
+      height: 60,
+      cellSize: 20,
+      majorStep: 40,
+    });
+
+    mockContext.clearRect.mockClear();
+    mockContext.stroke.mockClear();
+    mockContext.fillText.mockClear();
+
+    grid.clearCanvas({ redrawGrid: false });
+
+    expect(mockContext.clearRect).toHaveBeenCalledWith(0, 0, 120, 60);
+    expect(mockContext.stroke).not.toHaveBeenCalled();
+    expect(mockContext.fillText).not.toHaveBeenCalled();
+  });
+
   it("rejects invalid majorStep values", () => {
     expect(
       () =>
@@ -488,5 +757,21 @@ describe("GridCanvasSystem", () => {
     expect(() => grid.drawPacman(20, 20, 10, 2)).toThrow(
       "mouthOpen must be a finite number between 0 and 1",
     );
+  });
+
+  it("rejects invalid asteroid segment counts and noise", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    expect(() => grid.createAsteroidShape(2)).toThrow(
+      "segments must be greater than or equal to 3",
+    );
+    expect(() =>
+      grid.drawAsteroid(
+        { x: 50, y: 50 },
+        20,
+        [0, 0.1, -0.1],
+        { noise: 2 },
+      ),
+    ).toThrow("noise must be a finite number between 0 and 1");
   });
 });

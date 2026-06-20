@@ -4,7 +4,7 @@
 
 `grid-canvas-system` es una libreria pequena enfocada en preparar un `canvas` HTML con una cuadricula visible y ofrecer una capa encapsulada de dibujo para casos comunes.
 
-La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, shapes reutilizables, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
+La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, shapes reutilizables, overlays de HUD, un runtime ligero para animacion y movimiento, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
 
 ## Estructura actual
 
@@ -14,11 +14,27 @@ src/
   modules/
     vanilla/
       GridCanvasSystem.ts
+  runtime/
+    createAnimationLoop.ts
+    createKeyTracker.ts
+    MassBody.ts
+    motion.ts
+    types.ts
 examples/
   vanilla/
+    asteroid/
+      index.html
     drawLines/
       index.html
+    ghost/
+      index.html
+    hud/
+      index.html
     pacman/
+      index.html
+    projectile/
+      index.html
+    runtime/
       index.html
     spaceship/
       index.html
@@ -26,7 +42,7 @@ examples/
 
 ## Arquitectura
 
-La libreria expone una unica clase: `GridCanvasSystem`.
+La libreria expone una clase principal, `GridCanvasSystem`, y una capa adicional de utilidades runtime montadas como propiedades estaticas sobre el export principal para animacion, movimiento, input y fisica ligera.
 
 Archivo principal:
 
@@ -47,7 +63,8 @@ Punto de entrada:
 7. Resaltar lineas mayores con una linea mas gruesa y una etiqueta numerica.
 8. Permitir dibujar una etiqueta de coordenadas manualmente.
 9. Exponer una capa de dibujo encapsulada para texto, lineas, sectores y shapes reutilizables.
-10. Limpiar el canvas y volver a dibujar la cuadricula.
+10. Exponer utilidades runtime reutilizables para bucles de animacion, seguimiento de teclado, movimiento y colision circular.
+11. Limpiar el canvas y volver a dibujar la cuadricula.
 
 ## API publica real
 
@@ -81,14 +98,29 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 ### Metodos publicos
 
 - `drawText(text: string, x: number, y: number, options?: GridCanvasTextOptions)`: dibuja texto usando el estado gestionado por la libreria.
+- `drawGhost(center: GridCanvasPoint, radius: number, options?: GridCanvasGhostOptions)`: dibuja un fantasma parametrizable con pies y ojos.
+- `drawProjectile(center: GridCanvasPoint, radius: number, life: number, options?: GridCanvasProjectileOptions)`: dibuja un proyectil circular con color por defecto dependiente de su vida restante.
 - `polarToCartesian(center: GridCanvasPoint, radius: number, angle: number): GridCanvasPoint`: convierte coordenadas polares en un punto del canvas.
+- `createAsteroidShape(segments: number, random?: () => number): GridCanvasAsteroidShape`: genera shape data persistente para asteroides irregulares.
 - `drawCircleSector(center: GridCanvasPoint, radius: number, startAngle: number, endAngle: number, options?: GridCanvasCircleSectorOptions)`: dibuja una primitiva de sector circular reutilizable.
 - `drawPacman(x: number, y: number, radius: number, mouthOpen: number, options?: GridCanvasPacmanOptions)`: dibuja un Pac-Man parametrizable sobre la cuadricula.
-- `drawShip(center: GridCanvasPoint, radius: number, options?: GridCanvasShipOptions)`: dibuja una nave parametrizable con curvas cuadraticas, guias y rotacion encapsulada.
+- `drawAsteroid(center: GridCanvasPoint, radius: number, shape: GridCanvasAsteroidShape, options?: GridCanvasAsteroidOptions)`: dibuja un asteroide parametrizable a partir de shape data persistente.
+- `drawShip(center: GridCanvasPoint, radius: number, options?: GridCanvasShipOptions)`: dibuja una nave parametrizable con curvas cuadraticas, guias, rotacion encapsulada y thruster opcional.
+- `drawValueLabel(label: string, value: number, x: number, y: number, options?: GridCanvasValueLabelOptions)`: dibuja un label numerico formateado para score, fps o level.
+- `drawBarIndicator(label: string, x: number, y: number, width: number, height: number, value: number, max: number, options?: GridCanvasBarIndicatorOptions)`: dibuja una barra proporcional con etiqueta.
+- `drawMessage(mainText: string, subText: string, center: GridCanvasPoint, options?: GridCanvasMessageOptions)`: dibuja un mensaje de dos lineas centrado.
 - `drawLine(start: GridCanvasPoint, end: GridCanvasPoint, options?: GridCanvasStrokeOptions)`: dibuja una linea simple sin necesidad de tocar `ctx`.
 - `drawPolyline(points: GridCanvasPoint[], options?: GridCanvasPolylineOptions)`: dibuja una polilinea o ruta cerrada mediante una API encapsulada.
 - `drawCoordinate(x: number, y: number, options?: GridCanvasTextOptions)`: dibuja el texto `(${x},${y})` en la posicion recibida.
-- `clearCanvas()`: limpia el contenido actual y vuelve a dibujar la cuadricula.
+- `clearCanvas(options?: GridCanvasClearOptions)`: limpia el contenido actual y puede omitir el redibujado de la cuadricula para flujos de animacion.
+
+### Utilidades runtime expuestas en el export principal
+
+- `createAnimationLoop(options: GridCanvasAnimationLoopOptions): GridCanvasAnimationLoop`: crea un bucle basado en `requestAnimationFrame` con `elapsed` en segundos.
+- `MassBody`: clase reutilizable para posicion, velocidad, giro, empuje y wrap-around.
+- `createKeyTracker(target, options?)`: rastrea teclas pulsadas sobre un `target` concreto.
+- `normalizeKeyIdentifier(key)`: normaliza `key` y `keyCode` legados.
+- `vectorFromAngle(angle, magnitude?)`, `angleToPoint(from, to)`, `oscillate01(time, frequency?)`, `distanceBetweenPoints(a, b)`, `circlesIntersect(a, b)` y `wrapPoint(point, bounds, radius?)`: utilidades de movimiento, oscilacion y colision.
 
 ### Configuracion visual relevante
 
@@ -104,8 +136,10 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 La libreria ofrece dos capas complementarias:
 
 1. Capa encapsulada recomendada para el uso comun:
-   `drawText()`, `polarToCartesian()`, `drawCircleSector()`, `drawPacman()`, `drawShip()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
-2. Capa avanzada basada en `canvas` y `ctx`:
+   `drawText()`, `drawGhost()`, `drawProjectile()`, `polarToCartesian()`, `createAsteroidShape()`, `drawCircleSector()`, `drawPacman()`, `drawAsteroid()`, `drawShip()`, `drawValueLabel()`, `drawBarIndicator()`, `drawMessage()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
+2. Capa runtime ligera:
+   `createAnimationLoop()`, `MassBody`, `createKeyTracker()` y utilidades de movimiento/colision.
+3. Capa avanzada basada en `canvas` y `ctx`:
    pensada para integraciones y dibujo manual mas libre.
 
 ## Flujo de renderizado
@@ -145,8 +179,11 @@ Pruebas automatizadas:
 - Comportamiento base de `drawCoordinate()` y `clearCanvas()`.
 - Verificacion visual real de lineas de cuadricula y restauracion del bitmap tras `clearCanvas()`.
 - Comparacion contra snapshots PNG versionados en el repositorio.
-- Cobertura de primitives reutilizables y del render de Pac-Man.
-- Cobertura del helper geometrico polar-cartesiano y del render de la nave.
+- Cobertura de primitives reutilizables, overlays y del render de Pac-Man.
+- Cobertura del render de fantasmas y del nuevo runtime ligero.
+- Cobertura del render de asteroides persistentes y sus guias de ruido.
+- Cobertura del helper geometrico polar-cartesiano, del render de la nave y de su thruster opcional.
+- Cobertura de snapshots PNG para proyectiles y HUD arcade.
 
 ### Verificacion realizada
 
@@ -168,7 +205,12 @@ Se valido localmente que:
 - Capa encapsulada para dibujo comun sin depender de `ctx` directamente.
 - Primitive reutilizable para sectores circulares y una shape oficial construida sobre ella.
 - Helper geometrico reutilizable para convertir angulos y radios en puntos del canvas.
-- Shape oficial de nave con rotacion encapsulada y curvas cuadraticas configurables.
+- Shape oficial de fantasma inspirada en el chapter 8, configurable sin tocar `ctx`.
+- Shape oficial de asteroide basada en shape data persistente y ruido configurable.
+- Shape oficial de proyectil con color por vida restante.
+- Shape oficial de nave con rotacion encapsulada, curvas cuadraticas configurables y thruster opcional.
+- Overlays reutilizables para HUD y estados de escena.
+- Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y colisiones circulares.
 - Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
 - Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
 - Soporte HiDPI para mejorar nitidez en pantallas de alta densidad.
@@ -188,10 +230,10 @@ Se valido localmente que:
 
 ## Recomendacion de evolucion
 
-La siguiente etapa natural seria separar la libreria en tres capas:
+La siguiente etapa natural seria consolidar la libreria en tres capas:
 
 1. Inicializacion y validacion del canvas.
-2. Configuracion visual de la cuadricula.
-3. Utilidades de dibujo adicionales.
+2. Configuracion visual de la cuadricula y shapes reutilizables.
+3. Runtime ligero opcional para animacion, input y fisica simple.
 
 Con eso se podria mantener la simplicidad actual sin cerrar la puerta a una API mas solida y reutilizable.

@@ -77,9 +77,57 @@ const PACMAN_OPTIONS: GridCanvasSystemOptions = {
   devicePixelRatio: 1,
 };
 
+const GHOST_OPTIONS: GridCanvasSystemOptions = {
+  width: 220,
+  height: 220,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
+const ASTEROID_OPTIONS: GridCanvasSystemOptions = {
+  width: 220,
+  height: 220,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
 const SHIP_OPTIONS: GridCanvasSystemOptions = {
   width: 220,
   height: 220,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
+const HUD_OPTIONS: GridCanvasSystemOptions = {
+  width: 320,
+  height: 180,
   backgroundColor: "#000000",
   gridColor: "#00ff00",
   gridLabelColor: "rgba(0, 0, 0, 0)",
@@ -194,6 +242,48 @@ function renderPacmanScenario(): BackingCanvas {
   return backingCanvas;
 }
 
+function renderGhostScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-ghost",
+    GHOST_OPTIONS,
+  );
+
+  grid.drawGhost(
+    { x: 110, y: 115 },
+    70,
+    {
+      feet: 5,
+      fillColor: "#ff0000",
+      strokeColor: "#ffffff",
+    },
+  );
+
+  return backingCanvas;
+}
+
+function renderAsteroidScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-asteroid",
+    ASTEROID_OPTIONS,
+  );
+
+  grid.drawAsteroid(
+    { x: 110, y: 110 },
+    70,
+    [-0.3, 0.15, 0.45, -0.1, 0.25, -0.4, 0.3, 0.05, -0.2, 0.4, -0.15, 0.2],
+    {
+      noise: 0.45,
+      rotation: -Math.PI / 8,
+      guide: true,
+      fillColor: "#111111",
+      strokeColor: "#ffffff",
+      lineWidth: 2,
+    },
+  );
+
+  return backingCanvas;
+}
+
 function renderShipScenario(): BackingCanvas {
   const { grid, backingCanvas } = renderScenario(
     "visual-ship",
@@ -211,6 +301,92 @@ function renderShipScenario(): BackingCanvas {
       fillColor: "#111111",
       strokeColor: "#ffffff",
       lineWidth: 2,
+    },
+  );
+
+  return backingCanvas;
+}
+
+function renderProjectileScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-projectile",
+    PACMAN_OPTIONS,
+  );
+
+  grid.drawProjectile(
+    { x: 45, y: 70 },
+    10,
+    1,
+    {
+      strokeColor: "#ffffff",
+    },
+  );
+  grid.drawProjectile(
+    { x: 100, y: 100 },
+    14,
+    0.6,
+    {
+      strokeColor: "#ffffff",
+    },
+  );
+  grid.drawProjectile(
+    { x: 155, y: 135 },
+    18,
+    0.25,
+    {
+      strokeColor: "#ffffff",
+      guide: true,
+    },
+  );
+
+  return backingCanvas;
+}
+
+function renderHudScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-hud",
+    HUD_OPTIONS,
+  );
+
+  grid.drawShip(
+    { x: 160, y: 112 },
+    38,
+    {
+      rotation: -Math.PI / 2,
+      curve1: 0.45,
+      curve2: 0.8,
+      thruster: true,
+      fillColor: "#111111",
+      strokeColor: "#ffffff",
+      lineWidth: 2,
+    },
+  );
+  grid.drawBarIndicator("health", 8, 8, 110, 12, 78, 100, {
+    fillColor: "#22c55e",
+    strokeColor: "#ffffff",
+    textColor: "#ffffff",
+    font: "12px sans-serif",
+    labelGap: 8,
+  });
+  grid.drawValueLabel("score", 2450, 312, 18, {
+    color: "#ffffff",
+    font: "12px sans-serif",
+    textAlign: "end",
+  });
+  grid.drawValueLabel("level", 3, 160, 18, {
+    color: "#ffffff",
+    font: "12px sans-serif",
+    textAlign: "center",
+  });
+  grid.drawMessage(
+    "GAME OVER",
+    "Press space to play again",
+    { x: 160, y: 62 },
+    {
+      color: "#ffffff",
+      subColor: "#d4d4d4",
+      mainFont: "28px sans-serif",
+      subFont: "16px sans-serif",
     },
   );
 
@@ -297,9 +473,33 @@ describe("GridCanvasSystem visual snapshots", () => {
     await expectCanvasToMatchSnapshot(backingCanvas, "pacman");
   });
 
+  it("matches the ghost snapshot", async () => {
+    const backingCanvas = renderGhostScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "ghost");
+  });
+
+  it("matches the asteroid snapshot", async () => {
+    const backingCanvas = renderAsteroidScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "asteroid");
+  });
+
   it("matches the ship snapshot", async () => {
     const backingCanvas = renderShipScenario();
 
     await expectCanvasToMatchSnapshot(backingCanvas, "ship");
+  });
+
+  it("matches the projectile snapshot", async () => {
+    const backingCanvas = renderProjectileScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "projectile");
+  });
+
+  it("matches the hud snapshot", async () => {
+    const backingCanvas = renderHudScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "hud");
   });
 });

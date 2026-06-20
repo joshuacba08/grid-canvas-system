@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projectile Helpers</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
+    <script>
+      const grid = new GridCanvasSystem("canvas", {
+        width: 220,
+        height: 220,
+      });
+
+      grid.drawProjectile({ x: 45, y: 70 }, 10, 1, {
+        strokeColor: "#ffffff",
+      });
+      grid.drawProjectile({ x: 100, y: 100 }, 14, 0.6, {
+        strokeColor: "#ffffff",
+      });
+      grid.drawProjectile({ x: 155, y: 135 }, 18, 0.25, {
+        strokeColor: "#ffffff",
+        guide: true,
+      });
+    </script>
+  </body>
+</html>

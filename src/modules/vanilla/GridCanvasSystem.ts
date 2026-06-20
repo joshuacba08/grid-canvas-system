@@ -38,6 +38,10 @@ export interface GridCanvasTextOptions {
   textBaseline?: CanvasTextBaseline;
 }
 
+export interface GridCanvasClearOptions {
+  redrawGrid?: boolean;
+}
+
 export interface GridCanvasShapeOptions extends GridCanvasStrokeOptions {
   fillColor?: string;
 }
@@ -51,6 +55,30 @@ export interface GridCanvasPacmanOptions extends GridCanvasShapeOptions {
   maxMouthAngle?: number;
 }
 
+export type GridCanvasAsteroidShape = number[];
+
+export interface GridCanvasAsteroidOptions extends GridCanvasShapeOptions {
+  noise?: number;
+  guide?: boolean;
+  guideColor?: string;
+  guideLineWidth?: number;
+  rotation?: number;
+}
+
+export interface GridCanvasGhostOptions extends GridCanvasShapeOptions {
+  feet?: number;
+  eyeColor?: string;
+  pupilColor?: string;
+  eyes?: boolean;
+  rotation?: number;
+}
+
+export interface GridCanvasProjectileOptions extends GridCanvasShapeOptions {
+  guide?: boolean;
+  guideColor?: string;
+  guideLineWidth?: number;
+}
+
 export interface GridCanvasShipOptions extends GridCanvasShapeOptions {
   angle?: number;
   curve1?: number;
@@ -60,6 +88,32 @@ export interface GridCanvasShipOptions extends GridCanvasShapeOptions {
   guideFillColor?: string;
   guideLineWidth?: number;
   rotation?: number;
+  thruster?: boolean;
+  thrusterFillColor?: string;
+  thrusterStrokeColor?: string;
+  thrusterLineWidth?: number;
+}
+
+export interface GridCanvasValueLabelOptions extends GridCanvasTextOptions {
+  digits?: number;
+  separator?: string;
+}
+
+export interface GridCanvasBarIndicatorOptions extends GridCanvasStrokeOptions {
+  fillColor?: string;
+  trackColor?: string;
+  textColor?: string;
+  font?: string;
+  labelGap?: number;
+}
+
+export interface GridCanvasMessageOptions {
+  color?: string;
+  subColor?: string;
+  mainFont?: string;
+  subFont?: string;
+  textAlign?: CanvasTextAlign;
+  lineGap?: number;
 }
 
 export interface GridCanvasSystemResolvedOptions {
@@ -99,12 +153,26 @@ class GridCanvasSystem {
   private static readonly DEFAULT_PACMAN_STROKE = "#000000";
   private static readonly DEFAULT_PACMAN_LINE_WIDTH = 2;
   private static readonly DEFAULT_PACMAN_MAX_MOUTH_ANGLE = Math.PI * 0.4;
+  private static readonly DEFAULT_ASTEROID_FILL = "#111111";
+  private static readonly DEFAULT_ASTEROID_STROKE = "#FFFFFF";
+  private static readonly DEFAULT_ASTEROID_LINE_WIDTH = 2;
+  private static readonly DEFAULT_ASTEROID_NOISE = 0.4;
+  private static readonly DEFAULT_GHOST_FILL = "#FF0000";
+  private static readonly DEFAULT_GHOST_STROKE = "#FFFFFF";
+  private static readonly DEFAULT_GHOST_FEET = 4;
+  private static readonly DEFAULT_PROJECTILE_STROKE = "#FFFFFF";
+  private static readonly DEFAULT_PROJECTILE_LINE_WIDTH = 1;
   private static readonly DEFAULT_SHIP_FILL = "#111111";
   private static readonly DEFAULT_SHIP_STROKE = "#FFFFFF";
   private static readonly DEFAULT_SHIP_LINE_WIDTH = 2;
   private static readonly DEFAULT_SHIP_ANGLE = Math.PI * 0.5;
   private static readonly DEFAULT_SHIP_CURVE1 = 0.5;
   private static readonly DEFAULT_SHIP_CURVE2 = 0.75;
+  private static readonly DEFAULT_THRUSTER_FILL = "#FF0000";
+  private static readonly DEFAULT_THRUSTER_STROKE = "#FFFF00";
+  private static readonly DEFAULT_BAR_TRACK = "rgba(255, 255, 255, 0.15)";
+  private static readonly DEFAULT_MESSAGE_MAIN_FONT = "28px sans-serif";
+  private static readonly DEFAULT_MESSAGE_SUB_FONT = "18px sans-serif";
   private static readonly DEFAULT_GUIDE_STROKE = "rgba(255, 255, 255, 0.7)";
   private static readonly DEFAULT_GUIDE_FILL = "rgba(255, 255, 255, 0.08)";
   private static readonly DEFAULT_GUIDE_LINE_WIDTH = 0.5;
@@ -299,6 +367,48 @@ class GridCanvasSystem {
     return resolvedValue;
   }
 
+  private resolveNonNegativeNumber(
+    value: number | undefined,
+    fallback: number,
+    name: string,
+  ): number {
+    const resolvedValue = value ?? fallback;
+
+    if (!Number.isFinite(resolvedValue) || resolvedValue < 0) {
+      throw new Error(`${name} must be a non-negative finite number`);
+    }
+
+    return resolvedValue;
+  }
+
+  private resolveInteger(
+    value: number | undefined,
+    fallback: number,
+    name: string,
+  ): number {
+    const resolvedValue = value ?? fallback;
+
+    if (!Number.isInteger(resolvedValue) || resolvedValue <= 0) {
+      throw new Error(`${name} must be a positive integer`);
+    }
+
+    return resolvedValue;
+  }
+
+  private resolveNonNegativeInteger(
+    value: number | undefined,
+    fallback: number,
+    name: string,
+  ): number {
+    const resolvedValue = value ?? fallback;
+
+    if (!Number.isInteger(resolvedValue) || resolvedValue < 0) {
+      throw new Error(`${name} must be a non-negative integer`);
+    }
+
+    return resolvedValue;
+  }
+
   private resolveFiniteNumber(
     value: number | undefined,
     fallback: number,
@@ -327,6 +437,23 @@ class GridCanvasSystem {
     };
   }
 
+  private resolveShape(
+    shape: GridCanvasAsteroidShape,
+    name: string,
+  ): GridCanvasAsteroidShape {
+    if (!Array.isArray(shape)) {
+      throw new Error(`${name} must be an array of finite numbers`);
+    }
+
+    if (shape.length < 3) {
+      throw new Error(`${name} must contain at least three points`);
+    }
+
+    return shape.map((value, index) =>
+      this.resolveFiniteNumber(value, 0, `${name}[${index}]`),
+    );
+  }
+
   private resolveUnitInterval(
     value: number,
     name: string,
@@ -336,6 +463,21 @@ class GridCanvasSystem {
     }
 
     return value;
+  }
+
+  private resolveFontSize(
+    font: string,
+    fallback: number,
+  ): number {
+    const match = font.match(/(\d+(?:\.\d+)?)px/i);
+
+    if (match === null) {
+      return fallback;
+    }
+
+    const size = Number.parseFloat(match[1]);
+
+    return Number.isFinite(size) ? size : fallback;
   }
 
   private drawGridSystem(): void {
@@ -410,6 +552,37 @@ class GridCanvasSystem {
       x: resolvedCenter.x + Math.cos(resolvedAngle) * resolvedRadius,
       y: resolvedCenter.y + Math.sin(resolvedAngle) * resolvedRadius,
     };
+  }
+
+  createAsteroidShape(
+    segments: number,
+    random: () => number = Math.random,
+  ): GridCanvasAsteroidShape {
+    const resolvedSegments = this.resolveInteger(segments, 3, "segments");
+
+    if (resolvedSegments < 3) {
+      throw new Error("segments must be greater than or equal to 3");
+    }
+
+    const shape: GridCanvasAsteroidShape = [];
+
+    for (let index = 0; index < resolvedSegments; index += 1) {
+      const randomValue = random();
+
+      if (
+        !Number.isFinite(randomValue) ||
+        randomValue < 0 ||
+        randomValue > 1
+      ) {
+        throw new Error(
+          "random must return a finite number between 0 and 1",
+        );
+      }
+
+      shape.push(randomValue - 0.5);
+    }
+
+    return shape;
   }
 
   drawCircleSector(
@@ -506,6 +679,371 @@ class GridCanvasSystem {
     );
   }
 
+  drawProjectile(
+    center: GridCanvasPoint,
+    radius: number,
+    life: number,
+    options?: GridCanvasProjectileOptions,
+  ): void {
+    const resolvedCenter = this.resolvePoint(center, "center");
+    const resolvedRadius = this.resolvePositiveNumber(radius, 1, "radius");
+    const resolvedLife = this.resolveUnitInterval(life, "life");
+    const guideColor =
+      options?.guideColor ?? GridCanvasSystem.DEFAULT_GUIDE_STROKE;
+    const guideLineWidth = this.resolvePositiveNumber(
+      options?.guideLineWidth,
+      GridCanvasSystem.DEFAULT_GUIDE_LINE_WIDTH,
+      "guideLineWidth",
+    );
+
+    this.withManagedContext(() => {
+      if (options?.guide === true) {
+        this.ctx.strokeStyle = guideColor;
+        this.ctx.lineWidth = guideLineWidth;
+        this.ctx.beginPath();
+        this.ctx.arc(
+          resolvedCenter.x,
+          resolvedCenter.y,
+          resolvedRadius,
+          0,
+          Math.PI * 2,
+        );
+        this.ctx.stroke();
+      }
+
+      this.ctx.fillStyle =
+        options?.fillColor ??
+        `rgb(255, 255, ${Math.round(resolvedLife * 255)})`;
+      this.ctx.strokeStyle =
+        options?.strokeColor ??
+        options?.color ??
+        GridCanvasSystem.DEFAULT_PROJECTILE_STROKE;
+      this.ctx.lineWidth = this.resolvePositiveNumber(
+        options?.lineWidth,
+        GridCanvasSystem.DEFAULT_PROJECTILE_LINE_WIDTH,
+        "lineWidth",
+      );
+      this.ctx.beginPath();
+      this.ctx.arc(
+        resolvedCenter.x,
+        resolvedCenter.y,
+        resolvedRadius,
+        0,
+        Math.PI * 2,
+      );
+      this.ctx.closePath();
+      this.ctx.fill();
+      this.ctx.stroke();
+    });
+  }
+
+  drawGhost(
+    center: GridCanvasPoint,
+    radius: number,
+    options?: GridCanvasGhostOptions,
+  ): void {
+    const resolvedCenter = this.resolvePoint(center, "center");
+    const resolvedRadius = this.resolvePositiveNumber(radius, 1, "radius");
+    const resolvedFeet = this.resolveInteger(
+      options?.feet,
+      GridCanvasSystem.DEFAULT_GHOST_FEET,
+      "feet",
+    );
+    const resolvedRotation = this.resolveFiniteNumber(
+      options?.rotation,
+      0,
+      "rotation",
+    );
+    const headRadius = resolvedRadius * 0.8;
+    const footRadius = headRadius / resolvedFeet;
+    const eyeColor = options?.eyeColor ?? "#FFFFFF";
+    const pupilColor = options?.pupilColor ?? "#000000";
+    const shouldDrawEyes = options?.eyes ?? true;
+
+    this.withManagedContext(() => {
+      this.ctx.translate(resolvedCenter.x, resolvedCenter.y);
+      this.ctx.rotate(resolvedRotation);
+      this.ctx.strokeStyle =
+        options?.strokeColor ??
+        options?.color ??
+        GridCanvasSystem.DEFAULT_GHOST_STROKE;
+      this.ctx.fillStyle =
+        options?.fillColor ?? GridCanvasSystem.DEFAULT_GHOST_FILL;
+      this.ctx.lineWidth = this.resolvePositiveNumber(
+        options?.lineWidth,
+        resolvedRadius * 0.05,
+        "lineWidth",
+      );
+      this.ctx.beginPath();
+
+      for (let foot = 0; foot < resolvedFeet; foot += 1) {
+        this.ctx.arc(
+          (2 * footRadius * (resolvedFeet - foot)) - headRadius - footRadius,
+          resolvedRadius - footRadius,
+          footRadius,
+          0,
+          Math.PI,
+        );
+      }
+
+      this.ctx.lineTo(-headRadius, resolvedRadius - footRadius);
+      this.ctx.arc(
+        0,
+        headRadius - resolvedRadius,
+        headRadius,
+        Math.PI,
+        Math.PI * 2,
+      );
+      this.ctx.closePath();
+      this.ctx.fill();
+      this.ctx.stroke();
+
+      if (shouldDrawEyes) {
+        const eyeRadius = resolvedRadius * 0.18;
+        const pupilRadius = eyeRadius * 0.45;
+        const eyeY = -resolvedRadius * 0.15;
+        const leftEyeX = -resolvedRadius * 0.28;
+        const rightEyeX = resolvedRadius * 0.05;
+        const pupilOffsetX = pupilRadius * 0.2;
+        const pupilOffsetY = pupilRadius * 0.3;
+
+        this.ctx.fillStyle = eyeColor;
+        this.ctx.beginPath();
+        this.ctx.arc(leftEyeX, eyeY, eyeRadius, 0, Math.PI * 2);
+        this.ctx.arc(rightEyeX, eyeY, eyeRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.fillStyle = pupilColor;
+        this.ctx.beginPath();
+        this.ctx.arc(
+          leftEyeX + pupilOffsetX,
+          eyeY + pupilOffsetY,
+          pupilRadius,
+          0,
+          Math.PI * 2,
+        );
+        this.ctx.arc(
+          rightEyeX + pupilOffsetX,
+          eyeY + pupilOffsetY,
+          pupilRadius,
+          0,
+          Math.PI * 2,
+        );
+        this.ctx.fill();
+      }
+    });
+  }
+
+  drawValueLabel(
+    label: string,
+    value: number,
+    x: number,
+    y: number,
+    options?: GridCanvasValueLabelOptions,
+  ): void {
+    const digits = this.resolveNonNegativeInteger(
+      options?.digits,
+      0,
+      "digits",
+    );
+    const resolvedValue = this.resolveFiniteNumber(value, 0, "value");
+    const separator = options?.separator ?? ": ";
+
+    this.drawText(
+      `${label}${separator}${resolvedValue.toFixed(digits)}`,
+      x,
+      y,
+      options,
+    );
+  }
+
+  drawBarIndicator(
+    label: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    value: number,
+    max: number,
+    options?: GridCanvasBarIndicatorOptions,
+  ): void {
+    const resolvedX = this.resolveFiniteNumber(x, 0, "x");
+    const resolvedY = this.resolveFiniteNumber(y, 0, "y");
+    const resolvedWidth = this.resolvePositiveNumber(width, 1, "width");
+    const resolvedHeight = this.resolvePositiveNumber(height, 1, "height");
+    const resolvedValue = this.resolveFiniteNumber(value, 0, "value");
+    const resolvedMax = this.resolvePositiveNumber(max, 1, "max");
+    const labelGap = this.resolveNonNegativeNumber(
+      options?.labelGap,
+      6,
+      "labelGap",
+    );
+    const lineWidth = this.resolvePositiveNumber(
+      options?.lineWidth,
+      1,
+      "lineWidth",
+    );
+    const ratio = Math.min(
+      1,
+      Math.max(0, resolvedValue / resolvedMax),
+    );
+    const font =
+      options?.font ?? `${Math.max(Math.round(resolvedHeight), 10)}px sans-serif`;
+    const strokeColor =
+      options?.strokeColor ?? options?.color ?? this.options.coordinateLabelColor;
+    const fillColor =
+      options?.fillColor ?? this.options.coordinateLabelColor;
+    const textColor = options?.textColor ?? strokeColor;
+    const trackColor =
+      options?.trackColor ?? GridCanvasSystem.DEFAULT_BAR_TRACK;
+
+    this.withManagedContext(() => {
+      this.ctx.font = font;
+      this.ctx.textAlign = "start";
+      this.ctx.textBaseline = "alphabetic";
+      this.ctx.fillStyle = textColor;
+      this.ctx.fillText(label, resolvedX, resolvedY + resolvedHeight - 1);
+
+      const labelWidth = this.ctx.measureText(label).width;
+      const barX = resolvedX + labelWidth + labelGap;
+
+      this.ctx.fillStyle = trackColor;
+      this.ctx.strokeStyle = strokeColor;
+      this.ctx.lineWidth = lineWidth;
+      this.ctx.beginPath();
+      this.ctx.rect(barX, resolvedY, resolvedWidth, resolvedHeight);
+      this.ctx.fill();
+      this.ctx.stroke();
+
+      this.ctx.fillStyle = fillColor;
+      this.ctx.beginPath();
+      this.ctx.rect(barX, resolvedY, resolvedWidth * ratio, resolvedHeight);
+      this.ctx.fill();
+    });
+  }
+
+  drawMessage(
+    mainText: string,
+    subText: string,
+    center: GridCanvasPoint,
+    options?: GridCanvasMessageOptions,
+  ): void {
+    const resolvedCenter = this.resolvePoint(center, "center");
+    const mainFont =
+      options?.mainFont ?? GridCanvasSystem.DEFAULT_MESSAGE_MAIN_FONT;
+    const subFont =
+      options?.subFont ?? GridCanvasSystem.DEFAULT_MESSAGE_SUB_FONT;
+    const lineGap = this.resolveNonNegativeNumber(
+      options?.lineGap,
+      this.resolveFontSize(mainFont, 28),
+      "lineGap",
+    );
+    const mainColor = options?.color ?? this.options.coordinateLabelColor;
+    const subColor = options?.subColor ?? mainColor;
+
+    this.withManagedContext(() => {
+      this.ctx.textAlign = options?.textAlign ?? "center";
+      this.ctx.textBaseline = "alphabetic";
+      this.ctx.fillStyle = mainColor;
+      this.ctx.font = mainFont;
+      this.ctx.fillText(mainText, resolvedCenter.x, resolvedCenter.y);
+      this.ctx.fillStyle = subColor;
+      this.ctx.font = subFont;
+      this.ctx.fillText(
+        subText,
+        resolvedCenter.x,
+        resolvedCenter.y + lineGap,
+      );
+    });
+  }
+
+  drawAsteroid(
+    center: GridCanvasPoint,
+    radius: number,
+    shape: GridCanvasAsteroidShape,
+    options?: GridCanvasAsteroidOptions,
+  ): void {
+    const resolvedCenter = this.resolvePoint(center, "center");
+    const resolvedRadius = this.resolvePositiveNumber(radius, 1, "radius");
+    const resolvedShape = this.resolveShape(shape, "shape");
+    const resolvedRotation = this.resolveFiniteNumber(
+      options?.rotation,
+      0,
+      "rotation",
+    );
+    const resolvedNoise =
+      options?.noise === undefined
+        ? GridCanvasSystem.DEFAULT_ASTEROID_NOISE
+        : this.resolveUnitInterval(options.noise, "noise");
+    const guideColor =
+      options?.guideColor ?? GridCanvasSystem.DEFAULT_GUIDE_STROKE;
+    const guideLineWidth = this.resolvePositiveNumber(
+      options?.guideLineWidth,
+      GridCanvasSystem.DEFAULT_GUIDE_LINE_WIDTH,
+      "guideLineWidth",
+    );
+    const radii = resolvedShape.map((shapeValue) =>
+      resolvedRadius + resolvedRadius * resolvedNoise * shapeValue,
+    );
+    const minGuideRadius = Math.min(...radii);
+    const maxGuideRadius = Math.max(...radii);
+
+    this.withManagedContext(() => {
+      this.ctx.translate(resolvedCenter.x, resolvedCenter.y);
+      this.ctx.rotate(resolvedRotation);
+      this.ctx.fillStyle =
+        options?.fillColor ?? GridCanvasSystem.DEFAULT_ASTEROID_FILL;
+      this.ctx.strokeStyle =
+        options?.strokeColor ??
+        options?.color ??
+        GridCanvasSystem.DEFAULT_ASTEROID_STROKE;
+      this.ctx.lineWidth = this.resolvePositiveNumber(
+        options?.lineWidth,
+        GridCanvasSystem.DEFAULT_ASTEROID_LINE_WIDTH,
+        "lineWidth",
+      );
+
+      const firstPoint = this.polarToCartesian(
+        { x: 0, y: 0 },
+        radii[0],
+        0,
+      );
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(firstPoint.x, firstPoint.y);
+
+      for (let index = 1; index < resolvedShape.length; index += 1) {
+        const angle = (Math.PI * 2 * index) / resolvedShape.length;
+        const point = this.polarToCartesian(
+          { x: 0, y: 0 },
+          radii[index],
+          angle,
+        );
+
+        this.ctx.lineTo(point.x, point.y);
+      }
+
+      this.ctx.closePath();
+      this.ctx.fill();
+      this.ctx.stroke();
+
+      if (options?.guide === true) {
+        this.ctx.strokeStyle = guideColor;
+        this.ctx.lineWidth = guideLineWidth;
+
+        for (const guideRadius of [
+          minGuideRadius,
+          resolvedRadius,
+          maxGuideRadius,
+        ]) {
+          this.ctx.beginPath();
+          this.ctx.arc(0, 0, guideRadius, 0, Math.PI * 2);
+          this.ctx.stroke();
+        }
+      }
+    });
+  }
+
   drawShip(
     center: GridCanvasPoint,
     radius: number,
@@ -578,6 +1116,33 @@ class GridCanvasSystem {
         this.ctx.lineWidth = guideLineWidth;
         this.ctx.beginPath();
         this.ctx.arc(0, 0, resolvedRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+      }
+
+      if (options?.thruster === true) {
+        this.ctx.fillStyle =
+          options?.thrusterFillColor ?? GridCanvasSystem.DEFAULT_THRUSTER_FILL;
+        this.ctx.strokeStyle =
+          options?.thrusterStrokeColor ??
+          GridCanvasSystem.DEFAULT_THRUSTER_STROKE;
+        this.ctx.lineWidth = this.resolvePositiveNumber(
+          options?.thrusterLineWidth,
+          Math.max(1, resolvedRadius * 0.06),
+          "thrusterLineWidth",
+        );
+        this.ctx.beginPath();
+        this.ctx.moveTo(
+          Math.cos(Math.PI + halfAngle * 0.8) * (resolvedRadius / 2),
+          Math.sin(Math.PI + halfAngle * 0.8) * (resolvedRadius / 2),
+        );
+        this.ctx.quadraticCurveTo(
+          -resolvedRadius * 2,
+          0,
+          Math.cos(Math.PI - halfAngle * 0.8) * (resolvedRadius / 2),
+          Math.sin(Math.PI - halfAngle * 0.8) * (resolvedRadius / 2),
+        );
+        this.ctx.closePath();
         this.ctx.fill();
         this.ctx.stroke();
       }
@@ -702,11 +1267,14 @@ class GridCanvasSystem {
     });
   }
 
-  clearCanvas(): void {
+  clearCanvas(options?: GridCanvasClearOptions): void {
     this.withManagedContext(() => {
       this.ctx.clearRect(0, 0, this.options.width, this.options.height);
     });
-    this.drawGridSystem();
+
+    if (options?.redrawGrid !== false) {
+      this.drawGridSystem();
+    }
   }
 }
 
