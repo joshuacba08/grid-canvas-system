@@ -29,6 +29,14 @@
   ],
   "author": "Josue Oroya",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joshuacba08/grid-canvas-system.git"
+  },
+  "homepage": "https://github.com/joshuacba08/grid-canvas-system#readme",
+  "bugs": {
+    "url": "https://github.com/joshuacba08/grid-canvas-system/issues"
+  },
   "devDependencies": {
     "@napi-rs/canvas": "^1.0.0",
     "jsdom": "^29.1.1",
