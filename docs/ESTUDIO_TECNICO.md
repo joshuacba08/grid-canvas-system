@@ -75,7 +75,10 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 
 ### Metodos publicos
 
-- `drawCoordinate(x: number, y: number)`: dibuja el texto `(${x},${y})` en la posicion recibida.
+- `drawText(text: string, x: number, y: number, options?: GridCanvasTextOptions)`: dibuja texto usando el estado gestionado por la libreria.
+- `drawLine(start: GridCanvasPoint, end: GridCanvasPoint, options?: GridCanvasStrokeOptions)`: dibuja una linea simple sin necesidad de tocar `ctx`.
+- `drawPolyline(points: GridCanvasPoint[], options?: GridCanvasPolylineOptions)`: dibuja una polilinea o ruta cerrada mediante una API encapsulada.
+- `drawCoordinate(x: number, y: number, options?: GridCanvasTextOptions)`: dibuja el texto `(${x},${y})` en la posicion recibida.
 - `clearCanvas()`: limpia el contenido actual y vuelve a dibujar la cuadricula.
 
 ### Configuracion visual relevante
@@ -86,6 +89,15 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 - `gridLabelFont`: fuente de las etiquetas numericas de la cuadricula.
 - `coordinateFont`: fuente de las coordenadas dibujadas con `drawCoordinate()`.
 - `font`: alias de compatibilidad que aplica la misma fuente a ambos tipos de etiqueta.
+
+## Capas de uso
+
+La libreria ofrece dos capas complementarias:
+
+1. Capa encapsulada recomendada para el uso comun:
+   `drawText()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
+2. Capa avanzada basada en `canvas` y `ctx`:
+   pensada para integraciones y dibujo manual mas libre.
 
 ## Flujo de renderizado
 
@@ -142,6 +154,7 @@ Se valido localmente que:
 - Validaciones mas claras sobre el elemento DOM y el contexto 2D.
 - Tipos TypeScript listos para consumidores del paquete.
 - API configurable sin romper compatibilidad con la firma anterior.
+- Capa encapsulada para dibujo comun sin depender de `ctx` directamente.
 - Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
 - Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
 - Soporte HiDPI para mejorar nitidez en pantallas de alta densidad.

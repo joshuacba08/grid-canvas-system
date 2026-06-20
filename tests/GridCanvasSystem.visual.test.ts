@@ -45,6 +45,38 @@ const HIDPI_OPTIONS: GridCanvasSystemOptions = {
   devicePixelRatio: 2,
 };
 
+const ENCAPSULATED_DRAWING_OPTIONS: GridCanvasSystemOptions = {
+  width: 140,
+  height: 80,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
+const PACMAN_OPTIONS: GridCanvasSystemOptions = {
+  width: 200,
+  height: 200,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
 function attachBackingCanvas(element: HTMLCanvasElement): BackingCanvas {
   let width = element.width || 300;
   let height = element.height || 150;
@@ -96,6 +128,54 @@ function renderScenario(
   const grid = new GridCanvasSystem(elementId, options);
 
   return { grid, backingCanvas };
+}
+
+function renderEncapsulatedDrawingScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-encapsulated-drawing",
+    ENCAPSULATED_DRAWING_OPTIONS,
+  );
+
+  grid.drawPolyline(
+    [
+      { x: 20, y: 50 },
+      { x: 60, y: 20 },
+      { x: 110, y: 40 },
+    ],
+    {
+      color: "#ffffff",
+      lineWidth: 3,
+    },
+  );
+  grid.drawLine(
+    { x: 110, y: 40 },
+    { x: 120, y: 60 },
+    {
+      color: "#ffffff",
+      lineWidth: 3,
+    },
+  );
+  grid.drawCoordinate(60, 20, {
+    color: "#ffffff",
+    font: "12px serif",
+  });
+
+  return backingCanvas;
+}
+
+function renderPacmanScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-pacman",
+    PACMAN_OPTIONS,
+  );
+
+  grid.drawPacman(100, 100, 70, 1, {
+    fillColor: "#FFFF00",
+    strokeColor: "#000000",
+    lineWidth: 2,
+  });
+
+  return backingCanvas;
 }
 
 async function toPixelBuffer(pngBuffer: Buffer): Promise<Buffer> {
@@ -164,5 +244,17 @@ describe("GridCanvasSystem visual snapshots", () => {
     grid.clearCanvas();
 
     await expectCanvasToMatchSnapshot(backingCanvas, "grid-baseline");
+  });
+
+  it("matches the encapsulated drawing snapshot", async () => {
+    const backingCanvas = renderEncapsulatedDrawingScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "encapsulated-drawing");
+  });
+
+  it("matches the pacman snapshot", async () => {
+    const backingCanvas = renderPacmanScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "pacman");
   });
 });

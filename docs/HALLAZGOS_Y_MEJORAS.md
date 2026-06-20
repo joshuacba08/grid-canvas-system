@@ -68,6 +68,10 @@ La libreria ya no deja este punto como una ambiguedad de implementacion: `canvas
 
 Ahora existen snapshots PNG versionados en el repositorio, junto con una prueba que compara el render actual contra esas referencias y un script para regenerarlas cuando el resultado esperado cambie deliberadamente.
 
+#### 15. Capa encapsulada recomendada para dibujo comun
+
+La libreria ahora ofrece una capa de mas alto nivel con `drawText()`, `drawLine()` y `drawPolyline()`, de modo que los casos comunes ya no necesitan depender de `ctx` directamente.
+
 ## Hallazgos priorizados pendientes
 
 ### Prioridad baja
@@ -90,10 +94,10 @@ Impacto:
 
 Mejora sugerida:
 
-- Mantener documentado este contrato y evitar cambios sorpresivos de semantica en futuras versiones mayores o menores.
+- Mantener documentado este contrato y seguir recomendando la capa encapsulada para el uso comun.
 
 ## Siguientes pasos recomendados
 
 1. Incorporar diffs visuales o artefactos comparativos mas explicitos para fallos de snapshot.
 2. Evaluar si conviene separar tambien otras opciones de texto, como alineacion o baseline, entre cuadricula y coordenadas.
-3. Decidir si en una futura version conviene ofrecer una capa mas encapsulada ademas del contrato actual basado en `ctx` y `canvas`.
+3. Evaluar si la capa encapsulada deberia crecer con primitivas adicionales, como rectangulos, circulos o flechas.

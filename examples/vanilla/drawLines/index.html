@@ -9,26 +9,23 @@
     <canvas id="canvas"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
     <script>
-      const newCanvas = new GridCanvasSystem("canvas");
-      const { canvas, ctx } = newCanvas;
+      const grid = new GridCanvasSystem("canvas");
 
-      ctx.beginPath();
+      grid.drawPolyline(
+        [
+          { x: 100, y: 200 },
+          { x: 120, y: 300 },
+          { x: 250, y: 150 },
+        ],
+        {
+          color: "#FFFFFF",
+          lineWidth: 2,
+        }
+      );
 
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "#FFFFFF";
-
-      ctx.moveTo(100, 200);
-      newCanvas.drawCoordinate(100, 200);
-
-      ctx.lineTo(120, 300);
-      newCanvas.drawCoordinate(120, 300);
-
-      ctx.lineTo(250, 150);
-      newCanvas.drawCoordinate(250, 150);
-
-      ctx.closePath();
-
-      ctx.stroke();
+      grid.drawCoordinate(100, 200);
+      grid.drawCoordinate(120, 300);
+      grid.drawCoordinate(250, 150);
     </script>
   </body>
 </html>

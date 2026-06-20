@@ -16,6 +16,41 @@ export interface GridCanvasSystemOptions {
   devicePixelRatio?: number;
 }
 
+export interface GridCanvasPoint {
+  x: number;
+  y: number;
+}
+
+export interface GridCanvasStrokeOptions {
+  color?: string;
+  strokeColor?: string;
+  lineWidth?: number;
+}
+
+export interface GridCanvasPolylineOptions extends GridCanvasStrokeOptions {
+  closePath?: boolean;
+}
+
+export interface GridCanvasTextOptions {
+  color?: string;
+  font?: string;
+  textAlign?: CanvasTextAlign;
+  textBaseline?: CanvasTextBaseline;
+}
+
+export interface GridCanvasShapeOptions extends GridCanvasStrokeOptions {
+  fillColor?: string;
+}
+
+export interface GridCanvasCircleSectorOptions extends GridCanvasShapeOptions {
+  connectToCenter?: boolean;
+}
+
+export interface GridCanvasPacmanOptions extends GridCanvasShapeOptions {
+  direction?: number;
+  maxMouthAngle?: number;
+}
+
 export interface GridCanvasSystemResolvedOptions {
   width: number;
   height: number;
@@ -49,6 +84,11 @@ const DEFAULT_OPTIONS: GridCanvasSystemResolvedOptions = {
 };
 
 class GridCanvasSystem {
+  private static readonly DEFAULT_PACMAN_FILL = "#FFFF00";
+  private static readonly DEFAULT_PACMAN_STROKE = "#000000";
+  private static readonly DEFAULT_PACMAN_LINE_WIDTH = 2;
+  private static readonly DEFAULT_PACMAN_MAX_MOUTH_ANGLE = Math.PI * 0.4;
+
   /**
    * Official public extension point for DOM integration and sizing workflows.
    * This reference is intended to remain part of the supported API.
@@ -200,6 +240,17 @@ class GridCanvasSystem {
     );
   }
 
+  private withManagedContext(render: () => void): void {
+    this.ctx.save();
+    this.applyBaselineTransform();
+
+    try {
+      render();
+    } finally {
+      this.ctx.restore();
+    }
+  }
+
   private resolveNonNegativeDimension(
     value: number | undefined,
     fallback: number,
@@ -228,6 +279,31 @@ class GridCanvasSystem {
     return resolvedValue;
   }
 
+  private resolveFiniteNumber(
+    value: number | undefined,
+    fallback: number,
+    name: string,
+  ): number {
+    const resolvedValue = value ?? fallback;
+
+    if (!Number.isFinite(resolvedValue)) {
+      throw new Error(`${name} must be a finite number`);
+    }
+
+    return resolvedValue;
+  }
+
+  private resolveUnitInterval(
+    value: number,
+    name: string,
+  ): number {
+    if (!Number.isFinite(value) || value < 0 || value > 1) {
+      throw new Error(`${name} must be a finite number between 0 and 1`);
+    }
+
+    return value;
+  }
+
   private drawGridSystem(): void {
     const {
       width,
@@ -241,47 +317,200 @@ class GridCanvasSystem {
       gridLabelFont,
     } = this.options;
 
-    this.ctx.save();
-    this.applyBaselineTransform();
-    this.ctx.strokeStyle = gridColor;
-    this.ctx.fillStyle = gridLabelColor;
-    this.ctx.font = gridLabelFont;
+    this.withManagedContext(() => {
+      this.ctx.strokeStyle = gridColor;
+      this.ctx.fillStyle = gridLabelColor;
+      this.ctx.font = gridLabelFont;
+      this.ctx.textAlign = "start";
+      this.ctx.textBaseline = "alphabetic";
 
-    for (let x = 0; x < width; x += cellSize) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, 0);
-      this.ctx.lineTo(x, height);
-      this.ctx.lineWidth = x % majorStep === 0 ? majorLineWidth : minorLineWidth;
-      this.ctx.stroke();
-      if (x % majorStep === 0) this.ctx.fillText(x.toString(), x, 10);
-    }
+      for (let x = 0; x < width; x += cellSize) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, 0);
+        this.ctx.lineTo(x, height);
+        this.ctx.lineWidth = x % majorStep === 0 ? majorLineWidth : minorLineWidth;
+        this.ctx.stroke();
+        if (x % majorStep === 0) this.ctx.fillText(x.toString(), x, 10);
+      }
 
-    for (let y = 0; y < height; y += cellSize) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(0, y);
-      this.ctx.lineTo(width, y);
-      this.ctx.lineWidth = y % majorStep === 0 ? majorLineWidth : minorLineWidth;
-      this.ctx.stroke();
-      if (y % majorStep === 0) this.ctx.fillText(y.toString(), 0, y + 10);
-    }
-
-    this.ctx.restore();
+      for (let y = 0; y < height; y += cellSize) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, y);
+        this.ctx.lineTo(width, y);
+        this.ctx.lineWidth = y % majorStep === 0 ? majorLineWidth : minorLineWidth;
+        this.ctx.stroke();
+        if (y % majorStep === 0) this.ctx.fillText(y.toString(), 0, y + 10);
+      }
+    });
   }
 
-  drawCoordinate(x: number, y: number): void {
-    this.ctx.save();
-    this.applyBaselineTransform();
-    this.ctx.fillStyle = this.options.coordinateLabelColor;
-    this.ctx.font = this.options.coordinateFont;
-    this.ctx.fillText(`(${x},${y})`, x, y);
-    this.ctx.restore();
+  drawText(
+    text: string,
+    x: number,
+    y: number,
+    options?: GridCanvasTextOptions,
+  ): void {
+    this.withManagedContext(() => {
+      this.ctx.fillStyle = options?.color ?? this.options.coordinateLabelColor;
+      this.ctx.font = options?.font ?? this.options.coordinateFont;
+      this.ctx.textAlign = options?.textAlign ?? "start";
+      this.ctx.textBaseline = options?.textBaseline ?? "alphabetic";
+
+      this.ctx.fillText(text, x, y);
+    });
+  }
+
+  drawCircleSector(
+    center: GridCanvasPoint,
+    radius: number,
+    startAngle: number,
+    endAngle: number,
+    options?: GridCanvasCircleSectorOptions,
+  ): void {
+    const resolvedRadius = this.resolvePositiveNumber(radius, 1, "radius");
+    const resolvedStartAngle = this.resolveFiniteNumber(
+      startAngle,
+      0,
+      "startAngle",
+    );
+    const resolvedEndAngle = this.resolveFiniteNumber(
+      endAngle,
+      0,
+      "endAngle",
+    );
+    const fillColor = options?.fillColor ?? this.options.coordinateLabelColor;
+    const strokeColor = options?.strokeColor ?? options?.color;
+    const shouldConnectToCenter = options?.connectToCenter ?? true;
+
+    this.withManagedContext(() => {
+      this.ctx.beginPath();
+
+      if (shouldConnectToCenter) {
+        this.ctx.moveTo(center.x, center.y);
+      }
+
+      this.ctx.arc(
+        center.x,
+        center.y,
+        resolvedRadius,
+        resolvedStartAngle,
+        resolvedEndAngle,
+      );
+
+      if (shouldConnectToCenter) {
+        this.ctx.lineTo(center.x, center.y);
+      }
+
+      this.ctx.fillStyle = fillColor;
+      this.ctx.fill();
+
+      if (strokeColor !== undefined) {
+        this.ctx.strokeStyle = strokeColor;
+        this.ctx.lineWidth = this.resolvePositiveNumber(
+          options?.lineWidth,
+          1,
+          "lineWidth",
+        );
+        this.ctx.stroke();
+      }
+    });
+  }
+
+  drawPacman(
+    x: number,
+    y: number,
+    radius: number,
+    mouthOpen: number,
+    options?: GridCanvasPacmanOptions,
+  ): void {
+    const resolvedMouthOpen = this.resolveUnitInterval(mouthOpen, "mouthOpen");
+    const resolvedDirection = this.resolveFiniteNumber(
+      options?.direction,
+      0,
+      "direction",
+    );
+    const resolvedMaxMouthAngle = this.resolvePositiveNumber(
+      options?.maxMouthAngle,
+      GridCanvasSystem.DEFAULT_PACMAN_MAX_MOUTH_ANGLE,
+      "maxMouthAngle",
+    );
+    const halfMouthAngle = (resolvedMaxMouthAngle * resolvedMouthOpen) / 2;
+
+    this.drawCircleSector(
+      { x, y },
+      radius,
+      resolvedDirection + halfMouthAngle,
+      resolvedDirection + Math.PI * 2 - halfMouthAngle,
+      {
+        fillColor:
+          options?.fillColor ?? GridCanvasSystem.DEFAULT_PACMAN_FILL,
+        strokeColor:
+          options?.strokeColor ?? options?.color ?? GridCanvasSystem.DEFAULT_PACMAN_STROKE,
+        lineWidth:
+          options?.lineWidth ?? GridCanvasSystem.DEFAULT_PACMAN_LINE_WIDTH,
+        connectToCenter: true,
+      },
+    );
+  }
+
+  drawLine(
+    start: GridCanvasPoint,
+    end: GridCanvasPoint,
+    options?: GridCanvasStrokeOptions,
+  ): void {
+    this.drawPolyline([start, end], options);
+  }
+
+  drawPolyline(
+    points: GridCanvasPoint[],
+    options?: GridCanvasPolylineOptions,
+  ): void {
+    if (points.length < 2) {
+      return;
+    }
+
+    this.withManagedContext(() => {
+      this.ctx.beginPath();
+      this.ctx.moveTo(points[0].x, points[0].y);
+
+      for (let index = 1; index < points.length; index += 1) {
+        this.ctx.lineTo(points[index].x, points[index].y);
+      }
+
+      if (options?.closePath === true) {
+        this.ctx.closePath();
+      }
+
+      this.ctx.strokeStyle =
+        options?.strokeColor ??
+        options?.color ??
+        this.options.coordinateLabelColor;
+      this.ctx.lineWidth = this.resolvePositiveNumber(
+        options?.lineWidth,
+        1,
+        "lineWidth",
+      );
+      this.ctx.stroke();
+    });
+  }
+
+  drawCoordinate(
+    x: number,
+    y: number,
+    options?: GridCanvasTextOptions,
+  ): void {
+    this.drawText(`(${x},${y})`, x, y, {
+      color: options?.color ?? this.options.coordinateLabelColor,
+      font: options?.font ?? this.options.coordinateFont,
+      textAlign: options?.textAlign,
+      textBaseline: options?.textBaseline,
+    });
   }
 
   clearCanvas(): void {
-    this.ctx.save();
-    this.applyBaselineTransform();
-    this.ctx.clearRect(0, 0, this.options.width, this.options.height);
-    this.ctx.restore();
+    this.withManagedContext(() => {
+      this.ctx.clearRect(0, 0, this.options.width, this.options.height);
+    });
     this.drawGridSystem();
   }
 }

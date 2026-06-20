@@ -7,12 +7,17 @@ interface MockCanvasContext {
   fillStyle: string | CanvasGradient | CanvasPattern;
   lineWidth: number;
   font: string;
+  textAlign: CanvasTextAlign;
+  textBaseline: CanvasTextBaseline;
   setTransform: ReturnType<typeof vi.fn>;
   save: ReturnType<typeof vi.fn>;
   restore: ReturnType<typeof vi.fn>;
   beginPath: ReturnType<typeof vi.fn>;
   moveTo: ReturnType<typeof vi.fn>;
   lineTo: ReturnType<typeof vi.fn>;
+  arc: ReturnType<typeof vi.fn>;
+  closePath: ReturnType<typeof vi.fn>;
+  fill: ReturnType<typeof vi.fn>;
   stroke: ReturnType<typeof vi.fn>;
   fillText: ReturnType<typeof vi.fn>;
   clearRect: ReturnType<typeof vi.fn>;
@@ -24,12 +29,17 @@ function createMockContext(): MockCanvasContext {
     fillStyle: "",
     lineWidth: 0,
     font: "",
+    textAlign: "start",
+    textBaseline: "alphabetic",
     setTransform: vi.fn(),
     save: vi.fn(),
     restore: vi.fn(),
     beginPath: vi.fn(),
     moveTo: vi.fn(),
     lineTo: vi.fn(),
+    arc: vi.fn(),
+    closePath: vi.fn(),
+    fill: vi.fn(),
     stroke: vi.fn(),
     fillText: vi.fn(),
     clearRect: vi.fn(),
@@ -161,6 +171,178 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.fillText).toHaveBeenCalledWith("(10,20)", 10, 20);
   });
 
+  it("drawText supports explicit text styling overrides", () => {
+    const grid = new GridCanvasSystem("canvas", {
+      coordinateLabelColor: "#ffffff",
+      coordinateFont: "14px serif",
+    });
+
+    mockContext.fillText.mockClear();
+
+    grid.drawText("hello", 30, 40, {
+      color: "#ff00ff",
+      font: "18px monospace",
+      textAlign: "center",
+      textBaseline: "middle",
+    });
+
+    expect(mockContext.fillStyle).toBe("#ff00ff");
+    expect(mockContext.font).toBe("18px monospace");
+    expect(mockContext.textAlign).toBe("center");
+    expect(mockContext.textBaseline).toBe("middle");
+    expect(mockContext.fillText).toHaveBeenCalledWith("hello", 30, 40);
+  });
+
+  it("drawLine provides an encapsulated drawing path without direct ctx access", () => {
+    const grid = new GridCanvasSystem("canvas", {
+      coordinateLabelColor: "#ffffff",
+    });
+
+    mockContext.beginPath.mockClear();
+    mockContext.moveTo.mockClear();
+    mockContext.lineTo.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawLine({ x: 10, y: 20 }, { x: 80, y: 30 }, {
+      color: "#abcdef",
+      lineWidth: 3,
+    });
+
+    expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
+    expect(mockContext.moveTo).toHaveBeenCalledWith(10, 20);
+    expect(mockContext.lineTo).toHaveBeenCalledWith(80, 30);
+    expect(mockContext.strokeStyle).toBe("#abcdef");
+    expect(mockContext.lineWidth).toBe(3);
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawCircleSector creates a managed wedge path", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.beginPath.mockClear();
+    mockContext.moveTo.mockClear();
+    mockContext.arc.mockClear();
+    mockContext.lineTo.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawCircleSector(
+      { x: 50, y: 60 },
+      30,
+      Math.PI * 0.25,
+      Math.PI * 1.5,
+      {
+        fillColor: "#ff0000",
+        strokeColor: "#0000ff",
+        lineWidth: 4,
+      },
+    );
+
+    expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
+    expect(mockContext.moveTo).toHaveBeenCalledWith(50, 60);
+    expect(mockContext.arc).toHaveBeenCalledWith(
+      50,
+      60,
+      30,
+      Math.PI * 0.25,
+      Math.PI * 1.5,
+    );
+    expect(mockContext.lineTo).toHaveBeenLastCalledWith(50, 60);
+    expect(mockContext.fillStyle).toBe("#ff0000");
+    expect(mockContext.fill).toHaveBeenCalledTimes(1);
+    expect(mockContext.strokeStyle).toBe("#0000ff");
+    expect(mockContext.lineWidth).toBe(4);
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawPacman uses the sector primitive with default visual styling", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.arc.mockClear();
+    mockContext.fill.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawPacman(100, 120, 40, 1);
+
+    expect(mockContext.arc).toHaveBeenCalledWith(
+      100,
+      120,
+      40,
+      Math.PI * 0.2,
+      Math.PI * 1.8,
+    );
+    expect(mockContext.fillStyle).toBe("#FFFF00");
+    expect(mockContext.strokeStyle).toBe("#000000");
+    expect(mockContext.lineWidth).toBe(2);
+    expect(mockContext.fill).toHaveBeenCalledTimes(1);
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawPacman supports custom direction and stroke settings", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.arc.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawPacman(40, 50, 20, 0.5, {
+      direction: Math.PI / 2,
+      fillColor: "#ffee00",
+      strokeColor: "#333333",
+      lineWidth: 5,
+      maxMouthAngle: Math.PI * 0.6,
+    });
+
+    expect(mockContext.arc).toHaveBeenCalledWith(
+      40,
+      50,
+      20,
+      Math.PI / 2 + Math.PI * 0.15,
+      Math.PI / 2 + Math.PI * 1.85,
+    );
+    expect(mockContext.fillStyle).toBe("#ffee00");
+    expect(mockContext.strokeStyle).toBe("#333333");
+    expect(mockContext.lineWidth).toBe(5);
+    expect(mockContext.stroke).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawPolyline can close the path in the encapsulated API", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.beginPath.mockClear();
+    mockContext.moveTo.mockClear();
+    mockContext.lineTo.mockClear();
+    mockContext.closePath.mockClear();
+
+    grid.drawPolyline(
+      [
+        { x: 10, y: 10 },
+        { x: 40, y: 20 },
+        { x: 20, y: 50 },
+      ],
+      {
+        closePath: true,
+      },
+    );
+
+    expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
+    expect(mockContext.moveTo).toHaveBeenCalledWith(10, 10);
+    expect(mockContext.lineTo).toHaveBeenNthCalledWith(1, 40, 20);
+    expect(mockContext.lineTo).toHaveBeenNthCalledWith(2, 20, 50);
+    expect(mockContext.closePath).toHaveBeenCalledTimes(1);
+  });
+
+  it("drawPolyline safely ignores paths with fewer than two points", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.beginPath.mockClear();
+    mockContext.stroke.mockClear();
+
+    grid.drawPolyline([{ x: 10, y: 10 }]);
+
+    expect(mockContext.beginPath).not.toHaveBeenCalled();
+    expect(mockContext.stroke).not.toHaveBeenCalled();
+  });
+
   it("draws major grid labels using the grid label color", () => {
     new GridCanvasSystem("canvas", {
       width: 120,
@@ -226,5 +408,13 @@ describe("GridCanvasSystem", () => {
           majorStep: 50,
         }),
     ).toThrow("majorStep must be a multiple of cellSize");
+  });
+
+  it("rejects invalid pacman mouthOpen values", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    expect(() => grid.drawPacman(20, 20, 10, 2)).toThrow(
+      "mouthOpen must be a finite number between 0 and 1",
+    );
   });
 });

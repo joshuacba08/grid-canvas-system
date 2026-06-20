@@ -85,6 +85,33 @@ const newCanvas = new GridCanvasSystem("canvas", {
 });
 ```
 
+### Preferred encapsulated usage
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 800,
+  height: 500,
+});
+
+grid.drawPolyline(
+  [
+    { x: 100, y: 200 },
+    { x: 120, y: 300 },
+    { x: 250, y: 150 },
+  ],
+  {
+    color: "#ffffff",
+    lineWidth: 2,
+  },
+);
+
+grid.drawCoordinate(100, 200);
+grid.drawCoordinate(120, 300);
+grid.drawCoordinate(250, 150);
+```
+
 ## Documentation
 
 - [Documentation index](./docs/README.md)
@@ -131,12 +158,17 @@ The constructor throws an error when:
 
 The library has the following methods:
 
-- `drawCoordinate(x, y)`: Draws the coordinate label at the provided position.
+- `drawText(text, x, y, options?)`: Draws text using the managed canvas state.
+- `drawLine(start, end, options?)`: Draws a line without manipulating `ctx` directly.
+- `drawPolyline(points, options?)`: Draws a polyline or closed path through a high-level API.
+- `drawCoordinate(x, y, options?)`: Draws the coordinate label at the provided position.
 - `clearCanvas()`: Clears the canvas.
 
 ## Advanced Usage
 
-`canvas` and `ctx` are intentionally exposed as advanced extension points.
+The preferred path for common drawing is the encapsulated API: `drawText`, `drawLine`, `drawPolyline`, `drawCoordinate`, and `clearCanvas()`.
+
+`canvas` and `ctx` remain intentionally exposed as advanced extension points.
 
 - `canvas` lets you integrate the instance with DOM or sizing logic outside the library.
 - `ctx` lets you draw your own shapes on top of the grid.
@@ -148,8 +180,12 @@ The library has the following methods:
 The package exports:
 
 - `GridCanvasSystem`
+- `GridCanvasPoint`
+- `GridCanvasStrokeOptions`
+- `GridCanvasPolylineOptions`
 - `GridCanvasSystemOptions`
 - `GridCanvasSystemResolvedOptions`
+- `GridCanvasTextOptions`
 
 ## Testing
 
@@ -186,26 +222,23 @@ pnpm test
     <canvas id="canvas"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
     <script>
-      const newCanvas = new GridCanvasSystem("canvas");
-      const { canvas, ctx } = newCanvas;
+      const grid = new GridCanvasSystem("canvas");
 
-      ctx.beginPath();
+      grid.drawPolyline(
+        [
+          { x: 100, y: 200 },
+          { x: 120, y: 300 },
+          { x: 250, y: 150 },
+        ],
+        {
+          color: "#FFFFFF",
+          lineWidth: 2,
+        }
+      );
 
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "#FFFFFF";
-
-      ctx.moveTo(100, 200);
-      newCanvas.drawCoordinate(100, 200);
-
-      ctx.lineTo(120, 300);
-      newCanvas.drawCoordinate(120, 300);
-
-      ctx.lineTo(250, 150);
-      newCanvas.drawCoordinate(250, 150);
-
-      ctx.closePath();
-
-      ctx.stroke();
+      grid.drawCoordinate(100, 200);
+      grid.drawCoordinate(120, 300);
+      grid.drawCoordinate(250, 150);
     </script>
   </body>
 </html>
