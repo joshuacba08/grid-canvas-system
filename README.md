@@ -63,20 +63,81 @@ import GridCanvasSystem from "grid-canvas-system";
 const newCanvas = new GridCanvasSystem("canvas");
 ```
 
+### Usage with options
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const newCanvas = new GridCanvasSystem("canvas", {
+  width: 800,
+  height: 500,
+  backgroundColor: "#101820",
+  gridColor: "#5eead4",
+  labelColor: "#ccfbf1",
+  cellSize: 20,
+  majorStep: 100,
+  minorLineWidth: 0.5,
+  majorLineWidth: 1.25,
+  devicePixelRatio: window.devicePixelRatio,
+  font: "12px monospace",
+});
+```
+
+## Documentation
+
+- [Documentation index](./docs/README.md)
+- [Technical study](./docs/ESTUDIO_TECNICO.md)
+- [Findings and improvements](./docs/HALLAZGOS_Y_MEJORAS.md)
+
 ## Parameters
 
 The library accepts the following parameters:
 
 - `id`: The ID of the canvas where the grid will be drawn. (Required)
-- `width`: The width of the canvas. (Optional, defaults to 400)
-- `height`: The height of the canvas. (Optional, defaults to 400)
+- `width`: The width of the canvas. (Optional, defaults to `400`)
+- `height`: The height of the canvas. (Optional, defaults to `400`)
+- `options`: Optional configuration object for styles, spacing, and HiDPI behavior.
+
+Available options:
+
+- `width`: Logical canvas width in CSS pixels. Defaults to `400`.
+- `height`: Logical canvas height in CSS pixels. Defaults to `400`.
+- `backgroundColor`: Canvas background color. Defaults to `#000000`.
+- `gridColor`: Grid line color. Defaults to `#00FF00`.
+- `labelColor`: Label text color. Defaults to `#009900`.
+- `cellSize`: Space between grid lines. Defaults to `10`.
+- `majorStep`: Distance between emphasized lines and numeric labels. Defaults to `50`.
+- `minorLineWidth`: Width of regular grid lines. Defaults to `0.25`.
+- `majorLineWidth`: Width of emphasized grid lines. Defaults to `0.5`.
+- `devicePixelRatio`: Pixel ratio used for HiDPI rendering. Defaults to `window.devicePixelRatio` when available.
+- `font`: Font used for labels. Defaults to `10px sans-serif`.
+
+The constructor throws an error when:
+
+- the element does not exist;
+- the element exists but is not a `canvas`;
+- the 2D context cannot be created;
+- `width` or `height` are invalid values;
+- numeric options such as `cellSize` or `majorStep` are invalid;
+- `majorStep` is not a multiple of `cellSize`.
 
 ## Methods
 
 The library has the following methods:
 
-- `drawCoordinates()`: Draws a coordinate axis on the canvas.
+- `drawCoordinate(x, y)`: Draws the coordinate label at the provided position.
 - `clearCanvas()`: Clears the canvas.
+
+## Testing
+
+```bash
+npm test
+```
+
+```bash
+pnpm install --frozen-lockfile
+pnpm test
+```
 
 ## Examples
 
