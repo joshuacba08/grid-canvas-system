@@ -76,6 +76,10 @@ La libreria ahora ofrece una capa de mas alto nivel con `drawText()`, `drawLine(
 
 La libreria ahora incorpora `drawCircleSector()` como primitive general y `drawPacman()` como shape parametrizable construida sobre esa base.
 
+#### 17. Helper polar-cartesiano y shape oficial de nave
+
+La libreria ahora incorpora `polarToCartesian()` como helper geometrico reutilizable y `drawShip()` como shape parametrizable con rotacion encapsulada, curvas cuadraticas y guias opcionales inspiradas en el chapter 4 del libro.
+
 ## Hallazgos priorizados pendientes
 
 ### Prioridad baja
@@ -104,4 +108,4 @@ Mejora sugerida:
 
 1. Incorporar diffs visuales o artefactos comparativos mas explicitos para fallos de snapshot.
 2. Evaluar si conviene separar tambien otras opciones de texto, como alineacion o baseline, entre cuadricula y coordenadas.
-3. Evaluar si la capa encapsulada deberia crecer con primitivas adicionales, como rectangulos, circulos completos o flechas.
+3. Evaluar si la capa encapsulada deberia crecer con primitivas adicionales, como rectangulos, circulos completos, flechas o asteroides parametrizables.

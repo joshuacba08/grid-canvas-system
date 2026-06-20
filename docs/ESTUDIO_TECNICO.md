@@ -2,9 +2,9 @@
 
 ## Resumen
 
-`grid-canvas-system` es una libreria pequena enfocada en un caso de uso puntual: preparar un `canvas` HTML con una cuadricula visible y ofrecer utilidades basicas para dibujar etiquetas de coordenadas.
+`grid-canvas-system` es una libreria pequena enfocada en preparar un `canvas` HTML con una cuadricula visible y ofrecer una capa encapsulada de dibujo para casos comunes.
 
-La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
+La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, shapes reutilizables, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
 
 ## Estructura actual
 
@@ -17,6 +17,10 @@ src/
 examples/
   vanilla/
     drawLines/
+      index.html
+    pacman/
+      index.html
+    spaceship/
       index.html
 ```
 
@@ -42,7 +46,8 @@ Punto de entrada:
 6. Dibujar una cuadricula configurable.
 7. Resaltar lineas mayores con una linea mas gruesa y una etiqueta numerica.
 8. Permitir dibujar una etiqueta de coordenadas manualmente.
-9. Limpiar el canvas y volver a dibujar la cuadricula.
+9. Exponer una capa de dibujo encapsulada para texto, lineas, sectores y shapes reutilizables.
+10. Limpiar el canvas y volver a dibujar la cuadricula.
 
 ## API publica real
 
@@ -76,8 +81,10 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 ### Metodos publicos
 
 - `drawText(text: string, x: number, y: number, options?: GridCanvasTextOptions)`: dibuja texto usando el estado gestionado por la libreria.
+- `polarToCartesian(center: GridCanvasPoint, radius: number, angle: number): GridCanvasPoint`: convierte coordenadas polares en un punto del canvas.
 - `drawCircleSector(center: GridCanvasPoint, radius: number, startAngle: number, endAngle: number, options?: GridCanvasCircleSectorOptions)`: dibuja una primitiva de sector circular reutilizable.
 - `drawPacman(x: number, y: number, radius: number, mouthOpen: number, options?: GridCanvasPacmanOptions)`: dibuja un Pac-Man parametrizable sobre la cuadricula.
+- `drawShip(center: GridCanvasPoint, radius: number, options?: GridCanvasShipOptions)`: dibuja una nave parametrizable con curvas cuadraticas, guias y rotacion encapsulada.
 - `drawLine(start: GridCanvasPoint, end: GridCanvasPoint, options?: GridCanvasStrokeOptions)`: dibuja una linea simple sin necesidad de tocar `ctx`.
 - `drawPolyline(points: GridCanvasPoint[], options?: GridCanvasPolylineOptions)`: dibuja una polilinea o ruta cerrada mediante una API encapsulada.
 - `drawCoordinate(x: number, y: number, options?: GridCanvasTextOptions)`: dibuja el texto `(${x},${y})` en la posicion recibida.
@@ -97,7 +104,7 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 La libreria ofrece dos capas complementarias:
 
 1. Capa encapsulada recomendada para el uso comun:
-   `drawText()`, `drawCircleSector()`, `drawPacman()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
+   `drawText()`, `polarToCartesian()`, `drawCircleSector()`, `drawPacman()`, `drawShip()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
 2. Capa avanzada basada en `canvas` y `ctx`:
    pensada para integraciones y dibujo manual mas libre.
 
@@ -139,6 +146,7 @@ Pruebas automatizadas:
 - Verificacion visual real de lineas de cuadricula y restauracion del bitmap tras `clearCanvas()`.
 - Comparacion contra snapshots PNG versionados en el repositorio.
 - Cobertura de primitives reutilizables y del render de Pac-Man.
+- Cobertura del helper geometrico polar-cartesiano y del render de la nave.
 
 ### Verificacion realizada
 
@@ -159,6 +167,8 @@ Se valido localmente que:
 - API configurable sin romper compatibilidad con la firma anterior.
 - Capa encapsulada para dibujo comun sin depender de `ctx` directamente.
 - Primitive reutilizable para sectores circulares y una shape oficial construida sobre ella.
+- Helper geometrico reutilizable para convertir angulos y radios en puntos del canvas.
+- Shape oficial de nave con rotacion encapsulada y curvas cuadraticas configurables.
 - Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
 - Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
 - Soporte HiDPI para mejorar nitidez en pantallas de alta densidad.
