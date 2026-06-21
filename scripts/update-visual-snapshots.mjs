@@ -216,7 +216,8 @@ function renderEncapsulatedDrawingScenario() {
     },
   );
   grid.drawCoordinate(60, 20, {
-    color: "#ffffff",
+    // Keep the integration path without snapshotting platform-specific glyph rasterization.
+    color: "rgba(255, 255, 255, 0)",
     font: "12px serif",
   });
 
@@ -339,20 +340,21 @@ function renderHudScenario() {
       lineWidth: 2,
     },
   );
-  grid.drawBarIndicator("health", 8, 8, 110, 12, 78, 100, {
+  // Use glyph-independent bitmap output in visual snapshots.
+  grid.drawBarIndicator("", 8, 8, 110, 12, 78, 100, {
     fillColor: "#22c55e",
     strokeColor: "#ffffff",
-    textColor: "#ffffff",
+    textColor: "rgba(255, 255, 255, 0)",
     font: "12px sans-serif",
     labelGap: 8,
   });
   grid.drawValueLabel("score", 2450, 312, 18, {
-    color: "#ffffff",
+    color: "rgba(255, 255, 255, 0)",
     font: "12px sans-serif",
     textAlign: "end",
   });
   grid.drawValueLabel("level", 3, 160, 18, {
-    color: "#ffffff",
+    color: "rgba(255, 255, 255, 0)",
     font: "12px sans-serif",
     textAlign: "center",
   });
@@ -361,8 +363,8 @@ function renderHudScenario() {
     "Press space to play again",
     { x: 160, y: 62 },
     {
-      color: "#ffffff",
-      subColor: "#d4d4d4",
+      color: "rgba(255, 255, 255, 0)",
+      subColor: "rgba(212, 212, 212, 0)",
       mainFont: "28px sans-serif",
       subFont: "16px sans-serif",
     },
