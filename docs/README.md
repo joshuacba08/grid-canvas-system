@@ -6,6 +6,7 @@ Este directorio centraliza la documentacion tecnica de `grid-canvas-system`.
 
 - [Estudio tecnico](./ESTUDIO_TECNICO.md): arquitectura actual, API publica, flujo de renderizado y estado del empaquetado.
 - [Hallazgos y mejoras](./HALLAZGOS_Y_MEJORAS.md): errores potenciales, inconsistencias y oportunidades de mejora priorizadas.
+- [Investigacion de innovacion y escalado](./INVESTIGACION_INNOVACION_ESCALADO.md): posicionamiento, comparativa, gaps, roadmap y PRs recomendados para escalar la libreria.
 
 ## Objetivo
 

@@ -4,7 +4,7 @@
 
 `grid-canvas-system` es una libreria pequena enfocada en preparar un `canvas` HTML con una cuadricula visible y ofrecer una capa encapsulada de dibujo para sistemas visuales interactivos.
 
-La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, pixel art declarativo, shapes reutilizables, overlays de HUD, un runtime ligero para animacion, sprite animation, maquinas de estado, movimiento y helpers neutros de escena, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
+La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, pixel art declarativo, shapes reutilizables, overlays de HUD, un runtime ligero para animacion, sprite animation, maquinas de estado, conversion explicita entre grid/canvas, input de teclado y puntero, movimiento y helpers neutros de escena, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
 
 ## Estructura actual
 
@@ -21,8 +21,10 @@ src/
   runtime/
     createAnimationLoop.ts
     createKeyTracker.ts
+    createPointerTracker.ts
     createSpriteAnimator.ts
     createStateMachine.ts
+    grid.ts
     index.ts
     MassBody.ts
     motion.ts
@@ -56,7 +58,7 @@ La libreria expone una clase principal, `GridCanvasSystem`, y consolida su uso e
 
 1. Capa core: inicializacion, validacion del DOM, ajuste del canvas, soporte HiDPI y contrato base (`canvas`, `ctx`, `options`).
 2. Capa visual: configuracion de la cuadricula, pixel art y methods encapsulados de dibujo.
-3. Capa runtime opcional: animacion, sprite animation, maquinas de estado, input, fisica ligera y helpers neutros de escena accesibles como `GridCanvasSystem.runtime`.
+3. Capa runtime opcional: animacion, sprite animation, maquinas de estado, input, conversion grid/canvas, fisica ligera y helpers neutros de escena accesibles como `GridCanvasSystem.runtime`.
 
 Archivo principal:
 
@@ -83,7 +85,7 @@ Punto de entrada:
 7. Resaltar lineas mayores con una linea mas gruesa y una etiqueta numerica.
 8. Permitir dibujar una etiqueta de coordenadas manualmente.
 9. Exponer una capa de dibujo encapsulada para texto, pixel art, lineas, sectores y shapes reutilizables.
-10. Exponer utilidades runtime reutilizables para bucles de animacion, sprite animation, maquinas de estado, seguimiento de teclado, movimiento y colisiones geometricas simples.
+10. Exponer utilidades runtime reutilizables para bucles de animacion, sprite animation, maquinas de estado, seguimiento de teclado y puntero, conversion grid/canvas, movimiento y colisiones geometricas simples.
 11. Limpiar el canvas y volver a dibujar la cuadricula.
 
 ## API publica real
@@ -142,6 +144,10 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 - `createStateMachine(options: GridCanvasStateMachineOptions): GridCanvasStateMachine`: gestiona estados y transiciones simples con retorno booleano.
 - `MassBody`: clase reutilizable para posicion, velocidad, giro, empuje y wrap-around.
 - `createKeyTracker(target, options?)`: rastrea teclas pulsadas sobre un `target` concreto.
+- `createPointerTracker(target, options?)`: rastrea posicion de puntero y estado pulsado relativo al `target`.
+- `canvasToGrid(point, options)`: convierte coordenadas canvas absolutas a celda `{ column, row }`.
+- `gridToCanvas(cell, options)`: convierte una celda de grilla al punto canvas superior izquierdo.
+- `snapPointToGrid(point, options)`: ajusta un punto canvas al origen de su celda.
 - `hitTestPoint(point, target)`: detecta si un punto toca un circulo o un rectangulo axis-aligned.
 - `hitTestRectangle(a, b)`: detecta solape entre dos rectangulos axis-aligned.
 - `hitTestCircleRectangle(circle, rectangle)`: detecta contacto entre un circulo y un rectangulo axis-aligned.
@@ -176,7 +182,7 @@ La libreria queda consolidada alrededor de tres capas:
 2. Capa visual de cuadricula y shapes reutilizables:
    `drawText()`, `drawPixelSprite()`, `drawGhost()`, `drawProjectile()`, `polarToCartesian()`, `createAsteroidShape()`, `drawCircleSector()`, `drawPacman()`, `drawAsteroid()`, `drawShip()`, `drawValueLabel()`, `drawBarIndicator()`, `drawMessage()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
 3. Capa runtime ligera opcional:
-   `GridCanvasSystem.runtime.createAnimationLoop()`, `GridCanvasSystem.runtime.createSpriteAnimator()`, `GridCanvasSystem.runtime.createStateMachine()`, `GridCanvasSystem.runtime.MassBody`, `GridCanvasSystem.runtime.createKeyTracker()` y utilidades de movimiento/colision.
+   `GridCanvasSystem.runtime.createAnimationLoop()`, `GridCanvasSystem.runtime.createSpriteAnimator()`, `GridCanvasSystem.runtime.createStateMachine()`, `GridCanvasSystem.runtime.MassBody`, `GridCanvasSystem.runtime.createKeyTracker()`, `GridCanvasSystem.runtime.createPointerTracker()`, helpers de coordenadas grid/canvas y utilidades de movimiento/colision.
 
 `canvas` y `ctx` siguen disponibles como extension points avanzados dentro de la primera capa, pero la recomendacion para uso comun sigue siendo permanecer en la capa visual encapsulada.
 
@@ -201,7 +207,9 @@ La libreria queda consolidada alrededor de tres capas:
 - `main`: `dist/grid-canvas-system.umd.js`
 - `module`: `dist/grid-canvas-system.es.js`
 - `types`: `dist/index.d.ts`
-- `files`: globs explicitos para `dist/**/*.js`, `dist/**/*.d.ts` y `docs`
+- `exports`: entrada principal con tipos y build ESM, mas acceso a `./package.json`.
+- `sideEffects`: `false` para facilitar tree-shaking en bundlers.
+- `files`: globs explicitos para `CHANGELOG.md`, `dist/**/*.js`, `dist/**/*.d.ts` y `docs`
 
 La build se genera en dos pasos:
 
@@ -225,7 +233,7 @@ Pruebas automatizadas:
 - Cobertura de helpers de deteccion para punto, rectangulo y circulo vs rectangulo.
 - Artefactos `expected`, `actual` y `diff` cuando falla un snapshot visual.
 - Cobertura de helpers neutros de escena para trails, particulas simples y layout de overlays.
-- Cobertura de `drawPixelSprite()`, `createSpriteAnimator()` y `createStateMachine()`.
+- Cobertura de `drawPixelSprite()`, `createSpriteAnimator()`, `createStateMachine()`, helpers de coordenadas grid/canvas y `createPointerTracker()`.
 - Snapshot visual dedicado para pixel art declarativo.
 
 ### Verificacion realizada
@@ -256,8 +264,7 @@ Se valido localmente que:
 - Shape oficial de nave con rotacion encapsulada, curvas cuadraticas configurables y thruster opcional.
 - Overlays reutilizables para HUD y estados de escena.
 - Runtime ligero para animaciones de sprites y maquinas de estado simples sin acoplar dibujo ni logica especifica de mascotas.
-- Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y colisiones circulares.
-- Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y deteccion geometrica simple entre puntos, rectangulos y circulos.
+- Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas por teclado o puntero, conversion grid/canvas, movimiento y deteccion geometrica simple entre puntos, rectangulos y circulos.
 - Helpers neutros de escena para trails acotados, bursts de particulas y layout de overlays.
 - Colores separados entre etiquetas de cuadricula y coordenadas del usuario.
 - Fuentes separadas entre etiquetas de cuadricula y coordenadas del usuario.
@@ -279,10 +286,10 @@ Se valido localmente que:
 
 ## Recomendacion de evolucion
 
-La siguiente etapa natural seria consolidar la libreria en tres capas:
+La siguiente etapa natural es mejorar rendimiento y ergonomia sin cambiar la arquitectura:
 
-1. Inicializacion y validacion del canvas.
-2. Configuracion visual de la cuadricula y shapes reutilizables.
-3. Runtime ligero opcional para animacion, input y fisica simple.
+1. Compilar sprites de pixel art para evitar validar matrices en cada frame animado.
+2. Agregar utilidades de paleta para recolorear sprites sin duplicar matrices.
+3. Incorporar un loop fixed-step opcional para escenas donde la simulacion deba ser mas estable.
 
-Con eso se podria mantener la simplicidad actual sin cerrar la puerta a una API mas solida y reutilizable.
+Con eso se mantiene la simplicidad actual mientras la libreria gana capacidad para demos mas ambiciosas.

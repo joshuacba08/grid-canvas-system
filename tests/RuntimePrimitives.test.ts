@@ -6,13 +6,16 @@ const runtime = GridCanvasSystem.runtime;
 const {
   angleToPoint,
   appendTrailPoint,
+  canvasToGrid,
   circlesIntersect,
   createAnimationLoop,
   createKeyTracker,
   createParticleBurst,
+  createPointerTracker,
   createSpriteAnimator,
   createStateMachine,
   distanceBetweenPoints,
+  gridToCanvas,
   hitTestCircleRectangle,
   hitTestPoint,
   hitTestRectangle,
@@ -20,6 +23,7 @@ const {
   MassBody,
   normalizeKeyIdentifier,
   oscillate01,
+  snapPointToGrid,
   stepParticles,
   vectorFromAngle,
   wrapPoint,
@@ -33,10 +37,14 @@ describe("runtime and utility exports", () => {
   it("groups the optional runtime layer under GridCanvasSystem.runtime without breaking direct aliases", () => {
     expect(runtime.createAnimationLoop).toBe(createAnimationLoop);
     expect(runtime.createKeyTracker).toBe(createKeyTracker);
+    expect(runtime.createPointerTracker).toBe(createPointerTracker);
     expect(runtime.appendTrailPoint).toBe(appendTrailPoint);
     expect(runtime.createParticleBurst).toBe(createParticleBurst);
     expect(runtime.createSpriteAnimator).toBe(createSpriteAnimator);
     expect(runtime.createStateMachine).toBe(createStateMachine);
+    expect(runtime.canvasToGrid).toBe(canvasToGrid);
+    expect(runtime.gridToCanvas).toBe(gridToCanvas);
+    expect(runtime.snapPointToGrid).toBe(snapPointToGrid);
     expect(runtime.hitTestPoint).toBe(hitTestPoint);
     expect(runtime.hitTestRectangle).toBe(hitTestRectangle);
     expect(runtime.hitTestCircleRectangle).toBe(hitTestCircleRectangle);
@@ -65,6 +73,36 @@ describe("runtime and utility exports", () => {
     expect(
       wrapPoint({ x: 120, y: 50 }, { width: 100, height: 100 }, 10),
     ).toEqual({ x: -10, y: 50 });
+  });
+
+  it("converts between absolute canvas points and grid cells", () => {
+    const options = {
+      cellSize: 16,
+      origin: { x: 8, y: 4 },
+    };
+
+    expect(canvasToGrid({ x: 40, y: 36 }, options)).toEqual({
+      column: 2,
+      row: 2,
+    });
+    expect(canvasToGrid({ x: 7, y: 3 }, options)).toEqual({
+      column: -1,
+      row: -1,
+    });
+    expect(gridToCanvas({ column: 3, row: 2 }, options)).toEqual({
+      x: 56,
+      y: 36,
+    });
+    expect(snapPointToGrid({ x: 47, y: 42 }, options)).toEqual({
+      x: 40,
+      y: 36,
+    });
+    expect(() =>
+      canvasToGrid({ x: 0, y: 0 }, { cellSize: 0 }),
+    ).toThrow("cellSize must be a positive finite number");
+    expect(() =>
+      gridToCanvas({ column: 0.5, row: 0 }, { cellSize: 16 }),
+    ).toThrow("cell.column must be an integer");
   });
 
   it("createSpriteAnimator advances frames, plays known animations and rejects missing animations", () => {
@@ -396,5 +434,82 @@ describe("runtime and utility exports", () => {
     expect(tracker.isPressed("ArrowLeft")).toBe(false);
     tracker.destroy();
     expect(tracker.pressedKeys.size).toBe(0);
+  });
+
+  it("createPointerTracker tracks relative pointer position and can clean up listeners", () => {
+    document.body.innerHTML = '<canvas id="canvas"></canvas>';
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+
+    vi.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
+      bottom: 120,
+      height: 100,
+      left: 10,
+      right: 210,
+      top: 20,
+      width: 200,
+      x: 10,
+      y: 20,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    const tracker = createPointerTracker(canvas, {
+      preventDefault: true,
+    });
+    const pointerdown = new MouseEvent("pointerdown", {
+      cancelable: true,
+      clientX: 25,
+      clientY: 45,
+    });
+    const pointermove = new MouseEvent("pointermove", {
+      cancelable: true,
+      clientX: 30,
+      clientY: 50,
+    });
+    const pointerup = new MouseEvent("pointerup", {
+      cancelable: true,
+      clientX: 32,
+      clientY: 54,
+    });
+
+    expect(tracker.position()).toBeNull();
+
+    canvas.dispatchEvent(pointerdown);
+
+    expect(tracker.isDown()).toBe(true);
+    expect(tracker.position()).toEqual({ x: 15, y: 25 });
+    expect(pointerdown.defaultPrevented).toBe(true);
+
+    canvas.dispatchEvent(pointermove);
+
+    expect(tracker.position()).toEqual({ x: 20, y: 30 });
+    expect(pointermove.defaultPrevented).toBe(true);
+
+    const copy = tracker.position();
+
+    if (copy !== null) {
+      copy.x = 999;
+    }
+
+    expect(tracker.position()).toEqual({ x: 20, y: 30 });
+
+    canvas.dispatchEvent(pointerup);
+
+    expect(tracker.isDown()).toBe(false);
+    expect(tracker.position()).toEqual({ x: 22, y: 34 });
+
+    tracker.destroy();
+
+    expect(tracker.isDown()).toBe(false);
+    expect(tracker.position()).toBeNull();
+
+    canvas.dispatchEvent(
+      new MouseEvent("pointerdown", {
+        clientX: 80,
+        clientY: 80,
+      }),
+    );
+
+    expect(tracker.isDown()).toBe(false);
+    expect(tracker.position()).toBeNull();
   });
 });

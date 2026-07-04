@@ -2,7 +2,7 @@
 
 ## Resumen
 
-La libreria funciona bien en su escenario base y ya resolvio varios puntos importantes de robustez, configuracion y tooling. En esta iteracion tambien crecio hacia primitives mas reutilizables para escenas arcade sin meter logica cerrada de juego.
+La libreria funciona bien en su escenario base y ya resolvio varios puntos importantes de robustez, configuracion y tooling. En esta iteracion tambien crecio hacia primitives mas reutilizables para escenas arcade e interactivas sin meter logica cerrada de juego.
 
 ## Mejoras aplicadas en esta iteracion
 
@@ -139,6 +139,10 @@ La libreria ahora incorpora `drawPixelSprite()` para dibujar sprites desde matri
 #### 32. Animator, state machine y demo `Grid Buddy`
 
 El runtime opcional ahora incorpora `createSpriteAnimator()` y `createStateMachine()` como helpers puros. La demo `examples/vanilla/grid-buddy/` muestra una mascota tipo Tamagotchi construida encima de APIs genericas, sin meter logica de mascota en el core.
+
+#### 33. Helpers grid/canvas y pointer tracker
+
+El runtime opcional ahora incorpora `canvasToGrid()`, `gridToCanvas()`, `snapPointToGrid()` y `createPointerTracker()`. Esto resuelve dos gaps de adopcion frecuentes: convertir entre coordenadas absolutas y celdas sin ambiguedad, y construir escenas con mouse, touch o stylus sin conectar listeners DOM repetidos en cada demo.
 
 ## Hallazgos priorizados pendientes
 

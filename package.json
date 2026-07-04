@@ -1,12 +1,21 @@
 {
   "name": "grid-canvas-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "private": false,
-  "description": "A library for creating canvas-based grids",
+  "sideEffects": false,
+  "description": "Build small interactive Canvas scenes with grids, pixel art, sprites, animation, input, collisions and lightweight runtime helpers.",
   "main": "dist/grid-canvas-system.umd.js",
   "module": "dist/grid-canvas-system.es.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/grid-canvas-system.es.js",
+      "default": "./dist/grid-canvas-system.es.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.build.json",
@@ -17,6 +26,7 @@
     "test:watch": "vitest"
   },
   "files": [
+    "CHANGELOG.md",
     "dist/**/*.js",
     "dist/**/*.d.ts",
     "docs"
@@ -24,8 +34,12 @@
   "keywords": [
     "canvas",
     "grid",
-    "library",
-    "vite"
+    "pixel-art",
+    "sprites",
+    "animation",
+    "game-dev",
+    "typescript",
+    "html5-canvas"
   ],
   "author": "Josue Oroya",
   "license": "MIT",

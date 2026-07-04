@@ -1,8 +1,12 @@
 # Grid System for Canvas
 
+[![npm version](https://img.shields.io/npm/v/grid-canvas-system.svg)](https://www.npmjs.com/package/grid-canvas-system)
+[![CI](https://github.com/joshuacba08/grid-canvas-system/actions/workflows/ci.yml/badge.svg)](https://github.com/joshuacba08/grid-canvas-system/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/grid-canvas-system.svg)](https://www.npmjs.com/package/grid-canvas-system)
+
 This library is a tiny canvas engine for grids, pixel art, sprites and playful interactive systems.
 
-In addition to the grid itself, the library now includes reusable drawing helpers, pixel sprite rendering, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, collision/motion utilities, keyboard tracking, lightweight scene helpers, sprite animation, state machines, and an optional animation runtime.
+In addition to the grid itself, the library now includes reusable drawing helpers, pixel sprite rendering, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, grid coordinate helpers, collision/motion utilities, keyboard and pointer tracking, lightweight scene helpers, sprite animation, state machines, and an optional animation runtime.
 
 In my professional use, I have found this tool very useful for education and game development. Students or animators can position elements precisely and visualize their coordinates.
 
@@ -69,7 +73,7 @@ The library is now organized around three simple layers:
 
 1. Core canvas layer: initialization, DOM validation, sizing, HiDPI setup, `canvas`, `ctx`, and `options`.
 2. Drawing layer: grid configuration plus reusable drawing methods like `drawPixelSprite()`, `drawPacman()`, `drawShip()`, `drawProjectile()`, and HUD-style overlays.
-3. Optional runtime layer: animation, sprite animation, state machines, input, simple physics, and scene helpers through `GridCanvasSystem.runtime`.
+3. Optional runtime layer: animation, sprite animation, state machines, input, grid coordinate conversion, simple physics, and scene helpers through `GridCanvasSystem.runtime`.
 
 ### Usage with options
 
@@ -355,6 +359,64 @@ animator.update(1 / 60);
 const frame = animator.getFrame();
 ```
 
+### Grid coordinate helpers example
+
+The drawing API uses absolute canvas coordinates. The runtime helpers make grid-cell conversion explicit when you want tile-like logic.
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const options = {
+  cellSize: 20,
+  origin: { x: 0, y: 0 },
+};
+
+const cell = GridCanvasSystem.runtime.canvasToGrid(
+  { x: 42, y: 58 },
+  options,
+);
+// { column: 2, row: 2 }
+
+const topLeft = GridCanvasSystem.runtime.gridToCanvas(
+  { column: 2, row: 2 },
+  options,
+);
+// { x: 40, y: 40 }
+
+const snapped = GridCanvasSystem.runtime.snapPointToGrid(
+  { x: 42, y: 58 },
+  options,
+);
+// { x: 40, y: 40 }
+```
+
+### Pointer tracker example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 320,
+  height: 220,
+});
+const pointer = GridCanvasSystem.runtime.createPointerTracker(grid.canvas, {
+  preventDefault: true,
+});
+
+GridCanvasSystem.runtime.createAnimationLoop({
+  autoStart: true,
+  draw() {
+    grid.clearCanvas();
+
+    const position = pointer.position();
+
+    if (position !== null) {
+      grid.drawCoordinate(position.x, position.y);
+    }
+  },
+});
+```
+
 ### Collision helpers example
 
 ```js
@@ -428,6 +490,8 @@ const hudSlots = GridCanvasSystem.runtime.layoutStack(
 - [Documentation index](./docs/README.md)
 - [Technical study](./docs/ESTUDIO_TECNICO.md)
 - [Findings and improvements](./docs/HALLAZGOS_Y_MEJORAS.md)
+- [Innovation and scaling research](./docs/INVESTIGACION_INNOVACION_ESCALADO.md)
+- [Changelog](./CHANGELOG.md)
 
 ## Parameters
 
@@ -500,6 +564,10 @@ Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime
 - `createStateMachine(options)`: Small finite state machine helper with boolean transition results.
 - `MassBody`: Reusable physics/movement body with `update`, `push`, `twist`, `speed`, and `movementAngle`.
 - `createKeyTracker(target, options?)`: Tracks pressed keys on a specific target.
+- `createPointerTracker(target, options?)`: Tracks pointer position and down state relative to a target.
+- `canvasToGrid(point, options)`: Converts absolute canvas coordinates into `{ column, row }`.
+- `gridToCanvas(cell, options)`: Converts a grid cell into its top-left absolute canvas point.
+- `snapPointToGrid(point, options)`: Snaps a canvas point to the top-left of its containing grid cell.
 - `appendTrailPoint(trail, point, maxPoints)`: Keeps a bounded point trail without mutating the original array.
 - `createParticleBurst(origin, count, options?)`: Creates a simple particle burst with angle, spread, speed, size, and lifetime controls.
 - `hitTestPoint(point, target)`: Checks a point against either a circle or an axis-aligned rectangle.
@@ -528,6 +596,10 @@ The preferred path for common drawing is the encapsulated API: `drawText`, `draw
 - Both references are treated as part of the supported public API.
 - If you mutate the rendering context state directly, the visual result becomes your responsibility.
 
+## Why not Phaser, PixiJS or Konva?
+
+Those projects are excellent when you need a full game framework, a high-performance renderer, or an interactive object model. `grid-canvas-system` is intentionally smaller: it focuses on learning-friendly Canvas scenes, grids, pixel art, lightweight runtime helpers, and examples that can be read in minutes. The goal is not to replace larger engines, but to make small playful visual systems easy to build without adopting a heavy architecture.
+
 ## TypeScript
 
 The package exports:
@@ -543,11 +615,15 @@ The package exports:
 - `GridCanvasBounds`
 - `GridCanvasCircleLike`
 - `GridCanvasCollisionTarget`
+- `GridCanvasGridCell`
+- `GridCanvasGridOptions`
 - `GridCanvasParticle`
 - `GridCanvasParticleBurstOptions`
 - `GridCanvasParticleStepOptions`
 - `GridCanvasKeyTracker`
 - `GridCanvasKeyTrackerOptions`
+- `GridCanvasPointerTracker`
+- `GridCanvasPointerTrackerOptions`
 - `GridCanvasMassBodyOptions`
 - `GridCanvasMessageOptions`
 - `GridCanvasPacmanOptions`
@@ -657,6 +733,8 @@ Image preview
 - Draw declarative pixel characters with `drawPixelSprite()`.
 - Combine `createSpriteAnimator()` and `createStateMachine()` for small reactive actors.
 - Use Grid Buddy as a showcase for a Tamagotchi-like companion built on generic APIs, not as core pet logic.
+- Convert between canvas points and grid cells with `canvasToGrid()`, `gridToCanvas()`, and `snapPointToGrid()`.
+- Use `createPointerTracker()` for click, drag, hover, or tap-driven scenes without wiring raw DOM listeners each time.
 - Generate persistent asteroid `shape` data once and redraw it with different `noise` values.
 - Drive small scenes with `MassBody` plus `createAnimationLoop()` instead of hand-rolled timers.
 - Reuse `polarToCartesian()` and `drawShip()` to prototype Asteroids-style actors.
