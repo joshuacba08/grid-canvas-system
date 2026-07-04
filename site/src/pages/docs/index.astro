@@ -257,7 +257,11 @@ const methodGroups = [
         "Track canvas-relative pointer state.",
       ],
       ["canvasToGrid / gridToCanvas", "Convert between absolute points and cells."],
-      ["hitTestPoint / hitTestRectangle", "Test common 2D collision targets."],
+      [
+        "hitTestPoint / hitTestRectangle / hitTestCircleRectangle",
+        "Test common point, rectangle and mixed-shape collision targets.",
+      ],
+      ["circlesIntersect(a, b)", "Test overlap between two circular actors."],
       [
         "createParticleBurst / stepParticles",
         "Create and advance lightweight particles.",
@@ -288,6 +292,11 @@ const recipes = [
     "Snap pointer input",
     "Track a pointer and convert its position into a grid cell.",
     "grid-input",
+  ],
+  [
+    "Explore collision response",
+    "Move a circle through walls and collect circular targets.",
+    "collision-course",
   ],
   [
     "Create a particle burst",

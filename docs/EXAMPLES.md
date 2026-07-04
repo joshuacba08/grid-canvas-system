@@ -16,6 +16,7 @@ that server instead of double-clicking the HTML file:
 
 ```text
 http://localhost:5173/examples/vanilla/sprite-state/
+http://localhost:5173/examples/vanilla/collisions/
 http://localhost:5173/examples/vanilla/runtime/
 http://localhost:5173/examples/vanilla/grid-buddy/
 ```
@@ -28,6 +29,7 @@ it does not rebuild the package bundle used by them.
 | Example                        | Focus                                                    |
 | ------------------------------ | -------------------------------------------------------- |
 | `sprite-state`                 | Minimal sprite, animator, and state-machine composition  |
+| `collisions`                   | Keyboard/touch movement and collision response           |
 | `runtime`                      | Animation loop, keyboard input, and `MassBody` motion    |
 | `grid-buddy`                   | Advanced multi-state showcase with stats and persistence |
 | `hud`                          | Labels, bars, and centered messages                      |

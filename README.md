@@ -676,6 +676,7 @@ See also:
 
 - [Example setup and authoring guide](./docs/EXAMPLES.md)
 - [Asteroid example](./examples/vanilla/asteroid/index.html)
+- [Collision course example](./examples/vanilla/collisions/index.html)
 - [Ghost example](./examples/vanilla/ghost/index.html)
 - [Grid Buddy example](./examples/vanilla/grid-buddy/index.html)
 - [HUD example](./examples/vanilla/hud/index.html)

@@ -90,6 +90,13 @@ main {
   font-size: 10px;
 }
 
+.demo-status {
+  color: #8e9b93;
+  font:
+    11px "Geist Pixel",
+    monospace;
+}
+
 .demo-gamebar strong {
   color: #00d43b;
   font-size: 17px;

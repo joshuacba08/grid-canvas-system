@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Collision Course</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, sans-serif;
+        background: #101418;
+        color: #e5edf5;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+      }
+
+      main {
+        width: min(100% - 32px, 680px);
+      }
+
+      header,
+      footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      h1,
+      p {
+        margin: 0;
+      }
+
+      p {
+        color: #94a3b8;
+        font-size: 14px;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        margin: 14px 0 12px;
+        border: 1px solid #334155;
+        outline: none;
+      }
+
+      canvas:focus-visible {
+        border-color: #38bdf8;
+      }
+
+      button {
+        min-height: 36px;
+        padding: 0 14px;
+        border: 1px solid #38bdf8;
+        border-radius: 6px;
+        background: #17202b;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>Collision course</h1>
+          <p>Move with arrows or WASD. Tap or drag on touch.</p>
+        </div>
+        <strong id="score">0 targets</strong>
+      </header>
+      <canvas
+        id="canvas"
+        tabindex="0"
+        aria-label="Interactive collision course"
+      ></canvas>
+      <footer>
+        <p id="status" aria-live="polite">Reach the green target.</p>
+        <button id="reset" type="button">Reset</button>
+      </footer>
+    </main>
+
+    <script type="module">
+      import GridCanvasSystem from "../../../dist/grid-canvas-system.es.js";
+
+      const grid = new GridCanvasSystem("canvas", {
+        width: 640,
+        height: 360,
+        cellSize: 20,
+        majorStep: 40,
+        backgroundColor: "#050708",
+        gridColor: "rgba(56, 189, 248, 0.14)",
+      });
+      const runtime = GridCanvasSystem.runtime;
+      const keys = runtime.createKeyTracker(grid.canvas, {
+        autoFocus: true,
+        preventDefaultKeys: ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"],
+      });
+      const pointer = runtime.createPointerTracker(grid.canvas, {
+        preventDefault: true,
+      });
+      const player = { x: 70, y: 180, radius: 14 };
+      const walls = [
+        { x: 210, y: 40, width: 40, height: 220 },
+        { x: 390, y: 100, width: 40, height: 220 },
+      ];
+      const targets = [
+        { x: 330, y: 70, radius: 13 },
+        { x: 540, y: 280, radius: 13 },
+        { x: 100, y: 300, radius: 13 },
+      ];
+      const statusNode = document.querySelector("#status");
+      const scoreNode = document.querySelector("#score");
+      let targetIndex = 0;
+      let score = 0;
+      let collisionFlash = 0;
+      let pointerTargetActive = false;
+
+      function clamp(value, min, max) {
+        return Math.min(max, Math.max(min, value));
+      }
+
+      function hitsWall(circle) {
+        return walls.some((wall) => runtime.hitTestCircleRectangle(circle, wall));
+      }
+
+      function movePlayer(dx, dy) {
+        let collided = false;
+        const nextX = {
+          ...player,
+          x: clamp(player.x + dx, player.radius, 640 - player.radius),
+        };
+
+        if (hitsWall(nextX)) {
+          collisionFlash = 0.16;
+          collided = true;
+        } else {
+          player.x = nextX.x;
+        }
+
+        const nextY = {
+          ...player,
+          y: clamp(player.y + dy, player.radius, 360 - player.radius),
+        };
+
+        if (hitsWall(nextY)) {
+          collisionFlash = 0.16;
+          collided = true;
+        } else {
+          player.y = nextY.y;
+        }
+
+        return collided;
+      }
+
+      function resetCourse() {
+        player.x = 70;
+        player.y = 180;
+        targetIndex = 0;
+        score = 0;
+        collisionFlash = 0;
+        pointerTargetActive = false;
+        scoreNode.textContent = "0 targets";
+        statusNode.textContent = "Reach the green target.";
+        keys.focus();
+      }
+
+      document.querySelector("#reset").addEventListener("click", resetCourse);
+      grid.canvas.addEventListener("pointerdown", () => {
+        pointerTargetActive = true;
+        keys.focus();
+      });
+
+      runtime.createAnimationLoop({
+        autoStart: true,
+        maxElapsed: 0.04,
+        update(elapsed) {
+          collisionFlash = Math.max(0, collisionFlash - elapsed);
+          let horizontal =
+            Number(keys.isPressed("ArrowRight") || keys.isPressed("d")) -
+            Number(keys.isPressed("ArrowLeft") || keys.isPressed("a"));
+          let vertical =
+            Number(keys.isPressed("ArrowDown") || keys.isPressed("s")) -
+            Number(keys.isPressed("ArrowUp") || keys.isPressed("w"));
+
+          if (horizontal !== 0 || vertical !== 0) {
+            pointerTargetActive = false;
+          }
+
+          if (pointerTargetActive) {
+            const point = pointer.position();
+            const bounds = grid.canvas.getBoundingClientRect();
+            const pointerX = point.x * (640 / bounds.width);
+            const pointerY = point.y * (360 / bounds.height);
+            const distance = Math.hypot(pointerX - player.x, pointerY - player.y);
+
+            if (distance > 2) {
+              horizontal = (pointerX - player.x) / distance;
+              vertical = (pointerY - player.y) / distance;
+            } else {
+              pointerTargetActive = false;
+            }
+          }
+
+          const length = Math.hypot(horizontal, vertical) || 1;
+          const collided = movePlayer(
+            (horizontal / length) * 190 * elapsed,
+            (vertical / length) * 190 * elapsed,
+          );
+
+          if (collided) {
+            pointerTargetActive = false;
+          }
+
+          if (runtime.circlesIntersect(player, targets[targetIndex])) {
+            score += 1;
+            targetIndex = (targetIndex + 1) % targets.length;
+            scoreNode.textContent = score + (score === 1 ? " target" : " targets");
+            statusNode.textContent = "Target reached. Find the next one.";
+          } else if (collisionFlash > 0) {
+            statusNode.textContent = "Blocked by a rectangle collision.";
+          }
+        },
+        draw() {
+          grid.clearCanvas();
+
+          walls.forEach((wall) => {
+            grid.drawPolyline(
+              [
+                { x: wall.x, y: wall.y },
+                { x: wall.x + wall.width, y: wall.y },
+                { x: wall.x + wall.width, y: wall.y + wall.height },
+                { x: wall.x, y: wall.y + wall.height },
+              ],
+              {
+                closePath: true,
+                strokeColor: collisionFlash > 0 ? "#fb7185" : "#64748b",
+                lineWidth: 3,
+              },
+            );
+          });
+
+          grid.drawProjectile(targets[targetIndex], targets[targetIndex].radius, 1, {
+            fillColor: "#22c55e",
+            strokeColor: "#dcfce7",
+            lineWidth: 2,
+          });
+          grid.drawProjectile(player, player.radius, 1, {
+            fillColor: collisionFlash > 0 ? "#fb7185" : "#38bdf8",
+            strokeColor: "#e5edf5",
+            lineWidth: 2,
+          });
+          grid.drawText("circle vs rectangle", 18, 26, {
+            color: "#94a3b8",
+            font: "13px monospace",
+          });
+        },
+      });
+    </script>
+  </body>
+</html>
