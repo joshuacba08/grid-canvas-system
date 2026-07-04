@@ -141,15 +141,7 @@ const grid = new GridCanvasSystem("canvas", {
 });
 
 grid.drawPixelSprite(
-  [
-    "00111100",
-    "01122110",
-    "11222211",
-    "12233221",
-    "11222211",
-    "01111110",
-    "00100100",
-  ],
+  ["00111100", "01122110", "11222211", "12233221", "11222211", "01111110", "00100100"],
   {
     x: 60,
     y: 45,
@@ -191,16 +183,12 @@ const grid = new GridCanvasSystem("canvas", {
   height: 240,
 });
 
-grid.drawShip(
-  { x: 120, y: 120 },
-  70,
-  {
-    rotation: -Math.PI / 2,
-    curve1: 0.45,
-    curve2: 0.8,
-    guide: true,
-  },
-);
+grid.drawShip({ x: 120, y: 120 }, 70, {
+  rotation: -Math.PI / 2,
+  curve1: 0.45,
+  curve2: 0.8,
+  guide: true,
+});
 ```
 
 ### Asteroid example
@@ -215,16 +203,11 @@ const grid = new GridCanvasSystem("canvas", {
 
 const shape = grid.createAsteroidShape(14);
 
-grid.drawAsteroid(
-  { x: 130, y: 130 },
-  75,
-  shape,
-  {
-    noise: 0.4,
-    rotation: Math.PI / 10,
-    guide: true,
-  },
-);
+grid.drawAsteroid({ x: 130, y: 130 }, 75, shape, {
+  noise: 0.4,
+  rotation: Math.PI / 10,
+  guide: true,
+});
 ```
 
 ### Ghost example
@@ -237,15 +220,11 @@ const grid = new GridCanvasSystem("canvas", {
   height: 240,
 });
 
-grid.drawGhost(
-  { x: 120, y: 130 },
-  70,
-  {
-    feet: 5,
-    fillColor: "#ff0000",
-    strokeColor: "#ffffff",
-  },
-);
+grid.drawGhost({ x: 120, y: 130 }, 70, {
+  feet: 5,
+  fillColor: "#ff0000",
+  strokeColor: "#ffffff",
+});
 ```
 
 ### HUD example
@@ -258,26 +237,18 @@ const grid = new GridCanvasSystem("canvas", {
   height: 180,
 });
 
-grid.drawShip(
-  { x: 160, y: 112 },
-  38,
-  {
-    rotation: -Math.PI / 2,
-    curve1: 0.45,
-    curve2: 0.8,
-    thruster: true,
-  },
-);
+grid.drawShip({ x: 160, y: 112 }, 38, {
+  rotation: -Math.PI / 2,
+  curve1: 0.45,
+  curve2: 0.8,
+  thruster: true,
+});
 
 grid.drawBarIndicator("health", 8, 8, 110, 12, 78, 100);
 grid.drawValueLabel("score", 2450, 312, 18, {
   textAlign: "end",
 });
-grid.drawMessage(
-  "GAME OVER",
-  "Press space to play again",
-  { x: 160, y: 62 },
-);
+grid.drawMessage("GAME OVER", "Press space to play again", { x: 160, y: 62 });
 ```
 
 ### Runtime example
@@ -371,22 +342,13 @@ const options = {
   origin: { x: 0, y: 0 },
 };
 
-const cell = GridCanvasSystem.runtime.canvasToGrid(
-  { x: 42, y: 58 },
-  options,
-);
+const cell = GridCanvasSystem.runtime.canvasToGrid({ x: 42, y: 58 }, options);
 // { column: 2, row: 2 }
 
-const topLeft = GridCanvasSystem.runtime.gridToCanvas(
-  { column: 2, row: 2 },
-  options,
-);
+const topLeft = GridCanvasSystem.runtime.gridToCanvas({ column: 2, row: 2 }, options);
 // { x: 40, y: 40 }
 
-const snapped = GridCanvasSystem.runtime.snapPointToGrid(
-  { x: 42, y: 58 },
-  options,
-);
+const snapped = GridCanvasSystem.runtime.snapPointToGrid({ x: 42, y: 58 }, options);
 // { x: 40, y: 40 }
 ```
 
@@ -445,32 +407,20 @@ import GridCanvasSystem from "grid-canvas-system";
 
 let trail = [];
 
-trail = GridCanvasSystem.runtime.appendTrailPoint(
-  trail,
-  { x: 140, y: 90 },
-  12,
-);
+trail = GridCanvasSystem.runtime.appendTrailPoint(trail, { x: 140, y: 90 }, 12);
 
-const particles = GridCanvasSystem.runtime.createParticleBurst(
-  { x: 140, y: 90 },
-  6,
-  {
-    angle: -Math.PI / 2,
-    spread: Math.PI / 3,
-    speed: 90,
-    life: 0.8,
-    size: 3,
-  },
-);
+const particles = GridCanvasSystem.runtime.createParticleBurst({ x: 140, y: 90 }, 6, {
+  angle: -Math.PI / 2,
+  spread: Math.PI / 3,
+  speed: 90,
+  life: 0.8,
+  size: 3,
+});
 
-const nextParticles = GridCanvasSystem.runtime.stepParticles(
-  particles,
-  1 / 60,
-  {
-    gravityY: 40,
-    drag: 0.15,
-  },
-);
+const nextParticles = GridCanvasSystem.runtime.stepParticles(particles, 1 / 60, {
+  gravityY: 40,
+  drag: 0.15,
+});
 
 const hudSlots = GridCanvasSystem.runtime.layoutStack(
   { x: 312, y: 12 },
@@ -653,6 +603,13 @@ The package exports:
 
 ## Testing
 
+Format the complete workspace before running the test suite:
+
+```bash
+pnpm run format
+pnpm run format:check
+```
+
 ```bash
 npm test
 ```
@@ -671,6 +628,11 @@ When a visual snapshot fails, the test runner now writes `expected`, `actual`, a
 pnpm install --frozen-lockfile
 pnpm test
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow, formatting
+contract, and pull-request checklist.
 
 ## Examples
 
@@ -699,7 +661,7 @@ pnpm test
         {
           color: "#FFFFFF",
           lineWidth: 2,
-        }
+        },
       );
 
       grid.drawCoordinate(100, 200);
@@ -712,6 +674,7 @@ pnpm test
 
 See also:
 
+- [Example setup and authoring guide](./docs/EXAMPLES.md)
 - [Asteroid example](./examples/vanilla/asteroid/index.html)
 - [Ghost example](./examples/vanilla/ghost/index.html)
 - [Grid Buddy example](./examples/vanilla/grid-buddy/index.html)
@@ -719,6 +682,7 @@ See also:
 - [Pac-Man example](./examples/vanilla/pacman/index.html)
 - [Projectile example](./examples/vanilla/projectile/index.html)
 - [Runtime example](./examples/vanilla/runtime/index.html)
+- [Sprite animator and state machine example](./examples/vanilla/sprite-state/index.html)
 - [Spaceship example](./examples/vanilla/spaceship/index.html)
 
 ### Output

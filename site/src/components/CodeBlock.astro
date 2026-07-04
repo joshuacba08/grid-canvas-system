@@ -1,0 +1,34 @@
+---
+import { Check, Copy } from "@lucide/astro";
+
+interface Props {
+  snippet: {
+    id: string;
+    title: string;
+    highlighted: string;
+  };
+}
+
+const { snippet } = Astro.props;
+---
+
+<div class="docs-code-block">
+  <header>
+    <span>{snippet.title}</span>
+    <button
+      class="copy-button"
+      type="button"
+      data-copy-target={snippet.id}
+      data-tooltip="Copy code"
+      aria-label={`Copy ${snippet.title} code`}
+    >
+      <Copy class="copy-icon" size={14} aria-hidden="true" />
+      <Check class="check-icon" size={14} aria-hidden="true" />
+    </button>
+  </header>
+  <div
+    id={snippet.id}
+    class="highlighted-code docs-highlight"
+    set:html={snippet.highlighted}
+  />
+</div>

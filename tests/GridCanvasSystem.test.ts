@@ -62,7 +62,8 @@ describe("GridCanvasSystem", () => {
   let mockContext: MockCanvasContext;
 
   beforeEach(() => {
-    document.body.innerHTML = '<canvas id="canvas"></canvas><div id="not-canvas"></div>';
+    document.body.innerHTML =
+      '<canvas id="canvas"></canvas><div id="not-canvas"></div>';
     mockContext = createMockContext();
 
     vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
@@ -244,25 +245,19 @@ describe("GridCanvasSystem", () => {
 
     mockContext.fillRect.mockClear();
 
-    grid.drawPixelSprite(
-      [
-        "012",
-        "345",
-      ],
-      {
-        x: 10,
-        y: 20,
-        pixelSize: 4,
-        palette: {
-          0: null,
-          1: undefined,
-          2: "transparent",
-          3: "#111111",
-          4: "#222222",
-          5: "#333333",
-        },
+    grid.drawPixelSprite(["012", "345"], {
+      x: 10,
+      y: 20,
+      pixelSize: 4,
+      palette: {
+        0: null,
+        1: undefined,
+        2: "transparent",
+        3: "#111111",
+        4: "#222222",
+        5: "#333333",
       },
-    );
+    });
 
     expect(mockContext.fillRect).toHaveBeenCalledTimes(3);
     expect(mockContext.fillRect).toHaveBeenNthCalledWith(1, 10, 24, 4, 4);
@@ -309,10 +304,14 @@ describe("GridCanvasSystem", () => {
     mockContext.lineTo.mockClear();
     mockContext.stroke.mockClear();
 
-    grid.drawLine({ x: 10, y: 20 }, { x: 80, y: 30 }, {
-      color: "#abcdef",
-      lineWidth: 3,
-    });
+    grid.drawLine(
+      { x: 10, y: 20 },
+      { x: 80, y: 30 },
+      {
+        color: "#abcdef",
+        lineWidth: 3,
+      },
+    );
 
     expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
     expect(mockContext.moveTo).toHaveBeenCalledWith(10, 20);
@@ -332,17 +331,11 @@ describe("GridCanvasSystem", () => {
     mockContext.fill.mockClear();
     mockContext.stroke.mockClear();
 
-    grid.drawCircleSector(
-      { x: 50, y: 60 },
-      30,
-      Math.PI * 0.25,
-      Math.PI * 1.5,
-      {
-        fillColor: "#ff0000",
-        strokeColor: "#0000ff",
-        lineWidth: 4,
-      },
-    );
+    grid.drawCircleSector({ x: 50, y: 60 }, 30, Math.PI * 0.25, Math.PI * 1.5, {
+      fillColor: "#ff0000",
+      strokeColor: "#0000ff",
+      lineWidth: 4,
+    });
 
     expect(mockContext.beginPath).toHaveBeenCalledTimes(1);
     expect(mockContext.moveTo).toHaveBeenCalledWith(50, 60);
@@ -364,11 +357,7 @@ describe("GridCanvasSystem", () => {
   it("polarToCartesian converts polar coordinates into canvas coordinates", () => {
     const grid = new GridCanvasSystem("canvas");
 
-    const point = grid.polarToCartesian(
-      { x: 100, y: 60 },
-      50,
-      Math.PI / 2,
-    );
+    const point = grid.polarToCartesian({ x: 100, y: 60 }, 50, Math.PI / 2);
 
     expect(point.x).toBeCloseTo(100);
     expect(point.y).toBeCloseTo(110);
@@ -404,19 +393,14 @@ describe("GridCanvasSystem", () => {
     mockContext.fill.mockClear();
     mockContext.stroke.mockClear();
 
-    grid.drawAsteroid(
-      { x: 100, y: 120 },
-      30,
-      [0, 0.5, -0.5, 0.25],
-      {
-        noise: 0.4,
-        rotation: Math.PI / 8,
-        guide: true,
-        fillColor: "#111111",
-        strokeColor: "#ffffff",
-        lineWidth: 3,
-      },
-    );
+    grid.drawAsteroid({ x: 100, y: 120 }, 30, [0, 0.5, -0.5, 0.25], {
+      noise: 0.4,
+      rotation: Math.PI / 8,
+      guide: true,
+      fillColor: "#111111",
+      strokeColor: "#ffffff",
+      lineWidth: 3,
+    });
 
     expect(mockContext.save).toHaveBeenCalledTimes(1);
     expect(mockContext.restore).toHaveBeenCalledTimes(1);
@@ -500,11 +484,7 @@ describe("GridCanvasSystem", () => {
     mockContext.stroke.mockClear();
     mockContext.closePath.mockClear();
 
-    grid.drawProjectile(
-      { x: 70, y: 80 },
-      12,
-      0.5,
-    );
+    grid.drawProjectile({ x: 70, y: 80 }, 12, 0.5);
 
     expect(mockContext.arc).toHaveBeenCalledWith(70, 80, 12, 0, Math.PI * 2);
     expect(mockContext.fillStyle).toBe("rgb(255, 255, 128)");
@@ -529,16 +509,12 @@ describe("GridCanvasSystem", () => {
     mockContext.fill.mockClear();
     mockContext.stroke.mockClear();
 
-    grid.drawGhost(
-      { x: 60, y: 80 },
-      30,
-      {
-        feet: 5,
-        fillColor: "#ff0000",
-        strokeColor: "#ffffff",
-        rotation: Math.PI / 6,
-      },
-    );
+    grid.drawGhost({ x: 60, y: 80 }, 30, {
+      feet: 5,
+      fillColor: "#ff0000",
+      strokeColor: "#ffffff",
+      rotation: Math.PI / 6,
+    });
 
     expect(mockContext.save).toHaveBeenCalledTimes(1);
     expect(mockContext.restore).toHaveBeenCalledTimes(1);
@@ -652,19 +628,15 @@ describe("GridCanvasSystem", () => {
     mockContext.fill.mockClear();
     mockContext.stroke.mockClear();
 
-    grid.drawShip(
-      { x: 80, y: 90 },
-      30,
-      {
-        rotation: -Math.PI / 2,
-        curve1: 0.4,
-        curve2: 0.8,
-        guide: true,
-        fillColor: "#101010",
-        strokeColor: "#ffffff",
-        lineWidth: 4,
-      },
-    );
+    grid.drawShip({ x: 80, y: 90 }, 30, {
+      rotation: -Math.PI / 2,
+      curve1: 0.4,
+      curve2: 0.8,
+      guide: true,
+      fillColor: "#101010",
+      strokeColor: "#ffffff",
+      lineWidth: 4,
+    });
 
     expect(mockContext.save).toHaveBeenCalledTimes(1);
     expect(mockContext.restore).toHaveBeenCalledTimes(1);
@@ -678,8 +650,7 @@ describe("GridCanvasSystem", () => {
 
     const [firstControlX, firstControlY, firstEndX, firstEndY] =
       mockContext.quadraticCurveTo.mock.calls[0];
-    const [rearControlX, rearControlY] =
-      mockContext.quadraticCurveTo.mock.calls[1];
+    const [rearControlX, rearControlY] = mockContext.quadraticCurveTo.mock.calls[1];
 
     expect(firstControlX).toBeCloseTo(Math.cos(Math.PI / 4) * 24);
     expect(firstControlY).toBeCloseTo(Math.sin(Math.PI / 4) * 24);
@@ -697,15 +668,11 @@ describe("GridCanvasSystem", () => {
     mockContext.fill.mockClear();
     mockContext.stroke.mockClear();
 
-    grid.drawShip(
-      { x: 80, y: 90 },
-      30,
-      {
-        thruster: true,
-        thrusterFillColor: "#ff3300",
-        thrusterStrokeColor: "#ffee00",
-      },
-    );
+    grid.drawShip({ x: 80, y: 90 }, 30, {
+      thruster: true,
+      thrusterFillColor: "#ff3300",
+      thrusterStrokeColor: "#ffee00",
+    });
 
     expect(mockContext.moveTo).toHaveBeenNthCalledWith(
       1,
@@ -862,12 +829,7 @@ describe("GridCanvasSystem", () => {
       "segments must be greater than or equal to 3",
     );
     expect(() =>
-      grid.drawAsteroid(
-        { x: 50, y: 50 },
-        20,
-        [0, 0.1, -0.1],
-        { noise: 2 },
-      ),
+      grid.drawAsteroid({ x: 50, y: 50 }, 20, [0, 0.1, -0.1], { noise: 2 }),
     ).toThrow("noise must be a finite number between 0 and 1");
   });
 });

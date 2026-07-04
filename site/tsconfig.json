@@ -1,0 +1,10 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "grid-canvas-system": ["../src/index.ts"]
+    },
+    "types": ["astro/client"]
+  }
+}

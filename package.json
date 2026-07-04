@@ -19,11 +19,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.build.json",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "preview": "vite preview",
     "test": "vitest run",
     "test:visual": "vitest run tests/GridCanvasSystem.visual.test.ts",
     "test:visual:update": "npm run build && node scripts/update-visual-snapshots.mjs",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "site:dev": "pnpm --filter grid-canvas-system-site dev",
+    "site:build": "pnpm --filter grid-canvas-system-site build",
+    "site:preview": "pnpm --filter grid-canvas-system-site preview"
   },
   "files": [
     "CHANGELOG.md",
@@ -54,6 +59,8 @@
   "devDependencies": {
     "@napi-rs/canvas": "^1.0.0",
     "jsdom": "^29.1.1",
+    "prettier": "^3.9.4",
+    "prettier-plugin-astro": "^0.14.1",
     "typescript": "~5.6.2",
     "vite": "^6.0.1",
     "vitest": "^4.1.9"

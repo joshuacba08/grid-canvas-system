@@ -134,7 +134,11 @@ export function createPointerTracker(
       resolvedTarget.removeEventListener("pointerdown", pointerdown, options.capture);
       resolvedTarget.removeEventListener("pointermove", pointermove, options.capture);
       resolvedTarget.removeEventListener("pointerup", pointerup, options.capture);
-      resolvedTarget.removeEventListener("pointercancel", pointercancel, options.capture);
+      resolvedTarget.removeEventListener(
+        "pointercancel",
+        pointercancel,
+        options.capture,
+      );
       resolvedTarget.removeEventListener("pointerleave", pointerleave, options.capture);
       down = false;
       currentPosition = null;

@@ -35,10 +35,7 @@ function resolveBounds(bounds: GridCanvasBounds): GridCanvasBounds {
   return { width, height };
 }
 
-export function vectorFromAngle(
-  angle: number,
-  magnitude: number = 1,
-): GridCanvasPoint {
+export function vectorFromAngle(angle: number, magnitude: number = 1): GridCanvasPoint {
   const resolvedAngle = resolveFinite(angle, "angle");
   const resolvedMagnitude = resolveFinite(magnitude, "magnitude");
 
@@ -48,33 +45,21 @@ export function vectorFromAngle(
   };
 }
 
-export function angleToPoint(
-  from: GridCanvasPoint,
-  to: GridCanvasPoint,
-): number {
+export function angleToPoint(from: GridCanvasPoint, to: GridCanvasPoint): number {
   const resolvedFrom = resolvePoint(from, "from");
   const resolvedTo = resolvePoint(to, "to");
 
-  return Math.atan2(
-    resolvedTo.y - resolvedFrom.y,
-    resolvedTo.x - resolvedFrom.x,
-  );
+  return Math.atan2(resolvedTo.y - resolvedFrom.y, resolvedTo.x - resolvedFrom.x);
 }
 
-export function oscillate01(
-  time: number,
-  frequency: number = 1,
-): number {
+export function oscillate01(time: number, frequency: number = 1): number {
   const resolvedTime = resolveFinite(time, "time");
   const resolvedFrequency = resolveFinite(frequency, "frequency");
 
   return Math.abs(Math.sin(Math.PI * 2 * resolvedFrequency * resolvedTime));
 }
 
-export function distanceBetweenPoints(
-  a: GridCanvasPoint,
-  b: GridCanvasPoint,
-): number {
+export function distanceBetweenPoints(a: GridCanvasPoint, b: GridCanvasPoint): number {
   const resolvedA = resolvePoint(a, "a");
   const resolvedB = resolvePoint(b, "b");
 
@@ -94,8 +79,9 @@ export function circlesIntersect(
     radius: resolveFinite(b.radius, "b.radius"),
   };
 
-  return distanceBetweenPoints(resolvedA, resolvedB) <=
-    resolvedA.radius + resolvedB.radius;
+  return (
+    distanceBetweenPoints(resolvedA, resolvedB) <= resolvedA.radius + resolvedB.radius
+  );
 }
 
 export function wrapPoint(

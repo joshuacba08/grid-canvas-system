@@ -32,9 +32,7 @@ function resolveTransitions(
       }
 
       if (!Object.prototype.hasOwnProperty.call(transitions, nextState)) {
-        throw new Error(
-          `transitions.${state} references unknown state "${nextState}"`,
-        );
+        throw new Error(`transitions.${state} references unknown state "${nextState}"`);
       }
     });
   }

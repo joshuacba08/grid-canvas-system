@@ -24,12 +24,9 @@ export interface GridCanvasRectangleLike extends GridCanvasPoint {
   height: number;
 }
 
-export type GridCanvasCollisionTarget =
-  | GridCanvasCircleLike
-  | GridCanvasRectangleLike;
+export type GridCanvasCollisionTarget = GridCanvasCircleLike | GridCanvasRectangleLike;
 
-export interface GridCanvasParticle
-  extends GridCanvasPoint, GridCanvasVelocity {
+export interface GridCanvasParticle extends GridCanvasPoint, GridCanvasVelocity {
   life: number;
   maxLife: number;
   size: number;

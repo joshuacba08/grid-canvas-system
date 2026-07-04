@@ -1,0 +1,155 @@
+---
+import { BookOpen, Check, Copy, Play, RotateCcw } from "@lucide/astro";
+
+import { playgroundExamples } from "../../data/playgroundExamples";
+import "../../styles/global.css";
+import "../../styles/playground.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Edit and run Grid Canvas System scenes with Monaco Editor."
+    />
+    <title>Playground / Grid Canvas System</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap"
+    />
+  </head>
+  <body class="playground-page">
+    <header class="playground-topbar">
+      <a class="brand playground-brand" href="/" aria-label="Grid Canvas System home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>Grid Canvas System</span>
+        <b>Playground</b>
+      </a>
+
+      <div class="playground-actions">
+        <label class="template-select">
+          <span class="sr-only">Example scene</span>
+          <select data-template-select aria-label="Example scene">
+            {
+              playgroundExamples.map((example) => (
+                <option value={example.id}>{example.title}</option>
+              ))
+            }
+          </select>
+        </label>
+        <button
+          class="tool-button icon-button"
+          type="button"
+          data-copy-editor
+          data-tooltip="Copy code"
+          aria-label="Copy editor code"
+        >
+          <Copy class="copy-icon" size={16} aria-hidden="true" />
+          <Check class="check-icon" size={16} aria-hidden="true" />
+        </button>
+        <button
+          class="tool-button icon-button"
+          type="button"
+          data-reset-editor
+          data-tooltip="Reset example"
+          aria-label="Reset example"
+        >
+          <RotateCcw size={16} aria-hidden="true" />
+        </button>
+        <a class="tool-button docs-button" href="/docs/">
+          <BookOpen size={16} aria-hidden="true" />
+          <span>Docs</span>
+        </a>
+        <button class="tool-button run-button" type="button" data-run-code>
+          <Play size={15} fill="currentColor" aria-hidden="true" />
+          Run
+        </button>
+      </div>
+    </header>
+
+    <nav class="playground-mobile-tabs" aria-label="Playground panels">
+      <button type="button" class="is-active" data-panel-tab="editor">Editor</button>
+      <button type="button" data-panel-tab="preview">Preview</button>
+    </nav>
+
+    <main class="playground-workbench">
+      <aside class="playground-explorer" aria-label="Playground examples">
+        <header>
+          <span>Examples</span>
+          <b>{String(playgroundExamples.length).padStart(2, "0")}</b>
+        </header>
+        <nav>
+          {
+            playgroundExamples.map((example, index) => (
+              <button
+                type="button"
+                class:list={["example-nav-item", { "is-active": index === 0 }]}
+                data-example-id={example.id}
+                aria-pressed={index === 0 ? "true" : "false"}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <span>
+                  <strong>{example.title}</strong>
+                  <small>{example.group}</small>
+                </span>
+              </button>
+            ))
+          }
+        </nav>
+        <footer data-example-description>{playgroundExamples[0].description}</footer>
+      </aside>
+
+      <section class="workbench-pane editor-pane is-mobile-active" data-panel="editor">
+        <header class="pane-header">
+          <div class="editor-file-tabs" role="tablist" aria-label="Playground files">
+            <button
+              type="button"
+              role="tab"
+              aria-selected="true"
+              class="is-active"
+              data-file-tab="javascript"><i></i> scene.js</button
+            >
+            <button type="button" role="tab" aria-selected="false" data-file-tab="html"
+              >index.html</button
+            >
+          </div>
+          <span data-language-label>JavaScript / Monaco</span>
+        </header>
+        <div id="monaco-editor" class="monaco-host" aria-label="Scene code editor">
+          <span class="editor-loading" data-editor-loading>Loading Monaco...</span>
+        </div>
+      </section>
+
+      <section class="workbench-pane preview-pane" data-panel="preview">
+        <header class="pane-header">
+          <span>Preview</span>
+          <span class="playground-status" data-playground-status data-state="loading">
+            <i></i><b>Loading</b>
+          </span>
+        </header>
+        <div class="preview-surface">
+          <iframe
+            class="preview-frame"
+            src="/playground-preview/"
+            title="Grid Canvas System scene preview"
+            sandbox="allow-scripts allow-same-origin"
+            data-preview-frame></iframe>
+        </div>
+        <footer class="playground-console" aria-live="polite">
+          <span>Console</span>
+          <output data-console-output>Waiting for editor.</output>
+        </footer>
+      </section>
+    </main>
+
+    <script>
+      import "../../scripts/playground";
+    </script>
+  </body>
+</html>

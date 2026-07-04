@@ -1,0 +1,147 @@
+:root {
+  color-scheme: dark;
+  background: #050607;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+main {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 212, 59, 0.035) 0 1px,
+      transparent 1px 48px
+    ),
+    #050607;
+}
+
+main {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.demo-shell {
+  display: grid;
+  width: min(100%, 720px);
+  max-height: 100%;
+  gap: 12px;
+}
+
+.demo-actions {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.demo-actions button {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(232, 247, 239, 0.18);
+  border-radius: 6px;
+  background: #101722;
+  color: #e8f7ef;
+  font:
+    12px "Geist Pixel",
+    monospace;
+  cursor: pointer;
+}
+
+.demo-actions button:hover {
+  border-color: rgba(0, 212, 59, 0.6);
+  color: #00d43b;
+}
+
+.demo-gamebar {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 2px;
+  color: #e8f7ef;
+  font-family: "Geist Pixel", monospace;
+}
+
+.demo-gamebar div {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.demo-gamebar span,
+.demo-gamebar p,
+.demo-hint {
+  color: #8e9b93;
+  font-size: 10px;
+}
+
+.demo-gamebar strong {
+  color: #00d43b;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+.demo-gamebar p {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.demo-gamebar p[data-state="playing"] {
+  color: #00d43b;
+}
+
+.demo-gamebar p[data-state="gameover"] {
+  color: #ffb14a;
+}
+
+.demo-hint {
+  margin-left: 6px;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.game-demo canvas:focus-visible {
+  border-color: #00d43b;
+  outline: 2px solid rgba(0, 212, 59, 0.22);
+  outline-offset: 2px;
+}
+
+canvas {
+  display: block;
+  width: min(100%, 720px) !important;
+  height: auto !important;
+  max-height: 100%;
+  border: 1px solid rgba(232, 247, 239, 0.14);
+  background: #050607;
+  image-rendering: pixelated;
+}
+
+@media (max-width: 560px) {
+  main {
+    padding: 12px;
+  }
+
+  .demo-gamebar {
+    min-height: 34px;
+  }
+
+  .demo-hint {
+    width: 100%;
+    margin-left: 0;
+  }
+}

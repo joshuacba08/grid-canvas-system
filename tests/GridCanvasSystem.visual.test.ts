@@ -250,10 +250,7 @@ function renderEncapsulatedDrawingScenario(): BackingCanvas {
 }
 
 function renderPacmanScenario(): BackingCanvas {
-  const { grid, backingCanvas } = renderScenario(
-    "visual-pacman",
-    PACMAN_OPTIONS,
-  );
+  const { grid, backingCanvas } = renderScenario("visual-pacman", PACMAN_OPTIONS);
 
   grid.drawPacman(100, 100, 70, 1, {
     fillColor: "#FFFF00",
@@ -265,29 +262,19 @@ function renderPacmanScenario(): BackingCanvas {
 }
 
 function renderGhostScenario(): BackingCanvas {
-  const { grid, backingCanvas } = renderScenario(
-    "visual-ghost",
-    GHOST_OPTIONS,
-  );
+  const { grid, backingCanvas } = renderScenario("visual-ghost", GHOST_OPTIONS);
 
-  grid.drawGhost(
-    { x: 110, y: 115 },
-    70,
-    {
-      feet: 5,
-      fillColor: "#ff0000",
-      strokeColor: "#ffffff",
-    },
-  );
+  grid.drawGhost({ x: 110, y: 115 }, 70, {
+    feet: 5,
+    fillColor: "#ff0000",
+    strokeColor: "#ffffff",
+  });
 
   return backingCanvas;
 }
 
 function renderAsteroidScenario(): BackingCanvas {
-  const { grid, backingCanvas } = renderScenario(
-    "visual-asteroid",
-    ASTEROID_OPTIONS,
-  );
+  const { grid, backingCanvas } = renderScenario("visual-asteroid", ASTEROID_OPTIONS);
 
   grid.drawAsteroid(
     { x: 110, y: 110 },
@@ -307,82 +294,50 @@ function renderAsteroidScenario(): BackingCanvas {
 }
 
 function renderShipScenario(): BackingCanvas {
-  const { grid, backingCanvas } = renderScenario(
-    "visual-ship",
-    SHIP_OPTIONS,
-  );
+  const { grid, backingCanvas } = renderScenario("visual-ship", SHIP_OPTIONS);
 
-  grid.drawShip(
-    { x: 110, y: 110 },
-    70,
-    {
-      rotation: -Math.PI / 2,
-      curve1: 0.45,
-      curve2: 0.8,
-      guide: true,
-      fillColor: "#111111",
-      strokeColor: "#ffffff",
-      lineWidth: 2,
-    },
-  );
+  grid.drawShip({ x: 110, y: 110 }, 70, {
+    rotation: -Math.PI / 2,
+    curve1: 0.45,
+    curve2: 0.8,
+    guide: true,
+    fillColor: "#111111",
+    strokeColor: "#ffffff",
+    lineWidth: 2,
+  });
 
   return backingCanvas;
 }
 
 function renderProjectileScenario(): BackingCanvas {
-  const { grid, backingCanvas } = renderScenario(
-    "visual-projectile",
-    PACMAN_OPTIONS,
-  );
+  const { grid, backingCanvas } = renderScenario("visual-projectile", PACMAN_OPTIONS);
 
-  grid.drawProjectile(
-    { x: 45, y: 70 },
-    10,
-    1,
-    {
-      strokeColor: "#ffffff",
-    },
-  );
-  grid.drawProjectile(
-    { x: 100, y: 100 },
-    14,
-    0.6,
-    {
-      strokeColor: "#ffffff",
-    },
-  );
-  grid.drawProjectile(
-    { x: 155, y: 135 },
-    18,
-    0.25,
-    {
-      strokeColor: "#ffffff",
-      guide: true,
-    },
-  );
+  grid.drawProjectile({ x: 45, y: 70 }, 10, 1, {
+    strokeColor: "#ffffff",
+  });
+  grid.drawProjectile({ x: 100, y: 100 }, 14, 0.6, {
+    strokeColor: "#ffffff",
+  });
+  grid.drawProjectile({ x: 155, y: 135 }, 18, 0.25, {
+    strokeColor: "#ffffff",
+    guide: true,
+  });
 
   return backingCanvas;
 }
 
 function renderHudScenario(): BackingCanvas {
-  const { grid, backingCanvas } = renderScenario(
-    "visual-hud",
-    HUD_OPTIONS,
-  );
+  const { grid, backingCanvas } = renderScenario("visual-hud", HUD_OPTIONS);
 
-  grid.drawShip(
-    { x: 160, y: 112 },
-    38,
-    {
-      rotation: -Math.PI / 2,
-      curve1: 0.45,
-      curve2: 0.8,
-      thruster: true,
-      fillColor: "#111111",
-      strokeColor: "#ffffff",
-      lineWidth: 2,
-    },
-  );
+  grid.drawShip({ x: 160, y: 112 }, 38, {
+    rotation: -Math.PI / 2,
+    curve1: 0.45,
+    curve2: 0.8,
+    thruster: true,
+    fillColor: "#111111",
+    strokeColor: "#ffffff",
+    lineWidth: 2,
+  });
   // Use glyph-independent bitmap output in visual snapshots.
   grid.drawBarIndicator("", 8, 8, 110, 12, 78, 100, {
     fillColor: "#22c55e",
@@ -458,9 +413,7 @@ async function decodePng(pngBuffer: Buffer): Promise<DecodedPng> {
   return {
     width: image.width,
     height: image.height,
-    pixels: Buffer.from(
-      decodedCtx.getImageData(0, 0, image.width, image.height).data,
-    ),
+    pixels: Buffer.from(decodedCtx.getImageData(0, 0, image.width, image.height).data),
   };
 }
 
@@ -487,15 +440,9 @@ async function createDiffPng(
       const expectedOffset = expectedInside ? (y * expected.width + x) * 4 : -1;
       const actualOffset = actualInside ? (y * actual.width + x) * 4 : -1;
       const expectedRed = expectedInside ? expected.pixels[expectedOffset] : 0;
-      const expectedGreen = expectedInside
-        ? expected.pixels[expectedOffset + 1]
-        : 0;
-      const expectedBlue = expectedInside
-        ? expected.pixels[expectedOffset + 2]
-        : 0;
-      const expectedAlpha = expectedInside
-        ? expected.pixels[expectedOffset + 3]
-        : 0;
+      const expectedGreen = expectedInside ? expected.pixels[expectedOffset + 1] : 0;
+      const expectedBlue = expectedInside ? expected.pixels[expectedOffset + 2] : 0;
+      const expectedAlpha = expectedInside ? expected.pixels[expectedOffset + 3] : 0;
       const actualRed = actualInside ? actual.pixels[actualOffset] : 0;
       const actualGreen = actualInside ? actual.pixels[actualOffset + 1] : 0;
       const actualBlue = actualInside ? actual.pixels[actualOffset + 2] : 0;
@@ -544,10 +491,7 @@ async function expectCanvasToMatchSnapshot(
 
   if (!matches) {
     const actualArtifactPath = resolve(ARTIFACT_DIR, `${snapshotName}.actual.png`);
-    const expectedArtifactPath = resolve(
-      ARTIFACT_DIR,
-      `${snapshotName}.expected.png`,
-    );
+    const expectedArtifactPath = resolve(ARTIFACT_DIR, `${snapshotName}.expected.png`);
     const diffArtifactPath = resolve(ARTIFACT_DIR, `${snapshotName}.diff.png`);
 
     await mkdir(dirname(actualArtifactPath), { recursive: true });
@@ -584,9 +528,7 @@ describe("GridCanvasSystem visual snapshots", () => {
       BASELINE_OPTIONS,
     );
 
-    const baselineSnapshot = readFileSync(
-      resolve(SNAPSHOT_DIR, "grid-baseline.png"),
-    );
+    const baselineSnapshot = readFileSync(resolve(SNAPSHOT_DIR, "grid-baseline.png"));
     const baselinePixels = await toPixelBuffer(baselineSnapshot);
 
     grid.drawCoordinate(55, 25);

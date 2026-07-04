@@ -1,8 +1,4 @@
-import {
-  hitTestCircleRectangle,
-  hitTestPoint,
-  hitTestRectangle,
-} from "./collision";
+import { hitTestCircleRectangle, hitTestPoint, hitTestRectangle } from "./collision";
 import { createAnimationLoop } from "./createAnimationLoop";
 import { createKeyTracker, normalizeKeyIdentifier } from "./createKeyTracker";
 import { createPointerTracker } from "./createPointerTracker";
@@ -51,11 +47,7 @@ export const GridCanvasRuntime = Object.freeze({
   wrapPoint,
 });
 
-export {
-  hitTestCircleRectangle,
-  hitTestPoint,
-  hitTestRectangle,
-} from "./collision";
+export { hitTestCircleRectangle, hitTestPoint, hitTestRectangle } from "./collision";
 export {
   appendTrailPoint,
   createParticleBurst,

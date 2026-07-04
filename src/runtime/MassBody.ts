@@ -12,7 +12,11 @@ export interface GridCanvasMassBodyOptions {
   rotationSpeed?: number;
 }
 
-function resolveFinite(value: number | undefined, fallback: number, name: string): number {
+function resolveFinite(
+  value: number | undefined,
+  fallback: number,
+  name: string,
+): number {
   const resolvedValue = value ?? fallback;
 
   if (!Number.isFinite(resolvedValue)) {
@@ -22,7 +26,11 @@ function resolveFinite(value: number | undefined, fallback: number, name: string
   return resolvedValue;
 }
 
-function resolvePositive(value: number | undefined, fallback: number, name: string): number {
+function resolvePositive(
+  value: number | undefined,
+  fallback: number,
+  name: string,
+): number {
   const resolvedValue = value ?? fallback;
 
   if (!Number.isFinite(resolvedValue) || resolvedValue <= 0) {
@@ -57,11 +65,7 @@ export class MassBody {
     this.angle = normalizeAngle(resolveFinite(options?.angle, 0, "angle"));
     this.xSpeed = resolveFinite(options?.xSpeed, 0, "xSpeed");
     this.ySpeed = resolveFinite(options?.ySpeed, 0, "ySpeed");
-    this.rotationSpeed = resolveFinite(
-      options?.rotationSpeed,
-      0,
-      "rotationSpeed",
-    );
+    this.rotationSpeed = resolveFinite(options?.rotationSpeed, 0, "rotationSpeed");
   }
 
   update(elapsed: number, bounds?: GridCanvasBounds): void {
@@ -69,16 +73,10 @@ export class MassBody {
 
     this.x += this.xSpeed * resolvedElapsed;
     this.y += this.ySpeed * resolvedElapsed;
-    this.angle = normalizeAngle(
-      this.angle + this.rotationSpeed * resolvedElapsed,
-    );
+    this.angle = normalizeAngle(this.angle + this.rotationSpeed * resolvedElapsed);
 
     if (bounds !== undefined) {
-      const wrapped = wrapPoint(
-        { x: this.x, y: this.y },
-        bounds,
-        this.radius,
-      );
+      const wrapped = wrapPoint({ x: this.x, y: this.y }, bounds, this.radius);
 
       this.x = wrapped.x;
       this.y = wrapped.y;

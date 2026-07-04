@@ -237,12 +237,12 @@ const scene = createScene({
   update(elapsed) {},
   draw(grid) {},
   enter?() {},
-  exit?() {}
+  exit?() {},
 });
 
 const scenes = createSceneManager({
   initial: "menu",
-  scenes: { menu, game, pause }
+  scenes: { menu, game, pause },
 });
 ```
 
@@ -401,20 +401,11 @@ Estado: los primeros cinco bloques ya quedaron implementados entre `0.2.1` y `0.
 Implementado en `0.3.0`.
 
 ```ts
-GridCanvasSystem.runtime.canvasToGrid(
-  { x: 42, y: 58 },
-  { cellSize: 20 }
-);
+GridCanvasSystem.runtime.canvasToGrid({ x: 42, y: 58 }, { cellSize: 20 });
 
-GridCanvasSystem.runtime.gridToCanvas(
-  { column: 2, row: 3 },
-  { cellSize: 20 }
-);
+GridCanvasSystem.runtime.gridToCanvas({ column: 2, row: 3 }, { cellSize: 20 });
 
-GridCanvasSystem.runtime.snapPointToGrid(
-  { x: 42, y: 58 },
-  { cellSize: 20 }
-);
+GridCanvasSystem.runtime.snapPointToGrid({ x: 42, y: 58 }, { cellSize: 20 });
 ```
 
 ### Pointer tracker
@@ -423,7 +414,7 @@ Implementado en `0.3.0`.
 
 ```ts
 const pointer = GridCanvasSystem.runtime.createPointerTracker(grid.canvas, {
-  preventDefault: true
+  preventDefault: true,
 });
 
 pointer.position();
@@ -440,7 +431,7 @@ grid.drawCompiledPixelSprite(blob, {
   x: 60,
   y: 45,
   pixelSize: 8,
-  flipX: true
+  flipX: true,
 });
 ```
 
@@ -452,9 +443,9 @@ const manager = GridCanvasSystem.runtime.createSceneManager({
   scenes: {
     buddy: {
       update(elapsed) {},
-      draw(grid) {}
-    }
-  }
+      draw(grid) {},
+    },
+  },
 });
 ```
 

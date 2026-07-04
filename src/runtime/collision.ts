@@ -88,15 +88,17 @@ export function hitTestPoint(
     const dx = resolvedPoint.x - resolvedCircle.x;
     const dy = resolvedPoint.y - resolvedCircle.y;
 
-    return (dx * dx) + (dy * dy) <= resolvedCircle.radius * resolvedCircle.radius;
+    return dx * dx + dy * dy <= resolvedCircle.radius * resolvedCircle.radius;
   }
 
   const resolvedRectangle = resolveRectangle(target, "target");
 
-  return resolvedPoint.x >= resolvedRectangle.x
-    && resolvedPoint.x <= resolvedRectangle.x + resolvedRectangle.width
-    && resolvedPoint.y >= resolvedRectangle.y
-    && resolvedPoint.y <= resolvedRectangle.y + resolvedRectangle.height;
+  return (
+    resolvedPoint.x >= resolvedRectangle.x &&
+    resolvedPoint.x <= resolvedRectangle.x + resolvedRectangle.width &&
+    resolvedPoint.y >= resolvedRectangle.y &&
+    resolvedPoint.y <= resolvedRectangle.y + resolvedRectangle.height
+  );
 }
 
 export function hitTestRectangle(
@@ -106,10 +108,12 @@ export function hitTestRectangle(
   const resolvedA = resolveRectangle(a, "a");
   const resolvedB = resolveRectangle(b, "b");
 
-  return resolvedA.x <= resolvedB.x + resolvedB.width
-    && resolvedA.x + resolvedA.width >= resolvedB.x
-    && resolvedA.y <= resolvedB.y + resolvedB.height
-    && resolvedA.y + resolvedA.height >= resolvedB.y;
+  return (
+    resolvedA.x <= resolvedB.x + resolvedB.width &&
+    resolvedA.x + resolvedA.width >= resolvedB.x &&
+    resolvedA.y <= resolvedB.y + resolvedB.height &&
+    resolvedA.y + resolvedA.height >= resolvedB.y
+  );
 }
 
 export function hitTestCircleRectangle(
@@ -131,5 +135,5 @@ export function hitTestCircleRectangle(
   const dx = resolvedCircle.x - closestX;
   const dy = resolvedCircle.y - closestY;
 
-  return (dx * dx) + (dy * dy) <= resolvedCircle.radius * resolvedCircle.radius;
+  return dx * dx + dy * dy <= resolvedCircle.radius * resolvedCircle.radius;
 }

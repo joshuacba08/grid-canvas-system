@@ -27,9 +27,7 @@ function normalizeKeyIdentifier(key: number | string): string {
   return key;
 }
 
-function resolveTarget(
-  target: EventTarget,
-): EventTarget & {
+function resolveTarget(target: EventTarget): EventTarget & {
   addEventListener: typeof window.addEventListener;
   removeEventListener: typeof window.removeEventListener;
 } {
@@ -84,10 +82,7 @@ export function createKeyTracker(
   resolvedTarget.addEventListener("keyup", keyup, options.capture);
 
   const focus = (): void => {
-    if (
-      "focus" in resolvedTarget &&
-      typeof resolvedTarget.focus === "function"
-    ) {
+    if ("focus" in resolvedTarget && typeof resolvedTarget.focus === "function") {
       if (
         "tabIndex" in resolvedTarget &&
         typeof resolvedTarget.tabIndex === "number" &&

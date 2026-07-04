@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,42 +14,30 @@
         height: 260,
       });
 
-      grid.drawShip(
-        { x: 100, y: 130 },
-        55,
-        {
-          rotation: -Math.PI / 2,
-          curve1: 0.45,
-          curve2: 0.8,
-          guide: true,
-        },
-      );
+      grid.drawShip({ x: 100, y: 130 }, 55, {
+        rotation: -Math.PI / 2,
+        curve1: 0.45,
+        curve2: 0.8,
+        guide: true,
+      });
 
-      grid.drawShip(
-        { x: 220, y: 130 },
-        45,
-        {
-          rotation: 0,
-          curve1: 0.2,
-          curve2: 0.65,
-          fillColor: "#001f33",
-          strokeColor: "#7dd3fc",
-          lineWidth: 2,
-        },
-      );
+      grid.drawShip({ x: 220, y: 130 }, 45, {
+        rotation: 0,
+        curve1: 0.2,
+        curve2: 0.65,
+        fillColor: "#001f33",
+        strokeColor: "#7dd3fc",
+        lineWidth: 2,
+      });
 
-      grid.drawShip(
-        { x: 320, y: 130 },
-        45,
-        {
-          rotation: Math.PI / 2,
-          curve1: 0.7,
-          curve2: 0.95,
-          fillColor: "#1a1200",
-          strokeColor: "#facc15",
-          lineWidth: 2,
-        },
-      );
+      grid.drawShip({ x: 320, y: 130 }, 45, {
+        rotation: Math.PI / 2,
+        curve1: 0.7,
+        curve2: 0.95,
+        fillColor: "#1a1200",
+        strokeColor: "#facc15",
+        lineWidth: 2,
+      });
     </script>
   </body>
 </html>

@@ -46,7 +46,9 @@ function resolvePoint(
   };
 }
 
-function resolveOptions(options: GridCanvasGridOptions): Required<GridCanvasGridOptions> {
+function resolveOptions(
+  options: GridCanvasGridOptions,
+): Required<GridCanvasGridOptions> {
   if (options === null || typeof options !== "object") {
     throw new Error("options must be an object");
   }

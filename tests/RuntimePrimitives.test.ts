@@ -59,20 +59,16 @@ describe("runtime and utility exports", () => {
 
     expect(vector.x).toBeCloseTo(0);
     expect(vector.y).toBeCloseTo(10);
-    expect(angleToPoint({ x: 0, y: 0 }, { x: 0, y: 5 })).toBeCloseTo(
-      Math.PI / 2,
-    );
+    expect(angleToPoint({ x: 0, y: 0 }, { x: 0, y: 5 })).toBeCloseTo(Math.PI / 2);
     expect(oscillate01(0.25)).toBeCloseTo(1);
     expect(distanceBetweenPoints({ x: 0, y: 0 }, { x: 3, y: 4 })).toBe(5);
     expect(
-      circlesIntersect(
-        { x: 0, y: 0, radius: 10 },
-        { x: 15, y: 0, radius: 6 },
-      ),
+      circlesIntersect({ x: 0, y: 0, radius: 10 }, { x: 15, y: 0, radius: 6 }),
     ).toBe(true);
-    expect(
-      wrapPoint({ x: 120, y: 50 }, { width: 100, height: 100 }, 10),
-    ).toEqual({ x: -10, y: 50 });
+    expect(wrapPoint({ x: 120, y: 50 }, { width: 100, height: 100 }, 10)).toEqual({
+      x: -10,
+      y: 50,
+    });
   });
 
   it("converts between absolute canvas points and grid cells", () => {
@@ -97,12 +93,12 @@ describe("runtime and utility exports", () => {
       x: 40,
       y: 36,
     });
-    expect(() =>
-      canvasToGrid({ x: 0, y: 0 }, { cellSize: 0 }),
-    ).toThrow("cellSize must be a positive finite number");
-    expect(() =>
-      gridToCanvas({ column: 0.5, row: 0 }, { cellSize: 16 }),
-    ).toThrow("cell.column must be an integer");
+    expect(() => canvasToGrid({ x: 0, y: 0 }, { cellSize: 0 })).toThrow(
+      "cellSize must be a positive finite number",
+    );
+    expect(() => gridToCanvas({ column: 0.5, row: 0 }, { cellSize: 16 })).toThrow(
+      "cell.column must be an integer",
+    );
   });
 
   it("createSpriteAnimator advances frames, plays known animations and rejects missing animations", () => {
@@ -191,23 +187,12 @@ describe("runtime and utility exports", () => {
 
   it("provides minimal point, rectangle, and circle-rectangle collision helpers", () => {
     expect(
-      hitTestPoint(
-        { x: 15, y: 15 },
-        { x: 10, y: 10, width: 20, height: 20 },
-      ),
+      hitTestPoint({ x: 15, y: 15 }, { x: 10, y: 10, width: 20, height: 20 }),
     ).toBe(true);
     expect(
-      hitTestPoint(
-        { x: 35, y: 35 },
-        { x: 10, y: 10, width: 20, height: 20 },
-      ),
+      hitTestPoint({ x: 35, y: 35 }, { x: 10, y: 10, width: 20, height: 20 }),
     ).toBe(false);
-    expect(
-      hitTestPoint(
-        { x: 8, y: 5 },
-        { x: 5, y: 5, radius: 3 },
-      ),
-    ).toBe(true);
+    expect(hitTestPoint({ x: 8, y: 5 }, { x: 5, y: 5, radius: 3 })).toBe(true);
     expect(
       hitTestRectangle(
         { x: 0, y: 0, width: 10, height: 10 },
@@ -249,18 +234,14 @@ describe("runtime and utility exports", () => {
       { x: 20, y: 20 },
     ]);
 
-    const burst = createParticleBurst(
-      { x: 5, y: 6 },
-      2,
-      {
-        angle: Math.PI / 2,
-        spread: 0,
-        speed: 10,
-        life: 1,
-        size: 3,
-        random: () => 0.5,
-      },
-    );
+    const burst = createParticleBurst({ x: 5, y: 6 }, 2, {
+      angle: Math.PI / 2,
+      spread: 0,
+      speed: 10,
+      life: 1,
+      size: 3,
+      random: () => 0.5,
+    });
 
     expect(burst).toHaveLength(2);
     expect(burst[0].x).toBe(5);

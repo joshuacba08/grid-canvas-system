@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -14,19 +14,15 @@
         height: 180,
       });
 
-      grid.drawShip(
-        { x: 160, y: 112 },
-        38,
-        {
-          rotation: -Math.PI / 2,
-          curve1: 0.45,
-          curve2: 0.8,
-          thruster: true,
-          fillColor: "#111111",
-          strokeColor: "#ffffff",
-          lineWidth: 2,
-        },
-      );
+      grid.drawShip({ x: 160, y: 112 }, 38, {
+        rotation: -Math.PI / 2,
+        curve1: 0.45,
+        curve2: 0.8,
+        thruster: true,
+        fillColor: "#111111",
+        strokeColor: "#ffffff",
+        lineWidth: 2,
+      });
 
       grid.drawBarIndicator("health", 8, 8, 110, 12, 78, 100, {
         fillColor: "#22c55e",

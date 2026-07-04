@@ -1,0 +1,22 @@
+{
+  "name": "grid-canvas-system-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "astro": "^7.0.6",
+    "typescript": "~5.6.3"
+  },
+  "dependencies": {
+    "@lucide/astro": "^1.23.0",
+    "gsap": "^3.15.0",
+    "monaco-editor": "^0.55.1",
+    "shiki": "^4.3.0"
+  }
+}

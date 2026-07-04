@@ -255,15 +255,11 @@ function renderPacmanScenario() {
 function renderGhostScenario() {
   const { backingCanvas, grid } = renderScenario("ghost", GHOST_OPTIONS);
 
-  grid.drawGhost(
-    { x: 110, y: 115 },
-    70,
-    {
-      feet: 5,
-      fillColor: "#ff0000",
-      strokeColor: "#ffffff",
-    },
-  );
+  grid.drawGhost({ x: 110, y: 115 }, 70, {
+    feet: 5,
+    fillColor: "#ff0000",
+    strokeColor: "#ffffff",
+  });
 
   return backingCanvas;
 }
@@ -291,19 +287,15 @@ function renderAsteroidScenario() {
 function renderShipScenario() {
   const { backingCanvas, grid } = renderScenario("ship", SHIP_OPTIONS);
 
-  grid.drawShip(
-    { x: 110, y: 110 },
-    70,
-    {
-      rotation: -Math.PI / 2,
-      curve1: 0.45,
-      curve2: 0.8,
-      guide: true,
-      fillColor: "#111111",
-      strokeColor: "#ffffff",
-      lineWidth: 2,
-    },
-  );
+  grid.drawShip({ x: 110, y: 110 }, 70, {
+    rotation: -Math.PI / 2,
+    curve1: 0.45,
+    curve2: 0.8,
+    guide: true,
+    fillColor: "#111111",
+    strokeColor: "#ffffff",
+    lineWidth: 2,
+  });
 
   return backingCanvas;
 }
@@ -311,31 +303,16 @@ function renderShipScenario() {
 function renderProjectileScenario() {
   const { backingCanvas, grid } = renderScenario("projectile", PACMAN_OPTIONS);
 
-  grid.drawProjectile(
-    { x: 45, y: 70 },
-    10,
-    1,
-    {
-      strokeColor: "#ffffff",
-    },
-  );
-  grid.drawProjectile(
-    { x: 100, y: 100 },
-    14,
-    0.6,
-    {
-      strokeColor: "#ffffff",
-    },
-  );
-  grid.drawProjectile(
-    { x: 155, y: 135 },
-    18,
-    0.25,
-    {
-      strokeColor: "#ffffff",
-      guide: true,
-    },
-  );
+  grid.drawProjectile({ x: 45, y: 70 }, 10, 1, {
+    strokeColor: "#ffffff",
+  });
+  grid.drawProjectile({ x: 100, y: 100 }, 14, 0.6, {
+    strokeColor: "#ffffff",
+  });
+  grid.drawProjectile({ x: 155, y: 135 }, 18, 0.25, {
+    strokeColor: "#ffffff",
+    guide: true,
+  });
 
   return backingCanvas;
 }
@@ -343,19 +320,15 @@ function renderProjectileScenario() {
 function renderHudScenario() {
   const { backingCanvas, grid } = renderScenario("hud", HUD_OPTIONS);
 
-  grid.drawShip(
-    { x: 160, y: 112 },
-    38,
-    {
-      rotation: -Math.PI / 2,
-      curve1: 0.45,
-      curve2: 0.8,
-      thruster: true,
-      fillColor: "#111111",
-      strokeColor: "#ffffff",
-      lineWidth: 2,
-    },
-  );
+  grid.drawShip({ x: 160, y: 112 }, 38, {
+    rotation: -Math.PI / 2,
+    curve1: 0.45,
+    curve2: 0.8,
+    thruster: true,
+    fillColor: "#111111",
+    strokeColor: "#ffffff",
+    lineWidth: 2,
+  });
   // Use glyph-independent bitmap output in visual snapshots.
   grid.drawBarIndicator("", 8, 8, 110, 12, 78, 100, {
     fillColor: "#22c55e",
@@ -390,10 +363,7 @@ function renderHudScenario() {
 }
 
 function renderPixelSpriteScenario() {
-  const { backingCanvas, grid } = renderScenario(
-    "pixel-sprite",
-    PIXEL_SPRITE_OPTIONS,
-  );
+  const { backingCanvas, grid } = renderScenario("pixel-sprite", PIXEL_SPRITE_OPTIONS);
 
   grid.drawPixelSprite(
     [

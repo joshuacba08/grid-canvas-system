@@ -15,7 +15,11 @@ export interface GridCanvasAnimationLoop {
   stop(): void;
 }
 
-function resolveFinite(value: number | undefined, fallback: number, name: string): number {
+function resolveFinite(
+  value: number | undefined,
+  fallback: number,
+  name: string,
+): number {
   const resolvedValue = value ?? fallback;
 
   if (!Number.isFinite(resolvedValue)) {
@@ -26,7 +30,10 @@ function resolveFinite(value: number | undefined, fallback: number, name: string
 }
 
 function getDefaultRequestFrame(): (callback: FrameRequestCallback) => number {
-  if (typeof window === "undefined" || typeof window.requestAnimationFrame !== "function") {
+  if (
+    typeof window === "undefined" ||
+    typeof window.requestAnimationFrame !== "function"
+  ) {
     throw new Error(
       "requestFrame must be provided when requestAnimationFrame is unavailable",
     );
@@ -36,7 +43,10 @@ function getDefaultRequestFrame(): (callback: FrameRequestCallback) => number {
 }
 
 function getDefaultCancelFrame(): (handle: number) => void {
-  if (typeof window === "undefined" || typeof window.cancelAnimationFrame !== "function") {
+  if (
+    typeof window === "undefined" ||
+    typeof window.cancelAnimationFrame !== "function"
+  ) {
     return () => {};
   }
 

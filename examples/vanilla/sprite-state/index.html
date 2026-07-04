@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sprite Animator and State Machine</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, sans-serif;
+        background: #101418;
+        color: #e5edf5;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+      }
+
+      main {
+        width: min(100% - 32px, 420px);
+        text-align: center;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        border: 1px solid #334155;
+        image-rendering: pixelated;
+      }
+
+      button {
+        min-height: 40px;
+        margin-top: 12px;
+        padding: 0 16px;
+        border: 1px solid #38bdf8;
+        border-radius: 6px;
+        background: #17202b;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Sprite state</h1>
+      <canvas id="canvas"></canvas>
+      <button id="toggle-state" type="button">Make happy</button>
+    </main>
+
+    <script type="module">
+      import GridCanvasSystem from "../../../dist/grid-canvas-system.es.js";
+
+      const sprites = {
+        idle1: ["01110", "12021", "12221", "01210"],
+        idle2: ["01110", "12021", "12221", "00100"],
+        happy1: ["01110", "13031", "12321", "01210"],
+        happy2: ["01110", "13031", "12321", "00100"],
+      };
+      const palette = {
+        0: "transparent",
+        1: "#38bdf8",
+        2: "#f8fafc",
+        3: "#facc15",
+      };
+      const grid = new GridCanvasSystem("canvas", {
+        width: 400,
+        height: 240,
+        cellSize: 20,
+        majorStep: 40,
+        backgroundColor: "#050708",
+        gridColor: "rgba(56, 189, 248, 0.16)",
+      });
+      const animator = GridCanvasSystem.runtime.createSpriteAnimator({
+        animations: {
+          idle: ["idle1", "idle2"],
+          happy: ["happy1", "happy2"],
+        },
+        initial: "idle",
+        fps: 3,
+      });
+      const machine = GridCanvasSystem.runtime.createStateMachine({
+        initial: "idle",
+        transitions: {
+          idle: ["happy"],
+          happy: ["idle"],
+        },
+      });
+      const button = document.querySelector("#toggle-state");
+
+      button.addEventListener("click", () => {
+        const nextState = machine.getState() === "idle" ? "happy" : "idle";
+
+        machine.transition(nextState);
+        animator.play(machine.getState());
+        button.textContent = nextState === "idle" ? "Make happy" : "Set idle";
+      });
+
+      GridCanvasSystem.runtime.createAnimationLoop({
+        autoStart: true,
+        update(elapsed) {
+          animator.update(elapsed);
+        },
+        draw() {
+          grid.clearCanvas();
+          grid.drawPixelSprite(sprites[animator.getFrame()], {
+            x: 140,
+            y: 58,
+            pixelSize: 24,
+            palette,
+          });
+          grid.drawText(machine.getState(), 200, 202, {
+            color: "#e5edf5",
+            font: "16px sans-serif",
+            textAlign: "center",
+          });
+        },
+      });
+    </script>
+  </body>
+</html>

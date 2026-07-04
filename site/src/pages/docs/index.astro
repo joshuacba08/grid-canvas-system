@@ -1,0 +1,798 @@
+---
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Copy,
+  GitFork,
+  Menu,
+  Play,
+  Search,
+  X,
+} from "@lucide/astro";
+import { codeToHtml } from "shiki";
+
+import CodeBlock from "../../components/CodeBlock.astro";
+import "../../styles/global.css";
+import "../../styles/docs.css";
+
+const version = "0.3.0";
+const repoUrl = "https://github.com/joshuacba08/grid-canvas-system";
+const snippets = [
+  {
+    id: "install-code",
+    title: "Terminal",
+    lang: "bash",
+    code: `npm install grid-canvas-system
+
+# or
+pnpm add grid-canvas-system`,
+  },
+  {
+    id: "first-scene-code",
+    title: "main.ts",
+    lang: "typescript",
+    code: `import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 640,
+  height: 360,
+  cellSize: 20,
+  backgroundColor: "#050607"
+});
+
+grid.drawCoordinate(120, 80);`,
+  },
+  {
+    id: "sprite-code",
+    title: "sprite.ts",
+    lang: "typescript",
+    code: `const sprite = [
+  "00111100",
+  "01122110",
+  "11222211",
+  "12233221",
+  "00100100"
+];
+
+grid.drawPixelSprite(sprite, {
+  x: 80,
+  y: 60,
+  pixelSize: 8,
+  palette: {
+    0: "transparent",
+    1: "#00d43b",
+    2: "#e8f7ef",
+    3: "#050607"
+  }
+});`,
+  },
+  {
+    id: "runtime-code",
+    title: "runtime.ts",
+    lang: "typescript",
+    code: `let time = 0;
+
+GridCanvasSystem.runtime.createAnimationLoop({
+  autoStart: true,
+  maxElapsed: 0.05,
+  update(elapsed) {
+    time += elapsed;
+  },
+  draw() {
+    grid.clearCanvas();
+    grid.drawPacman(160, 110, 36,
+      GridCanvasSystem.runtime.oscillate01(time, 2)
+    );
+  }
+});`,
+  },
+  {
+    id: "game-loop-code",
+    title: "game-loop.ts",
+    lang: "typescript",
+    code: `const keys = GridCanvasSystem.runtime.createKeyTracker(canvas);
+
+GridCanvasSystem.runtime.createAnimationLoop({
+  autoStart: true,
+  maxElapsed: 0.04,
+  update(elapsed) {
+    player.y += readDirection(keys) * speed * elapsed;
+    ball.x += ball.vx * elapsed;
+
+    if (GridCanvasSystem.runtime.hitTestCircleRectangle(ball, paddle)) {
+      ball.vx *= -1;
+    }
+  },
+  draw() {
+    grid.clearCanvas();
+    drawCourt();
+    drawActors();
+    drawScore();
+  }
+});`,
+  },
+];
+
+const highlightedSnippets = await Promise.all(
+  snippets.map(async (snippet) => ({
+    ...snippet,
+    highlighted: await codeToHtml(snippet.code, {
+      lang: snippet.lang,
+      theme: "vitesse-black",
+    }),
+  })),
+);
+
+const navigation = [
+  {
+    label: "Start here",
+    links: [
+      ["Overview", "#overview"],
+      ["Installation", "#installation"],
+      ["Your first scene", "#first-scene"],
+    ],
+  },
+  {
+    label: "Core canvas",
+    links: [
+      ["Canvas options", "#canvas-options"],
+      ["Redraw lifecycle", "#redraw-lifecycle"],
+    ],
+  },
+  {
+    label: "Drawing",
+    links: [
+      ["Pixel sprites", "#pixel-sprites"],
+      ["Arcade primitives", "#arcade-primitives"],
+      ["HUD overlays", "#hud-overlays"],
+    ],
+  },
+  {
+    label: "Runtime",
+    links: [
+      ["Animation loop", "#animation-loop"],
+      ["Input and motion", "#input-motion"],
+      ["State and sprites", "#state-sprites"],
+      ["Build a small game", "#game-architecture"],
+    ],
+  },
+  {
+    label: "Reference",
+    links: [
+      ["API map", "#api-reference"],
+      ["Method reference", "#method-reference"],
+      ["Recipes", "#recipes"],
+      ["Errors", "#errors"],
+      ["Performance", "#performance"],
+      ["Playground", "/playground/"],
+      ["Live examples", "/#examples"],
+      ["Release notes", `${repoUrl}/blob/main/CHANGELOG.md`],
+    ],
+  },
+];
+
+const toc = [
+  ["Overview", "#overview"],
+  ["Installation", "#installation"],
+  ["Your first scene", "#first-scene"],
+  ["Canvas options", "#canvas-options"],
+  ["Redraw lifecycle", "#redraw-lifecycle"],
+  ["Pixel sprites", "#pixel-sprites"],
+  ["Animation loop", "#animation-loop"],
+  ["Input and motion", "#input-motion"],
+  ["Build a small game", "#game-architecture"],
+  ["Playground", "#playground"],
+  ["API map", "#api-reference"],
+  ["Method reference", "#method-reference"],
+  ["Errors", "#errors"],
+  ["Performance", "#performance"],
+];
+
+const methodGroups = [
+  {
+    name: "Core",
+    methods: [
+      [
+        "new GridCanvasSystem(id, options?)",
+        "Create and validate a managed 2D canvas.",
+      ],
+      [
+        "clearCanvas(options?)",
+        "Clear the frame and optionally redraw the configured grid.",
+      ],
+      [
+        "canvas / ctx / options",
+        "Supported escape hatches and resolved configuration.",
+      ],
+    ],
+  },
+  {
+    name: "Drawing",
+    methods: [
+      [
+        "drawPixelSprite(sprite, options)",
+        "Render strict palette-based pixel matrices.",
+      ],
+      ["drawLine(start, end, options?)", "Draw a managed line segment."],
+      ["drawPolyline(points, options?)", "Draw an open or closed path."],
+      [
+        "drawPacman(x, y, radius, mouth, options?)",
+        "Draw an animated circular sector character.",
+      ],
+      [
+        "drawGhost(center, radius, options?)",
+        "Draw configurable feet, eyes and rotation.",
+      ],
+      [
+        "drawShip(center, radius, options?)",
+        "Draw a curved ship with guides and thruster.",
+      ],
+      [
+        "drawAsteroid(center, radius, shape, options?)",
+        "Reuse deterministic asteroid shape data.",
+      ],
+      ["drawBarIndicator(...)", "Draw a labeled proportional status bar."],
+      ["drawMessage(main, sub, center, options?)", "Draw a centered two-line overlay."],
+    ],
+  },
+  {
+    name: "Runtime",
+    methods: [
+      [
+        "createAnimationLoop(options)",
+        "Run update and draw callbacks with elapsed seconds.",
+      ],
+      [
+        "createSpriteAnimator(options)",
+        "Advance named frame IDs independently of rendering.",
+      ],
+      ["createStateMachine(options)", "Validate explicit state transitions."],
+      [
+        "createKeyTracker(target, options?)",
+        "Track normalized keys on an explicit target.",
+      ],
+      [
+        "createPointerTracker(target, options?)",
+        "Track canvas-relative pointer state.",
+      ],
+      ["canvasToGrid / gridToCanvas", "Convert between absolute points and cells."],
+      ["hitTestPoint / hitTestRectangle", "Test common 2D collision targets."],
+      [
+        "createParticleBurst / stepParticles",
+        "Create and advance lightweight particles.",
+      ],
+      ["MassBody", "Integrate force, velocity, rotation and wrapping."],
+    ],
+  },
+];
+
+const recipes = [
+  [
+    "Build Grid Pong",
+    "Connect pointer input, paddle AI, collisions, scoring and match states.",
+    "grid-pong",
+  ],
+  [
+    "Make an action game",
+    "Combine keyboard and touch input with projectiles, lives and particles.",
+    "asteroid-dodge",
+  ],
+  [
+    "Animate a sprite",
+    "Combine a sprite animator, state machine and drawPixelSprite().",
+    "grid-buddy",
+  ],
+  ["Build a game HUD", "Compose score, health and centered status messages.", "hud"],
+  [
+    "Snap pointer input",
+    "Track a pointer and convert its position into a grid cell.",
+    "grid-input",
+  ],
+  [
+    "Create a particle burst",
+    "Advance short-lived scene particles with gravity and drag.",
+    "particles",
+  ],
+];
+
+const errorRows = [
+  ["Canvas not found", "The constructor ID must reference an existing canvas element."],
+  ["Invalid grid rhythm", "majorStep must be an exact multiple of cellSize."],
+  ["Irregular sprite", "Every sprite row must have the same character count."],
+  ["Unknown palette key", "Every non-empty sprite character needs a palette entry."],
+  ["Invalid transition", "transition() returns false and keeps the current state."],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Guides and API orientation for grid-canvas-system."
+    />
+    <title>Documentation / Grid Canvas System</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap"
+    />
+  </head>
+  <body class="docs-page">
+    <header class="docs-topbar">
+      <div class="docs-topbar-inner">
+        <button
+          class="docs-menu-button"
+          type="button"
+          aria-label="Open documentation navigation"
+          aria-expanded="false"
+          data-docs-menu
+        >
+          <Menu class="menu-open-icon" size={18} aria-hidden="true" />
+          <X class="menu-close-icon" size={18} aria-hidden="true" />
+        </button>
+        <a class="brand docs-brand" href="/" aria-label="Grid Canvas System home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Grid Canvas System</span>
+          <b>Docs</b>
+        </a>
+        <div class="docs-top-actions">
+          <a class="docs-playground-link" href="/playground/">
+            <Play size={13} fill="currentColor" aria-hidden="true" />
+            <span>Playground</span>
+          </a>
+          <span class="docs-version">v{version}</span>
+          <a class="docs-icon-link" href={repoUrl} aria-label="Open GitHub repository">
+            <GitFork size={17} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar" data-docs-sidebar>
+        <label class="docs-search">
+          <Search size={15} aria-hidden="true" />
+          <span class="sr-only">Filter documentation</span>
+          <input type="search" placeholder="Filter docs" data-docs-search />
+          <kbd>/</kbd>
+        </label>
+        <nav aria-label="Documentation sections">
+          {
+            navigation.map((group) => (
+              <section class="docs-nav-group" data-docs-group>
+                <h2>{group.label}</h2>
+                {group.links.map(([label, href]) => (
+                  <a class="docs-nav-link" href={href} data-docs-link>
+                    {label}
+                  </a>
+                ))}
+              </section>
+            ))
+          }
+          <p class="docs-search-empty" data-docs-empty hidden>No matching pages.</p>
+        </nav>
+      </aside>
+
+      <main class="docs-content">
+        <article id="docs-article" class="docs-article">
+          <div class="docs-breadcrumbs">
+            <a href="/docs/">Docs</a>
+            <span>/</span>
+            <span>Get started</span>
+          </div>
+
+          <header class="docs-article-header" id="overview">
+            <div>
+              <p class="docs-kicker">Get started</p>
+              <h1>Build your first Canvas scene.</h1>
+              <p class="docs-intro">
+                Grid Canvas System is a small TypeScript-first layer over the Canvas 2D
+                API. It gives you a readable grid, drawing primitives and optional
+                runtime helpers without hiding the canvas underneath.
+              </p>
+            </div>
+            <button
+              class="docs-copy-page copy-button"
+              type="button"
+              data-copy-target="docs-article"
+              data-tooltip="Copy page"
+              aria-label="Copy documentation page"
+            >
+              <Copy class="copy-icon" size={15} aria-hidden="true" />
+              <Check class="check-icon" size={15} aria-hidden="true" />
+            </button>
+          </header>
+
+          <div class="docs-callout">
+            <strong>Good fit</strong>
+            <p>
+              Teaching, pixel tools, small arcade sketches and interactive diagrams
+              where direct access to <code>canvas</code> and <code>ctx</code> still matters.
+            </p>
+          </div>
+
+          <section class="docs-section" id="installation">
+            <p class="docs-section-index">01</p>
+            <h2>Installation</h2>
+            <p>
+              Install the package with your project package manager. The default export
+              includes the canvas class and exposes optional helpers under
+              <code>GridCanvasSystem.runtime</code>.
+            </p>
+            <CodeBlock snippet={highlightedSnippets[0]} />
+          </section>
+
+          <section class="docs-section" id="first-scene">
+            <p class="docs-section-index">02</p>
+            <h2>Your first scene</h2>
+            <p>
+              Add a canvas element, then initialize it by ID. Sizes use logical CSS
+              pixels; HiDPI scaling is handled internally.
+            </p>
+            <div class="docs-markup-line">
+              <code>&lt;canvas id="canvas"&gt;&lt;/canvas&gt;</code>
+            </div>
+            <CodeBlock snippet={highlightedSnippets[1]} />
+            <p>
+              The constructor validates the element and options immediately, which keeps
+              setup failures close to their cause.
+            </p>
+          </section>
+
+          <section class="docs-section" id="canvas-options">
+            <p class="docs-section-index">03</p>
+            <h2>Canvas options</h2>
+            <p>
+              Constructor options define logical dimensions, grid rhythm and text
+              defaults. The resolved values remain available through
+              <code>grid.options</code>.
+            </p>
+            <div class="docs-options-table" role="table" aria-label="Canvas options">
+              <div role="row">
+                <code role="cell">width / height</code>
+                <span role="cell">Logical canvas size</span>
+                <b role="cell">400 / 400</b>
+              </div>
+              <div role="row">
+                <code role="cell">cellSize</code>
+                <span role="cell">Minor grid spacing</span>
+                <b role="cell">10</b>
+              </div>
+              <div role="row">
+                <code role="cell">majorStep</code>
+                <span role="cell">Emphasized line interval</span>
+                <b role="cell">50</b>
+              </div>
+              <div role="row">
+                <code role="cell">devicePixelRatio</code>
+                <span role="cell">HiDPI backing-store scale</span>
+                <b role="cell">window DPR</b>
+              </div>
+            </div>
+          </section>
+
+          <section class="docs-section" id="redraw-lifecycle">
+            <p class="docs-section-index">04</p>
+            <h2>Redraw lifecycle</h2>
+            <p>
+              Animated scenes follow a small, explicit cycle. Rendering remains
+              deterministic and the managed context protects each helper from canvas
+              state left behind by another draw call.
+            </p>
+            <ol class="docs-steps">
+              <li>
+                <span>01</span><strong>Update</strong><p>
+                  Advance state with elapsed seconds.
+                </p>
+              </li>
+              <li>
+                <span>02</span><strong>Clear</strong><p>
+                  Reset the frame and redraw the grid.
+                </p>
+              </li>
+              <li>
+                <span>03</span><strong>Draw</strong><p>
+                  Render sprites, shapes and overlays.
+                </p>
+              </li>
+            </ol>
+          </section>
+
+          <section class="docs-section" id="pixel-sprites">
+            <p class="docs-section-index">05</p>
+            <h2>Pixel sprites</h2>
+            <p>
+              A sprite is a readonly array of equal-length strings. Each character maps
+              to a palette value; transparent entries reserve space without drawing a
+              pixel.
+            </p>
+            <CodeBlock snippet={highlightedSnippets[2]} />
+            <div class="docs-rule-grid">
+              <div><strong>x / y</strong><span>Absolute canvas coordinates</span></div>
+              <div>
+                <strong>pixelSize</strong><span>Positive logical pixel size</span>
+              </div>
+              <div>
+                <strong>palette</strong><span>Every character must be defined</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="docs-section" id="arcade-primitives">
+            <p class="docs-section-index">06</p>
+            <h2>Arcade primitives</h2>
+            <p>
+              Compose scenes with <code>drawPacman()</code>, <code>drawGhost()</code>,
+              <code>drawProjectile()</code>, <code>drawShip()</code> and persistent asteroid
+              shapes. Every method keeps context state isolated.
+            </p>
+          </section>
+
+          <section class="docs-section" id="hud-overlays">
+            <p class="docs-section-index">07</p>
+            <h2>HUD overlays</h2>
+            <p>
+              Use value labels, status bars and centered messages for compact game
+              state. They share the same text and color options as the drawing layer.
+            </p>
+          </section>
+
+          <section class="docs-section" id="animation-loop">
+            <p class="docs-section-index">08</p>
+            <h2>Animation loop</h2>
+            <p>
+              The runtime loop reports elapsed time in seconds. Keep state changes in
+              <code>update</code> and canvas work in <code>draw</code>; call
+              <code>clearCanvas()</code> before rendering the next frame.
+            </p>
+            <CodeBlock snippet={highlightedSnippets[3]} />
+          </section>
+
+          <section class="docs-section" id="input-motion">
+            <p class="docs-section-index">09</p>
+            <h2>Input and motion</h2>
+            <p>
+              Keyboard and pointer trackers are attached to an explicit target.
+              <code>MassBody</code>, angle utilities, collision tests, particles and
+              grid conversion stay independent from rendering.
+            </p>
+          </section>
+
+          <section class="docs-section" id="state-sprites">
+            <p class="docs-section-index">10</p>
+            <h2>State and sprites</h2>
+            <p>
+              The sprite animator selects frame IDs; the state machine validates
+              transitions. Neither helper draws, so both are easy to test and reuse.
+            </p>
+          </section>
+
+          <section class="docs-section" id="game-architecture">
+            <p class="docs-section-index">11</p>
+            <h2>Build a small game</h2>
+            <p>
+              A playable scene is the same explicit redraw cycle with four connected
+              responsibilities. Read input first, advance simulation with elapsed
+              seconds, resolve collisions, then draw the resulting state.
+            </p>
+            <div class="docs-game-cycle" aria-label="Small game architecture">
+              <div>
+                <span>01</span><strong>Input</strong><small
+                  >Track keys, pointer or touch.</small
+                >
+              </div>
+              <div>
+                <span>02</span><strong>Update</strong><small
+                  >Move actors using elapsed time.</small
+                >
+              </div>
+              <div>
+                <span>03</span><strong>Resolve</strong><small
+                  >Apply collisions, score and rules.</small
+                >
+              </div>
+              <div>
+                <span>04</span><strong>Render</strong><small
+                  >Clear once, then draw world and HUD.</small
+                >
+              </div>
+            </div>
+            <CodeBlock snippet={highlightedSnippets[4]} />
+            <p>
+              Keep the game model in ordinary objects and arrays. Runtime helpers
+              coordinate time and input; drawing helpers visualize the current model.
+              This keeps pause, restart and win states readable instead of burying them
+              inside rendering code.
+            </p>
+            <nav class="docs-game-examples" aria-label="Playable game examples">
+              <a href="/playground/?example=grid-pong">
+                <span
+                  ><strong>Grid Pong</strong><small
+                    >Pointer paddle, CPU rival and first-to-five scoring</small
+                  ></span
+                >
+                <Play size={15} fill="currentColor" aria-hidden="true" />
+              </a>
+              <a href="/playground/?example=asteroid-dodge">
+                <span
+                  ><strong>Asteroid Dodge</strong><small
+                    >Keyboard, touch, shooting, lives and particles</small
+                  ></span
+                >
+                <Play size={15} fill="currentColor" aria-hidden="true" />
+              </a>
+            </nav>
+          </section>
+
+          <section class="docs-section" id="playground">
+            <p class="docs-section-index">12</p>
+            <h2>Playground</h2>
+            <p>
+              Edit executable scenes with Monaco Editor and run them against the current
+              local library build. Every run starts in a fresh preview frame, so
+              animation loops and input listeners do not leak between scenes.
+            </p>
+            <a class="docs-playground-cta" href="/playground/">
+              <span>
+                <strong>Open the Playground</strong>
+                <small
+                  >Drawing studies, runtime systems and complete playable games</small
+                >
+              </span>
+              <Play size={17} fill="currentColor" aria-hidden="true" />
+            </a>
+          </section>
+
+          <section class="docs-section" id="api-reference">
+            <p class="docs-section-index">13</p>
+            <h2>API map</h2>
+            <div class="docs-api-table" role="table" aria-label="API groups">
+              <div role="row">
+                <strong role="cell">Core</strong>
+                <span role="cell">constructor, canvas, ctx, options, clearCanvas</span>
+              </div>
+              <div role="row">
+                <strong role="cell">Drawing</strong>
+                <span role="cell">sprites, shapes, lines, text, HUD</span>
+              </div>
+              <div role="row">
+                <strong role="cell">Runtime</strong>
+                <span role="cell">loop, input, motion, state, collision, scenes</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="docs-section" id="method-reference">
+            <p class="docs-section-index">14</p>
+            <h2>Method reference</h2>
+            <p>
+              Public methods stay grouped by responsibility. Drawing methods mutate only
+              the canvas; runtime helpers remain reusable without a renderer.
+            </p>
+            <div class="docs-method-groups">
+              {
+                methodGroups.map((group) => (
+                  <section>
+                    <h3>{group.name}</h3>
+                    <div>
+                      {group.methods.map(([signature, text]) => (
+                        <div class="docs-method-row">
+                          <code>{signature}</code>
+                          <span>{text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="docs-section" id="recipes">
+            <p class="docs-section-index">15</p>
+            <h2>Recipes</h2>
+            <p>
+              Open a working scene directly in the Playground, inspect both files and
+              change the smallest possible piece.
+            </p>
+            <nav class="docs-recipes" aria-label="Playground recipes">
+              {
+                recipes.map(([title, text, example]) => (
+                  <a href={`/playground/?example=${example}`}>
+                    <span>
+                      <>
+                        <strong>{title}</strong>
+                        <small>{text}</small>
+                      </>
+                    </span>
+                    <ArrowRight size={15} aria-hidden="true" />
+                  </a>
+                ))
+              }
+            </nav>
+          </section>
+
+          <section class="docs-section" id="errors">
+            <p class="docs-section-index">16</p>
+            <h2>Errors and validation</h2>
+            <p>
+              Configuration and drawing inputs fail close to the call site. Boolean
+              state transitions are the exception: invalid transitions are expected
+              control flow and do not throw.
+            </p>
+            <div class="docs-error-table" role="table" aria-label="Common errors">
+              {
+                errorRows.map(([name, resolution]) => (
+                  <div role="row">
+                    <strong role="cell">{name}</strong>
+                    <span role="cell">{resolution}</span>
+                  </div>
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="docs-section" id="performance">
+            <p class="docs-section-index">17</p>
+            <h2>Performance notes</h2>
+            <p>
+              The library favors readable Canvas code. These habits keep small scenes
+              responsive without introducing a scene graph or renderer abstraction.
+            </p>
+            <ul class="docs-performance-list">
+              <li>
+                <strong>Cap DPR</strong><span
+                  >Use a lower devicePixelRatio for large animated canvases.</span
+                >
+              </li>
+              <li>
+                <strong>Reuse shapes</strong><span
+                  >Create asteroid data and static palettes outside draw().</span
+                >
+              </li>
+              <li>
+                <strong>Pause hidden loops</strong><span
+                  >Stop animation when previews leave the viewport.</span
+                >
+              </li>
+              <li>
+                <strong>Clamp elapsed</strong><span
+                  >Set maxElapsed to avoid jumps after an inactive tab resumes.</span
+                >
+              </li>
+            </ul>
+          </section>
+
+          <nav class="docs-pagination" aria-label="Documentation pagination">
+            <a href="/">
+              <ArrowLeft size={16} aria-hidden="true" />
+              <span><small>Back</small>Landing page</span>
+            </a>
+            <a href="/playground/">
+              <span><small>Next</small>Playground</span>
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </nav>
+        </article>
+      </main>
+
+      <aside class="docs-toc" aria-label="On this page">
+        <h2>On this page</h2>
+        <nav>
+          {toc.map(([label, href]) => <a href={href}>{label}</a>)}
+        </nav>
+      </aside>
+    </div>
+
+    <script>
+      import "../../scripts/copy";
+      import "../../scripts/docs";
+    </script>
+  </body>
+</html>
