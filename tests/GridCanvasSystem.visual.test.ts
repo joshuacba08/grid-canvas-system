@@ -146,6 +146,22 @@ const HUD_OPTIONS: GridCanvasSystemOptions = {
   devicePixelRatio: 1,
 };
 
+const PIXEL_SPRITE_OPTIONS: GridCanvasSystemOptions = {
+  width: 200,
+  height: 160,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
 function attachBackingCanvas(element: HTMLCanvasElement): BackingCanvas {
   let width = element.width || 300;
   let height = element.height || 150;
@@ -400,6 +416,38 @@ function renderHudScenario(): BackingCanvas {
   return backingCanvas;
 }
 
+function renderPixelSpriteScenario(): BackingCanvas {
+  const { grid, backingCanvas } = renderScenario(
+    "visual-pixel-sprite",
+    PIXEL_SPRITE_OPTIONS,
+  );
+
+  grid.drawPixelSprite(
+    [
+      "00111100",
+      "01122110",
+      "11222211",
+      "12233221",
+      "11222211",
+      "01111110",
+      "00100100",
+    ],
+    {
+      x: 60,
+      y: 45,
+      pixelSize: 10,
+      palette: {
+        0: "transparent",
+        1: "#38bdf8",
+        2: "#f8fafc",
+        3: "#0f172a",
+      },
+    },
+  );
+
+  return backingCanvas;
+}
+
 async function decodePng(pngBuffer: Buffer): Promise<DecodedPng> {
   const image = await loadImage(pngBuffer);
   const decodedCanvas = createCanvas(image.width, image.height);
@@ -593,5 +641,11 @@ describe("GridCanvasSystem visual snapshots", () => {
     const backingCanvas = renderHudScenario();
 
     await expectCanvasToMatchSnapshot(backingCanvas, "hud");
+  });
+
+  it("matches the pixel sprite snapshot", async () => {
+    const backingCanvas = renderPixelSpriteScenario();
+
+    await expectCanvasToMatchSnapshot(backingCanvas, "pixel-sprite");
   });
 });

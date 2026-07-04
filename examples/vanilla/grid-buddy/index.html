@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Buddy</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background: #101418;
+        color: #e5edf5;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 38%),
+          #101418;
+      }
+
+      main {
+        width: min(100vw, 520px);
+        padding: 24px;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        max-width: 480px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: #050708;
+        image-rendering: pixelated;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      button {
+        min-height: 42px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 8px;
+        background: #19212a;
+        color: #e5edf5;
+        font: inherit;
+        font-weight: 650;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #243140;
+      }
+
+      button:active {
+        transform: translateY(1px);
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Grid Buddy</h1>
+      <canvas id="canvas"></canvas>
+      <div class="controls" aria-label="Grid Buddy controls">
+        <button type="button" id="feed">Feed</button>
+        <button type="button" id="play">Play</button>
+        <button type="button" id="nap">Nap</button>
+      </div>
+    </main>
+
+    <script type="module">
+      import GridCanvasSystem from "../../../dist/grid-canvas-system.es.js";
+
+      const STORAGE_KEY = "grid-canvas-system:grid-buddy:v1";
+      const INITIAL_STATS = {
+        hunger: 28,
+        energy: 78,
+        happiness: 72,
+      };
+      const SPRITES = {
+        idle1: [
+          "0001111000",
+          "0011111100",
+          "0112112110",
+          "0121111210",
+          "0111111110",
+          "0012221100",
+          "0001001000",
+        ],
+        idle2: [
+          "0001111000",
+          "0011111100",
+          "0112112110",
+          "0121111210",
+          "0111111110",
+          "0011111100",
+          "0001001000",
+        ],
+        happy1: [
+          "0001111000",
+          "0011111100",
+          "0113133110",
+          "0131111310",
+          "0112221110",
+          "0011111100",
+          "0001001000",
+        ],
+        happy2: [
+          "0001111000",
+          "0011111100",
+          "0313133130",
+          "0131111310",
+          "0112221110",
+          "0011111100",
+          "0000100100",
+        ],
+        hungry1: [
+          "0001111000",
+          "0011111100",
+          "0114114110",
+          "0141111410",
+          "0114441110",
+          "0011111100",
+          "0001001000",
+        ],
+        hungry2: [
+          "0001111000",
+          "0011111100",
+          "0114114110",
+          "0141111410",
+          "0114441110",
+          "0001111000",
+          "0001001000",
+        ],
+        sleeping1: [
+          "0001111000",
+          "0011111100",
+          "0115555110",
+          "0151111510",
+          "0111111110",
+          "0012221100",
+          "0001001000",
+        ],
+        sleeping2: [
+          "0001111000",
+          "0011111100",
+          "0115555110",
+          "0151111510",
+          "0111111110",
+          "0001111000",
+          "0000100100",
+        ],
+      };
+      const PALETTE = {
+        0: "transparent",
+        1: "#38bdf8",
+        2: "#f8fafc",
+        3: "#facc15",
+        4: "#fb7185",
+        5: "#94a3b8",
+      };
+
+      const grid = new GridCanvasSystem("canvas", {
+        width: 480,
+        height: 320,
+        backgroundColor: "#050708",
+        gridColor: "rgba(56, 189, 248, 0.16)",
+        gridLabelColor: "rgba(0, 0, 0, 0)",
+        coordinateLabelColor: "#e5edf5",
+        cellSize: 20,
+        majorStep: 40,
+        minorLineWidth: 1,
+        majorLineWidth: 1.5,
+      });
+      const animator = GridCanvasSystem.runtime.createSpriteAnimator({
+        animations: {
+          idle: ["idle1", "idle2"],
+          happy: ["happy1", "happy2"],
+          hungry: ["hungry1", "hungry2"],
+          sleeping: ["sleeping1", "sleeping2"],
+        },
+        initial: "idle",
+        fps: 3,
+      });
+      const machine = GridCanvasSystem.runtime.createStateMachine({
+        initial: "idle",
+        transitions: {
+          idle: ["happy", "hungry", "sleeping"],
+          happy: ["idle", "hungry", "sleeping"],
+          hungry: ["idle", "happy", "sleeping"],
+          sleeping: ["idle", "happy", "hungry"],
+        },
+      });
+      let stats = loadStats();
+      let decayTimer = 0;
+      let stateTimer = 0;
+
+      applyOfflineTime();
+      syncState();
+
+      document.getElementById("feed").addEventListener("click", () => {
+        stats.hunger = clamp(stats.hunger - 30);
+        stats.energy = clamp(stats.energy - 2);
+        stats.happiness = clamp(stats.happiness + 8);
+        setState("happy", 2.5);
+        saveStats();
+      });
+      document.getElementById("play").addEventListener("click", () => {
+        stats.hunger = clamp(stats.hunger + 5);
+        stats.energy = clamp(stats.energy - 12);
+        stats.happiness = clamp(stats.happiness + 18);
+        setState("happy", 2.5);
+        saveStats();
+      });
+      document.getElementById("nap").addEventListener("click", () => {
+        setState("sleeping", 4);
+        saveStats();
+      });
+
+      GridCanvasSystem.runtime.createAnimationLoop({
+        autoStart: true,
+        maxElapsed: 0.2,
+        update(elapsed) {
+          decayTimer += elapsed;
+          stateTimer = Math.max(0, stateTimer - elapsed);
+
+          if (machine.getState() === "sleeping") {
+            stats.energy = clamp(stats.energy + elapsed * 5);
+            stats.hunger = clamp(stats.hunger + elapsed * 0.35);
+          }
+
+          if (decayTimer >= 3) {
+            applyTime(decayTimer);
+            decayTimer = 0;
+            syncState();
+            saveStats();
+          }
+
+          if (stateTimer === 0) {
+            syncState();
+          }
+
+          animator.play(machine.getState());
+          animator.update(elapsed);
+        },
+        draw() {
+          grid.clearCanvas();
+          grid.drawPixelSprite(SPRITES[animator.getFrame()], {
+            x: 190,
+            y: 86,
+            pixelSize: 10,
+            palette: PALETTE,
+          });
+          grid.drawBarIndicator("hunger", 24, 24, 120, 12, stats.hunger, 100, {
+            fillColor: "#fb7185",
+            strokeColor: "#e5edf5",
+            textColor: "#e5edf5",
+            font: "12px sans-serif",
+          });
+          grid.drawBarIndicator("energy", 24, 48, 120, 12, stats.energy, 100, {
+            fillColor: "#38bdf8",
+            strokeColor: "#e5edf5",
+            textColor: "#e5edf5",
+            font: "12px sans-serif",
+          });
+          grid.drawBarIndicator(
+            "happy",
+            24,
+            72,
+            120,
+            12,
+            stats.happiness,
+            100,
+            {
+              fillColor: "#facc15",
+              strokeColor: "#e5edf5",
+              textColor: "#e5edf5",
+              font: "12px sans-serif",
+            },
+          );
+          grid.drawText(machine.getState(), 356, 28, {
+            color: "#e5edf5",
+            font: "14px sans-serif",
+            textAlign: "start",
+          });
+        },
+      });
+
+      function loadStats() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
+
+          if (saved === null || typeof saved !== "object") {
+            return { ...INITIAL_STATS, lastSavedAt: Date.now() };
+          }
+
+          return {
+            hunger: clamp(Number(saved.hunger ?? INITIAL_STATS.hunger)),
+            energy: clamp(Number(saved.energy ?? INITIAL_STATS.energy)),
+            happiness: clamp(Number(saved.happiness ?? INITIAL_STATS.happiness)),
+            lastSavedAt: Number(saved.lastSavedAt ?? Date.now()),
+          };
+        } catch {
+          return { ...INITIAL_STATS, lastSavedAt: Date.now() };
+        }
+      }
+
+      function saveStats() {
+        stats.lastSavedAt = Date.now();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(stats));
+      }
+
+      function applyOfflineTime() {
+        const elapsedSeconds = Math.min(
+          60 * 60 * 12,
+          Math.max(0, (Date.now() - stats.lastSavedAt) / 1000),
+        );
+
+        applyTime(elapsedSeconds);
+        saveStats();
+      }
+
+      function applyTime(seconds) {
+        stats.hunger = clamp(stats.hunger + seconds / 24);
+        stats.energy = clamp(stats.energy - seconds / 80);
+
+        if (stats.hunger > 70) {
+          stats.happiness = clamp(stats.happiness - seconds / 36);
+        } else {
+          stats.happiness = clamp(stats.happiness - seconds / 140);
+        }
+      }
+
+      function syncState() {
+        if (stateTimer > 0) {
+          return;
+        }
+
+        if (stats.energy < 18) {
+          setState("sleeping", 3);
+          return;
+        }
+
+        if (stats.hunger > 70) {
+          setState("hungry", 0);
+          return;
+        }
+
+        setState("idle", 0);
+      }
+
+      function setState(nextState, timer) {
+        if (machine.getState() !== nextState) {
+          machine.transition(nextState);
+        }
+
+        stateTimer = timer;
+      }
+
+      function clamp(value) {
+        if (!Number.isFinite(value)) {
+          return 0;
+        }
+
+        return Math.min(100, Math.max(0, value));
+      }
+
+    </script>
+  </body>
+</html>

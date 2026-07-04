@@ -1,8 +1,8 @@
 # Grid System for Canvas
 
-This library allows you to create managed grids on an HTML5 canvas and then draw on top of them through a small high-level API.
+This library is a tiny canvas engine for grids, pixel art, sprites and playful interactive systems.
 
-In addition to the grid itself, the library now includes reusable drawing helpers, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, collision/motion utilities, keyboard tracking, lightweight scene helpers, and an optional animation runtime.
+In addition to the grid itself, the library now includes reusable drawing helpers, pixel sprite rendering, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, collision/motion utilities, keyboard tracking, lightweight scene helpers, sprite animation, state machines, and an optional animation runtime.
 
 In my professional use, I have found this tool very useful for education and game development. Students or animators can position elements precisely and visualize their coordinates.
 
@@ -68,8 +68,8 @@ const newCanvas = new GridCanvasSystem("canvas");
 The library is now organized around three simple layers:
 
 1. Core canvas layer: initialization, DOM validation, sizing, HiDPI setup, `canvas`, `ctx`, and `options`.
-2. Drawing layer: grid configuration plus reusable drawing methods like `drawPacman()`, `drawShip()`, `drawProjectile()`, and HUD-style overlays.
-3. Optional runtime layer: animation, input, simple physics, and scene helpers through `GridCanvasSystem.runtime`.
+2. Drawing layer: grid configuration plus reusable drawing methods like `drawPixelSprite()`, `drawPacman()`, `drawShip()`, `drawProjectile()`, and HUD-style overlays.
+3. Optional runtime layer: animation, sprite animation, state machines, input, simple physics, and scene helpers through `GridCanvasSystem.runtime`.
 
 ### Usage with options
 
@@ -122,6 +122,42 @@ grid.drawPolyline(
 grid.drawCoordinate(100, 200);
 grid.drawCoordinate(120, 300);
 grid.drawCoordinate(250, 150);
+```
+
+### Pixel art example
+
+`drawPixelSprite()` draws declarative pixel art at absolute canvas coordinates. It is strict by design: rows must have the same length, `pixelSize` must be positive, and every sprite character must exist in the palette.
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas", {
+  width: 200,
+  height: 160,
+});
+
+grid.drawPixelSprite(
+  [
+    "00111100",
+    "01122110",
+    "11222211",
+    "12233221",
+    "11222211",
+    "01111110",
+    "00100100",
+  ],
+  {
+    x: 60,
+    y: 45,
+    pixelSize: 10,
+    palette: {
+      0: "transparent",
+      1: "#38bdf8",
+      2: "#f8fafc",
+      3: "#0f172a",
+    },
+  },
+);
 ```
 
 ### Pac-Man example
@@ -290,6 +326,35 @@ GridCanvasSystem.runtime.createAnimationLoop({
 });
 ```
 
+### Sprite animation and state machine example
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const animator = GridCanvasSystem.runtime.createSpriteAnimator({
+  animations: {
+    idle: ["idle-1", "idle-2"],
+    happy: ["happy-1", "happy-2"],
+  },
+  initial: "idle",
+  fps: 6,
+});
+
+const machine = GridCanvasSystem.runtime.createStateMachine({
+  initial: "idle",
+  transitions: {
+    idle: ["happy"],
+    happy: ["idle"],
+  },
+});
+
+machine.transition("happy");
+animator.play(machine.getState());
+animator.update(1 / 60);
+
+const frame = animator.getFrame();
+```
+
 ### Collision helpers example
 
 ```js
@@ -420,6 +485,7 @@ The library has the following methods:
 - `drawValueLabel(label, value, x, y, options?)`: Draws a formatted numeric label for score, fps, level, or similar overlays.
 - `drawBarIndicator(label, x, y, width, height, value, max, options?)`: Draws a label plus a proportional status bar.
 - `drawMessage(mainText, subText, center, options?)`: Draws a two-line centered message overlay.
+- `drawPixelSprite(sprite, options)`: Draws matrix/string-based pixel art with a strict palette and absolute canvas coordinates.
 - `drawLine(start, end, options?)`: Draws a line without manipulating `ctx` directly.
 - `drawPolyline(points, options?)`: Draws a polyline or closed path through a high-level API.
 - `drawCoordinate(x, y, options?)`: Draws the coordinate label at the provided position.
@@ -430,6 +496,8 @@ The library has the following methods:
 Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime`:
 
 - `createAnimationLoop(options)`: Lightweight `requestAnimationFrame` loop with elapsed seconds.
+- `createSpriteAnimator(options)`: Pure sprite animation helper that advances frame IDs by elapsed seconds.
+- `createStateMachine(options)`: Small finite state machine helper with boolean transition results.
 - `MassBody`: Reusable physics/movement body with `update`, `push`, `twist`, `speed`, and `movementAngle`.
 - `createKeyTracker(target, options?)`: Tracks pressed keys on a specific target.
 - `appendTrailPoint(trail, point, maxPoints)`: Keeps a bounded point trail without mutating the original array.
@@ -451,7 +519,7 @@ For backward compatibility, those helpers also remain mirrored as direct static 
 
 ## Advanced Usage
 
-The preferred path for common drawing is the encapsulated API: `drawText`, `drawGhost`, `drawProjectile`, `polarToCartesian`, `createAsteroidShape`, `drawCircleSector`, `drawPacman`, `drawAsteroid`, `drawShip`, `drawValueLabel`, `drawBarIndicator`, `drawMessage`, `drawLine`, `drawPolyline`, `drawCoordinate`, and `clearCanvas()`.
+The preferred path for common drawing is the encapsulated API: `drawText`, `drawPixelSprite`, `drawGhost`, `drawProjectile`, `polarToCartesian`, `createAsteroidShape`, `drawCircleSector`, `drawPacman`, `drawAsteroid`, `drawShip`, `drawValueLabel`, `drawBarIndicator`, `drawMessage`, `drawLine`, `drawPolyline`, `drawCoordinate`, and `clearCanvas()`.
 
 `canvas` and `ctx` remain intentionally exposed as advanced extension points.
 
@@ -483,6 +551,9 @@ The package exports:
 - `GridCanvasMassBodyOptions`
 - `GridCanvasMessageOptions`
 - `GridCanvasPacmanOptions`
+- `GridCanvasPixelPalette`
+- `GridCanvasPixelSprite`
+- `GridCanvasPixelSpriteDrawOptions`
 - `GridCanvasProjectileOptions`
 - `GridCanvasRectangleLike`
 - `GridCanvasShipOptions`
@@ -490,6 +561,10 @@ The package exports:
 - `GridCanvasStackAlign`
 - `GridCanvasStackDirection`
 - `GridCanvasStackLayoutOptions`
+- `GridCanvasSpriteAnimator`
+- `GridCanvasSpriteAnimatorOptions`
+- `GridCanvasStateMachine`
+- `GridCanvasStateMachineOptions`
 - `GridCanvasSystem`
 - `GridCanvasPoint`
 - `GridCanvasShapeOptions`
@@ -563,6 +638,7 @@ See also:
 
 - [Asteroid example](./examples/vanilla/asteroid/index.html)
 - [Ghost example](./examples/vanilla/ghost/index.html)
+- [Grid Buddy example](./examples/vanilla/grid-buddy/index.html)
 - [HUD example](./examples/vanilla/hud/index.html)
 - [Pac-Man example](./examples/vanilla/pacman/index.html)
 - [Projectile example](./examples/vanilla/projectile/index.html)
@@ -578,6 +654,9 @@ Image preview
 
 - Build reusable shapes like Pac-Man on top of `drawCircleSector()`.
 - Add arcade overlays with `drawBarIndicator()`, `drawValueLabel()`, and `drawMessage()`.
+- Draw declarative pixel characters with `drawPixelSprite()`.
+- Combine `createSpriteAnimator()` and `createStateMachine()` for small reactive actors.
+- Use Grid Buddy as a showcase for a Tamagotchi-like companion built on generic APIs, not as core pet logic.
 - Generate persistent asteroid `shape` data once and redraw it with different `noise` values.
 - Drive small scenes with `MassBody` plus `createAnimationLoop()` instead of hand-rolled timers.
 - Reuse `polarToCartesian()` and `drawShip()` to prototype Asteroids-style actors.

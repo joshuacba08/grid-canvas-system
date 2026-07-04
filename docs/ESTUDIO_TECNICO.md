@@ -2,9 +2,9 @@
 
 ## Resumen
 
-`grid-canvas-system` es una libreria pequena enfocada en preparar un `canvas` HTML con una cuadricula visible y ofrecer una capa encapsulada de dibujo para casos comunes.
+`grid-canvas-system` es una libreria pequena enfocada en preparar un `canvas` HTML con una cuadricula visible y ofrecer una capa encapsulada de dibujo para sistemas visuales interactivos.
 
-La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, shapes reutilizables, overlays de HUD, un runtime ligero para animacion, movimiento y helpers neutros de escena, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
+La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, pixel art declarativo, shapes reutilizables, overlays de HUD, un runtime ligero para animacion, sprite animation, maquinas de estado, movimiento y helpers neutros de escena, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
 
 ## Estructura actual
 
@@ -21,6 +21,8 @@ src/
   runtime/
     createAnimationLoop.ts
     createKeyTracker.ts
+    createSpriteAnimator.ts
+    createStateMachine.ts
     index.ts
     MassBody.ts
     motion.ts
@@ -33,6 +35,8 @@ examples/
     drawLines/
       index.html
     ghost/
+      index.html
+    grid-buddy/
       index.html
     hud/
       index.html
@@ -51,8 +55,8 @@ examples/
 La libreria expone una clase principal, `GridCanvasSystem`, y consolida su uso en tres capas simples:
 
 1. Capa core: inicializacion, validacion del DOM, ajuste del canvas, soporte HiDPI y contrato base (`canvas`, `ctx`, `options`).
-2. Capa visual: configuracion de la cuadricula y methods encapsulados de dibujo.
-3. Capa runtime opcional: animacion, input, fisica ligera y helpers neutros de escena accesibles como `GridCanvasSystem.runtime`.
+2. Capa visual: configuracion de la cuadricula, pixel art y methods encapsulados de dibujo.
+3. Capa runtime opcional: animacion, sprite animation, maquinas de estado, input, fisica ligera y helpers neutros de escena accesibles como `GridCanvasSystem.runtime`.
 
 Archivo principal:
 
@@ -78,8 +82,8 @@ Punto de entrada:
 6. Dibujar una cuadricula configurable.
 7. Resaltar lineas mayores con una linea mas gruesa y una etiqueta numerica.
 8. Permitir dibujar una etiqueta de coordenadas manualmente.
-9. Exponer una capa de dibujo encapsulada para texto, lineas, sectores y shapes reutilizables.
-10. Exponer utilidades runtime reutilizables para bucles de animacion, seguimiento de teclado, movimiento y colisiones geometricas simples.
+9. Exponer una capa de dibujo encapsulada para texto, pixel art, lineas, sectores y shapes reutilizables.
+10. Exponer utilidades runtime reutilizables para bucles de animacion, sprite animation, maquinas de estado, seguimiento de teclado, movimiento y colisiones geometricas simples.
 11. Limpiar el canvas y volver a dibujar la cuadricula.
 
 ## API publica real
@@ -114,6 +118,7 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 ### Metodos publicos
 
 - `drawText(text: string, x: number, y: number, options?: GridCanvasTextOptions)`: dibuja texto usando el estado gestionado por la libreria.
+- `drawPixelSprite(sprite: GridCanvasPixelSprite, options: GridCanvasPixelSpriteDrawOptions)`: dibuja pixel art declarativo con coordenadas canvas absolutas, `pixelSize` positivo y paleta estricta.
 - `drawGhost(center: GridCanvasPoint, radius: number, options?: GridCanvasGhostOptions)`: dibuja un fantasma parametrizable con pies y ojos.
 - `drawProjectile(center: GridCanvasPoint, radius: number, life: number, options?: GridCanvasProjectileOptions)`: dibuja un proyectil circular con color por defecto dependiente de su vida restante.
 - `polarToCartesian(center: GridCanvasPoint, radius: number, angle: number): GridCanvasPoint`: convierte coordenadas polares en un punto del canvas.
@@ -133,6 +138,8 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 ### Utilidades runtime expuestas en `GridCanvasSystem.runtime`
 
 - `createAnimationLoop(options: GridCanvasAnimationLoopOptions): GridCanvasAnimationLoop`: crea un bucle basado en `requestAnimationFrame` con `elapsed` en segundos.
+- `createSpriteAnimator(options: GridCanvasSpriteAnimatorOptions): GridCanvasSpriteAnimator`: gestiona animaciones de sprites devolviendo el frame actual sin dibujar.
+- `createStateMachine(options: GridCanvasStateMachineOptions): GridCanvasStateMachine`: gestiona estados y transiciones simples con retorno booleano.
 - `MassBody`: clase reutilizable para posicion, velocidad, giro, empuje y wrap-around.
 - `createKeyTracker(target, options?)`: rastrea teclas pulsadas sobre un `target` concreto.
 - `hitTestPoint(point, target)`: detecta si un punto toca un circulo o un rectangulo axis-aligned.
@@ -167,9 +174,9 @@ La libreria queda consolidada alrededor de tres capas:
 1. Capa de inicializacion y validacion del canvas:
    constructor, resolucion de opciones, `canvas`, `ctx`, `options` y soporte HiDPI.
 2. Capa visual de cuadricula y shapes reutilizables:
-   `drawText()`, `drawGhost()`, `drawProjectile()`, `polarToCartesian()`, `createAsteroidShape()`, `drawCircleSector()`, `drawPacman()`, `drawAsteroid()`, `drawShip()`, `drawValueLabel()`, `drawBarIndicator()`, `drawMessage()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
+   `drawText()`, `drawPixelSprite()`, `drawGhost()`, `drawProjectile()`, `polarToCartesian()`, `createAsteroidShape()`, `drawCircleSector()`, `drawPacman()`, `drawAsteroid()`, `drawShip()`, `drawValueLabel()`, `drawBarIndicator()`, `drawMessage()`, `drawLine()`, `drawPolyline()`, `drawCoordinate()` y `clearCanvas()`.
 3. Capa runtime ligera opcional:
-   `GridCanvasSystem.runtime.createAnimationLoop()`, `GridCanvasSystem.runtime.MassBody`, `GridCanvasSystem.runtime.createKeyTracker()` y utilidades de movimiento/colision.
+   `GridCanvasSystem.runtime.createAnimationLoop()`, `GridCanvasSystem.runtime.createSpriteAnimator()`, `GridCanvasSystem.runtime.createStateMachine()`, `GridCanvasSystem.runtime.MassBody`, `GridCanvasSystem.runtime.createKeyTracker()` y utilidades de movimiento/colision.
 
 `canvas` y `ctx` siguen disponibles como extension points avanzados dentro de la primera capa, pero la recomendacion para uso comun sigue siendo permanecer en la capa visual encapsulada.
 
@@ -218,6 +225,8 @@ Pruebas automatizadas:
 - Cobertura de helpers de deteccion para punto, rectangulo y circulo vs rectangulo.
 - Artefactos `expected`, `actual` y `diff` cuando falla un snapshot visual.
 - Cobertura de helpers neutros de escena para trails, particulas simples y layout de overlays.
+- Cobertura de `drawPixelSprite()`, `createSpriteAnimator()` y `createStateMachine()`.
+- Snapshot visual dedicado para pixel art declarativo.
 
 ### Verificacion realizada
 
@@ -238,6 +247,7 @@ Se valido localmente que:
 - Tipos TypeScript listos para consumidores del paquete.
 - API configurable sin romper compatibilidad con la firma anterior.
 - Capa encapsulada para dibujo comun sin depender de `ctx` directamente.
+- Pixel art declarativo con paletas estrictas y snapshot visual dedicado.
 - Primitive reutilizable para sectores circulares y una shape oficial construida sobre ella.
 - Helper geometrico reutilizable para convertir angulos y radios en puntos del canvas.
 - Shape oficial de fantasma inspirada en el chapter 8, configurable sin tocar `ctx`.
@@ -245,6 +255,7 @@ Se valido localmente que:
 - Shape oficial de proyectil con color por vida restante.
 - Shape oficial de nave con rotacion encapsulada, curvas cuadraticas configurables y thruster opcional.
 - Overlays reutilizables para HUD y estados de escena.
+- Runtime ligero para animaciones de sprites y maquinas de estado simples sin acoplar dibujo ni logica especifica de mascotas.
 - Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y colisiones circulares.
 - Runtime ligero reutilizable para `requestAnimationFrame`, input acotado al canvas, movimiento y deteccion geometrica simple entre puntos, rectangulos y circulos.
 - Helpers neutros de escena para trails acotados, bursts de particulas y layout de overlays.

@@ -23,6 +23,7 @@ interface MockCanvasContext {
   closePath: ReturnType<typeof vi.fn>;
   fill: ReturnType<typeof vi.fn>;
   stroke: ReturnType<typeof vi.fn>;
+  fillRect: ReturnType<typeof vi.fn>;
   fillText: ReturnType<typeof vi.fn>;
   measureText: ReturnType<typeof vi.fn>;
   clearRect: ReturnType<typeof vi.fn>;
@@ -50,6 +51,7 @@ function createMockContext(): MockCanvasContext {
     closePath: vi.fn(),
     fill: vi.fn(),
     stroke: vi.fn(),
+    fillRect: vi.fn(),
     fillText: vi.fn(),
     measureText: vi.fn((text: string) => ({ width: text.length * 8 })),
     clearRect: vi.fn(),
@@ -235,6 +237,66 @@ describe("GridCanvasSystem", () => {
     expect(mockContext.textAlign).toBe("center");
     expect(mockContext.textBaseline).toBe("middle");
     expect(mockContext.fillText).toHaveBeenCalledWith("hello", 30, 40);
+  });
+
+  it("drawPixelSprite renders palette-mapped pixels and skips transparent entries", () => {
+    const grid = new GridCanvasSystem("canvas");
+
+    mockContext.fillRect.mockClear();
+
+    grid.drawPixelSprite(
+      [
+        "012",
+        "345",
+      ],
+      {
+        x: 10,
+        y: 20,
+        pixelSize: 4,
+        palette: {
+          0: null,
+          1: undefined,
+          2: "transparent",
+          3: "#111111",
+          4: "#222222",
+          5: "#333333",
+        },
+      },
+    );
+
+    expect(mockContext.fillRect).toHaveBeenCalledTimes(3);
+    expect(mockContext.fillRect).toHaveBeenNthCalledWith(1, 10, 24, 4, 4);
+    expect(mockContext.fillRect).toHaveBeenNthCalledWith(2, 14, 24, 4, 4);
+    expect(mockContext.fillRect).toHaveBeenNthCalledWith(3, 18, 24, 4, 4);
+    expect(mockContext.fillStyle).toBe("#333333");
+  });
+
+  it("drawPixelSprite validates sprite shape, pixel size and palette coverage", () => {
+    const grid = new GridCanvasSystem("canvas");
+    const options = {
+      x: 0,
+      y: 0,
+      pixelSize: 2,
+      palette: {
+        0: "#ffffff",
+      },
+    };
+
+    expect(() => grid.drawPixelSprite([], options)).toThrow(
+      "sprite must contain at least one row",
+    );
+    expect(() => grid.drawPixelSprite(["0", "00"], options)).toThrow(
+      "sprite rows must have the same length",
+    );
+    expect(() =>
+      grid.drawPixelSprite(["0"], {
+        ...options,
+        pixelSize: 0,
+      }),
+    ).toThrow("options.pixelSize must be a positive finite number");
+    expect(() => grid.drawPixelSprite(["1"], options)).toThrow(
+      'palette is missing color for "1"',
+    );
   });
 
   it("drawLine provides an encapsulated drawing path without direct ctx access", () => {

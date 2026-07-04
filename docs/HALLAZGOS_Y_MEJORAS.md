@@ -132,6 +132,14 @@ La libreria ahora diferencia `gridLabelTextAlign`, `gridLabelTextBaseline`, `coo
 
 La libreria ahora incorpora `appendTrailPoint()`, `createParticleBurst()`, `stepParticles()` y `layoutStack()` para cubrir trails acotados, particulas simples y layout reutilizable de overlays sin meter logica cerrada de juego.
 
+#### 31. Pixel art declarativo
+
+La libreria ahora incorpora `drawPixelSprite()` para dibujar sprites desde matrices de strings con coordenadas canvas absolutas, `pixelSize`, paleta estricta y transparencia mediante `null`, `undefined` o `"transparent"`.
+
+#### 32. Animator, state machine y demo `Grid Buddy`
+
+El runtime opcional ahora incorpora `createSpriteAnimator()` y `createStateMachine()` como helpers puros. La demo `examples/vanilla/grid-buddy/` muestra una mascota tipo Tamagotchi construida encima de APIs genericas, sin meter logica de mascota en el core.
+
 ## Hallazgos priorizados pendientes
 
 ### Prioridad baja

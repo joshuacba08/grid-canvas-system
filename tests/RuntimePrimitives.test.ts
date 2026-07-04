@@ -10,6 +10,8 @@ const {
   createAnimationLoop,
   createKeyTracker,
   createParticleBurst,
+  createSpriteAnimator,
+  createStateMachine,
   distanceBetweenPoints,
   hitTestCircleRectangle,
   hitTestPoint,
@@ -33,6 +35,8 @@ describe("runtime and utility exports", () => {
     expect(runtime.createKeyTracker).toBe(createKeyTracker);
     expect(runtime.appendTrailPoint).toBe(appendTrailPoint);
     expect(runtime.createParticleBurst).toBe(createParticleBurst);
+    expect(runtime.createSpriteAnimator).toBe(createSpriteAnimator);
+    expect(runtime.createStateMachine).toBe(createStateMachine);
     expect(runtime.hitTestPoint).toBe(hitTestPoint);
     expect(runtime.hitTestRectangle).toBe(hitTestRectangle);
     expect(runtime.hitTestCircleRectangle).toBe(hitTestCircleRectangle);
@@ -61,6 +65,90 @@ describe("runtime and utility exports", () => {
     expect(
       wrapPoint({ x: 120, y: 50 }, { width: 100, height: 100 }, 10),
     ).toEqual({ x: -10, y: 50 });
+  });
+
+  it("createSpriteAnimator advances frames, plays known animations and rejects missing animations", () => {
+    const animator = createSpriteAnimator({
+      animations: {
+        idle: ["idle-1", "idle-2", "idle-3"],
+        happy: ["happy-1"],
+      },
+      initial: "idle",
+      fps: 2,
+    });
+
+    expect(animator.getCurrentAnimation()).toBe("idle");
+    expect(animator.getFrame()).toBe("idle-1");
+
+    animator.update(0.49);
+    expect(animator.getFrame()).toBe("idle-1");
+
+    animator.update(0.01);
+    expect(animator.getFrame()).toBe("idle-2");
+
+    animator.update(1);
+    expect(animator.getFrame()).toBe("idle-1");
+    expect(animator.play("missing")).toBe(false);
+    expect(animator.getCurrentAnimation()).toBe("idle");
+    expect(animator.play("happy")).toBe(true);
+    expect(animator.getCurrentAnimation()).toBe("happy");
+    expect(animator.getFrame()).toBe("happy-1");
+
+    animator.reset();
+    expect(animator.getCurrentAnimation()).toBe("idle");
+    expect(animator.getFrame()).toBe("idle-1");
+
+    const oneShot = createSpriteAnimator({
+      animations: {
+        burst: ["burst-1", "burst-2"],
+      },
+      initial: "burst",
+      fps: 1,
+      loop: false,
+    });
+
+    oneShot.update(10);
+    expect(oneShot.getFrame()).toBe("burst-2");
+    expect(() =>
+      createSpriteAnimator({
+        animations: {
+          idle: ["idle-1"],
+        },
+        initial: "missing",
+        fps: 1,
+      }),
+    ).toThrow("initial must reference an existing animation");
+  });
+
+  it("createStateMachine exposes simple transition checks, transitions and reset", () => {
+    const machine = createStateMachine({
+      initial: "idle",
+      transitions: {
+        idle: ["happy", "hungry"],
+        happy: ["idle"],
+        hungry: ["idle"],
+      },
+    });
+
+    expect(machine.getState()).toBe("idle");
+    expect(machine.canTransition("happy")).toBe(true);
+    expect(machine.canTransition("sleeping")).toBe(false);
+    expect(machine.transition("sleeping")).toBe(false);
+    expect(machine.getState()).toBe("idle");
+    expect(machine.transition("happy")).toBe(true);
+    expect(machine.getState()).toBe("happy");
+    expect(machine.canTransition("hungry")).toBe(false);
+
+    machine.reset();
+    expect(machine.getState()).toBe("idle");
+    expect(() =>
+      createStateMachine({
+        initial: "missing",
+        transitions: {
+          idle: [],
+        },
+      }),
+    ).toThrow("initial must reference an existing state");
   });
 
   it("provides minimal point, rectangle, and circle-rectangle collision helpers", () => {

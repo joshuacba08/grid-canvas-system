@@ -134,6 +134,22 @@ const HUD_OPTIONS = {
   devicePixelRatio: 1,
 };
 
+const PIXEL_SPRITE_OPTIONS = {
+  width: 200,
+  height: 160,
+  backgroundColor: "#000000",
+  gridColor: "#00ff00",
+  gridLabelColor: "rgba(0, 0, 0, 0)",
+  coordinateLabelColor: "#ffffff",
+  gridLabelFont: "10px monospace",
+  coordinateFont: "12px serif",
+  cellSize: 20,
+  majorStep: 40,
+  minorLineWidth: 2,
+  majorLineWidth: 4,
+  devicePixelRatio: 1,
+};
+
 function installDomGlobals(window) {
   globalThis.window = window;
   globalThis.document = window.document;
@@ -373,6 +389,38 @@ function renderHudScenario() {
   return backingCanvas;
 }
 
+function renderPixelSpriteScenario() {
+  const { backingCanvas, grid } = renderScenario(
+    "pixel-sprite",
+    PIXEL_SPRITE_OPTIONS,
+  );
+
+  grid.drawPixelSprite(
+    [
+      "00111100",
+      "01122110",
+      "11222211",
+      "12233221",
+      "11222211",
+      "01111110",
+      "00100100",
+    ],
+    {
+      x: 60,
+      y: 45,
+      pixelSize: 10,
+      palette: {
+        0: "transparent",
+        1: "#38bdf8",
+        2: "#f8fafc",
+        3: "#0f172a",
+      },
+    },
+  );
+
+  return backingCanvas;
+}
+
 async function writeSnapshot(name, options) {
   const { backingCanvas } = renderScenario(name, options);
   const snapshotUrl = new URL(`${name}.png`, SNAPSHOT_DIR);
@@ -429,6 +477,13 @@ async function writeHudSnapshot() {
   await writeFile(snapshotUrl, backingCanvas.toBuffer("image/png"));
 }
 
+async function writePixelSpriteSnapshot() {
+  const snapshotUrl = new URL("pixel-sprite.png", SNAPSHOT_DIR);
+  const backingCanvas = renderPixelSpriteScenario();
+
+  await writeFile(snapshotUrl, backingCanvas.toBuffer("image/png"));
+}
+
 await mkdir(SNAPSHOT_DIR, { recursive: true });
 await writeSnapshot("grid-baseline", BASELINE_OPTIONS);
 await writeSnapshot("grid-hidpi", HIDPI_OPTIONS);
@@ -439,3 +494,4 @@ await writeAsteroidSnapshot();
 await writeShipSnapshot();
 await writeProjectileSnapshot();
 await writeHudSnapshot();
+await writePixelSpriteSnapshot();
