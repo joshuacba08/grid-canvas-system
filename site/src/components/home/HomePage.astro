@@ -113,6 +113,18 @@ const highlightedCodeBlocks = await Promise.all(
     }),
   })),
 );
+const footerLinks = [
+  { href: content.docsPath, label: content.nav.docs },
+  { href: "/playground/", label: content.nav.playground },
+  { href: `${repoUrl}/tree/main/examples/vanilla`, label: content.nav.examples },
+  { href: npmUrl, label: "npm" },
+  { href: repoUrl, label: "GitHub" },
+  {
+    href: content.docs[content.docs.length - 1]?.href ?? `${repoUrl}/blob/main/CHANGELOG.md`,
+    label: content.docs[content.docs.length - 1]?.label ?? "Changelog",
+  },
+];
+const latestRelease = content.release.timeline[0];
 ---
 
 <!doctype html>
@@ -461,8 +473,70 @@ const highlightedCodeBlocks = await Promise.all(
       </main>
 
       <footer class="footer">
-        <span>MIT / Josue Oroya</span>
-        <span>{content.footer.right}</span>
+        <div class="footer-shell">
+          <section class="footer-lead">
+            <div class="footer-brand-lockup">
+              <span class="brand-mark" aria-hidden="true"></span>
+              <div>
+                <strong>Grid Canvas System</strong>
+                <span>{content.hero.eyebrow}</span>
+              </div>
+            </div>
+            <p class="footer-copy">{content.footer.right}</p>
+            <div class="footer-actions" aria-label={content.primaryNavAria}>
+              <a class="button primary" href={npmUrl}>{content.hero.actions.install}</a>
+              <a class="button" href={content.docsPath}>{content.hero.actions.docs}</a>
+              <a class="button" href="/playground/">{content.hero.actions.playground}</a>
+            </div>
+          </section>
+
+          <section class="footer-card" aria-label={content.docsSection.kicker}>
+            <p class="footer-kicker">{content.docsSection.kicker}</p>
+            <div class="footer-link-grid">
+              {
+                footerLinks.map((link) => (
+                  <a class="footer-link" href={link.href}>
+                    <span>{link.label}</span>
+                    <ArrowUpRight size={14} aria-hidden="true" />
+                  </a>
+                ))
+              }
+            </div>
+          </section>
+
+          <section class="footer-card footer-release-card" aria-label={content.release.kicker}>
+            <p class="footer-kicker">
+              {content.release.kicker} {version}
+            </p>
+            <div class="footer-version-row">
+              <strong>v{version}</strong>
+              <span>{content.versionLabel}</span>
+            </div>
+            <p class="footer-release-copy">{latestRelease.summary}</p>
+            <div class="footer-chip-row">
+              <span class="footer-chip">{content.hero.panelFooter[0]}</span>
+              <span class="footer-chip">{content.hero.panelFooter[1]}</span>
+              <span class="footer-chip">MIT</span>
+            </div>
+          </section>
+        </div>
+
+        <div class="footer-bottom">
+          <span class="footer-credit">MIT / Josue Oroya</span>
+          <nav class="footer-locale-links" aria-label={content.localeNavAria}>
+            {
+              content.localeLinks.map((link) => (
+                <a
+                  class="footer-locale-link"
+                  href={link.href}
+                  aria-current={link.href === currentHomeHref ? "page" : undefined}
+                >
+                  {link.label}
+                </a>
+              ))
+            }
+          </nav>
+        </div>
       </footer>
     </div>
 
