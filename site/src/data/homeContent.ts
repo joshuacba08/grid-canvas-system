@@ -136,10 +136,10 @@ const repoUrl = "https://github.com/joshuacba08/grid-canvas-system";
 export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
   en: {
     api: {
-      kicker: "API Lanes",
+      kicker: "Quick Start Paths",
       lede:
-        "Each lane maps to a documented public API. The landing page uses the same local source through Astro, so the showcase evolves with the library.",
-      title: "Copyable paths from blank canvas to moving scene.",
+        "Install it, draw something on day one, then layer runtime, pointer logic and audio only when the scene earns it.",
+      title: "From first grid to playable scene in a few copyable steps.",
     },
     audioControls: {
       initialStatus: "Click a control to unlock browser audio.",
@@ -158,45 +158,45 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     capabilities: [
       {
         code: 'new GridCanvasSystem("canvas", { cellSize: 20 })',
-        name: "Grid-first canvas",
-        text: "Initialize an HTML canvas with predictable sizing, HiDPI rendering, visible grid lines and coordinate labels.",
+        name: "Grid-ready canvas",
+        text: "Spin up a crisp HTML canvas with predictable sizing, HiDPI rendering and an always-readable grid.",
       },
       {
         code: "grid.drawPixelSprite(sprite, options)",
         name: "Pixel sprites",
-        text: "Draw matrix-based pixel art with strict palettes, transparent cells and absolute canvas coordinates.",
+        text: "Render pixel art from simple matrices so sprites stay lightweight, editable and easy to ship.",
       },
       {
         code: "drawPacman / drawShip / drawMessage",
-        name: "Arcade shapes",
-        text: "Compose Pac-Man, ghosts, projectiles, spaceships, asteroids, sectors, lines, polylines and HUD overlays.",
+        name: "Arcade primitives",
+        text: "Drop in Pac-Man, ghosts, ships, asteroids, HUD pieces and other reusable shapes instead of rebuilding them.",
       },
       {
         code: "GridCanvasSystem.runtime.createAnimationLoop",
-        name: "Runtime helpers",
-        text: "Run animation loops, sprite animators and finite state machines without adopting a full game framework.",
+        name: "Lightweight runtime",
+        text: "Animate, switch states and drive scenes with a minimal runtime that adds motion without framework overhead.",
       },
       {
         code: "createKeyTracker / createPointerTracker",
         name: "Input and motion",
-        text: "Track keyboard and pointer state, convert angles, wrap bodies, test collisions and keep trails or particles alive.",
+        text: "Wire keyboard, pointer, collisions, wrapping and small physics helpers for game-like interaction fast.",
       },
       {
         code: "createArcadeAudio / createHowlerAssetAudio",
         name: "Audio add-ons",
-        text: "Trigger browser-native retro SFX and looping cues, or opt into Howler and Tone adapters for assets and generative music.",
+        text: "Start with built-in retro cues, then plug in Howler or Tone when you want assets or generative music.",
       },
       {
         code: "canvasToGrid / gridToCanvas / snapPointToGrid",
         name: "Grid coordinates",
-        text: "Convert canvas points to cells, cells to canvas points and snap interactions to a grid explicitly.",
+        text: "Map clicks, touches and scene logic back to cells with explicit grid conversion and snapping helpers.",
       },
     ],
     capabilitiesSection: {
-      kicker: "Capability Matrix",
+      kicker: "Why Teams Pick It",
       lede:
-        "The package keeps the core direct and adds reusable primitives only when they unlock many demos: drawing, motion, state, input, particles, grid-aware interaction and optional audio cues.",
-      title: "Small surface, enough runtime to feel alive.",
+        "Everything here is tuned for small interactive scenes: strong canvas defaults, reusable drawing primitives and just enough runtime to make a prototype feel shippable.",
+      title: "Grid-first by default. Playable in minutes.",
     },
     codeBlockTitles: {
       audioArcade: "Audio Arcade",
@@ -209,43 +209,43 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       {
         href: "/docs/",
         label: "Guides",
-        text: "Install paths, audio setup, runtime concepts and getting-started guides in English and Spanish.",
+        text: "Go from install to first scene fast, with setup, runtime and audio paths explained clearly.",
       },
       {
         href: "/playground/",
         label: "Playground",
-        text: "Edit and run pixel sprites, runtime loops, HUD scenes and browser-native audio arcade cues with Monaco.",
+        text: "Try the API in the browser and tweak sprites, loops, HUD overlays and arcade cues live.",
       },
       {
         href: "/docs/#audio-addons",
         label: "Audio",
-        text: "Choose between zero-dependency arcade cues and optional Howler or Tone adapters.",
+        text: "Pick the right audio lane: built-in arcade cues, Howler assets or Tone-powered music.",
       },
       {
         href: `${repoUrl}/blob/main/docs/ESTUDIO_TECNICO.md`,
         label: "Study",
-        text: "Architecture, public API, rendering flow, packaging and verification notes.",
+        text: "Dive into architecture and rendering decisions when you want the deeper technical picture.",
       },
       {
         href: `${repoUrl}/blob/main/docs/HALLAZGOS_Y_MEJORAS.md`,
         label: "Findings",
-        text: "Applied improvements, remaining risks and the current technical backlog.",
+        text: "Review shipped improvements, current tradeoffs and the technical priorities ahead.",
       },
       {
         href: `${repoUrl}/blob/main/docs/INVESTIGACION_INNOVACION_ESCALADO.md`,
         label: "Research",
-        text: "Innovation strategy, market positioning, comparison with larger engines and scaling roadmap.",
+        text: "See the market positioning, product direction and how the library compares with larger engines.",
       },
       {
         href: `${repoUrl}/blob/main/CHANGELOG.md`,
         label: "Changelog",
-        text: `Release notes from 0.1.x through the current ${libraryVersion} audio expansion.`,
+        text: `Track everything new from 0.1.x to the current ${libraryVersion} release.`,
       },
     ],
     docsPath: "/docs/",
     docsSection: {
-      kicker: "Documentation Map",
-      title: "Everything useful stays one click from the package.",
+      kicker: "Learn & Evaluate",
+      title: "Docs, playground and source all stay close to the product.",
     },
     examples: [
       {
@@ -253,45 +253,45 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         id: "buddy",
         name: "Grid Buddy",
         number: "01",
-        text: "A tiny companion built with pixel sprites, animator, state machine and local persistence.",
+        text: "A compact character demo that shows how far sprites, state and persistence can go with very little code.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/runtime`,
         id: "runtime",
         name: "Runtime",
         number: "02",
-        text: "A moving actor driven by MassBody, keyboard input and requestAnimationFrame.",
+        text: "A clean motion sandbox for loops, body movement and keyboard-driven interaction.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/audio-arcade`,
         id: "audio-arcade",
         name: "Audio Arcade",
         number: "03",
-        text: "Retro sound effects, a looping patrol cue and mute control through the new browser-native addon.",
+        text: "Instant retro feedback and looping cues without bringing in a heavyweight audio stack.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/hud`,
         id: "hud",
         name: "HUD",
         number: "04",
-        text: "Value labels, status bars and centered messages for game-like overlays.",
+        text: "Ready-to-use overlays for scores, bars, status labels and centered scene messages.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla`,
         id: "shapes",
         name: "Pixel Shapes",
         number: "05",
-        text: "Pac-Man, ghost, projectile, asteroid and spaceship primitives.",
+        text: "Arcade-flavored building blocks for fast prototypes, playful tools and visual experiments.",
       },
     ],
     examplesSection: {
-      kicker: "Example Gallery",
+      kicker: "Live Showcase",
       lede:
-        "Vanilla examples remain the reference path: CDN-friendly, framework-free and now able to show runtime, drawing and browser-native audio patterns close to the source.",
-      title: "Readable demos before framework ceremony.",
+        "Each example proves a product promise in plain code: motion, sprites, HUD, audio and reusable arcade parts.",
+      title: "See the library working like a product, not a pitch.",
     },
     footer: {
-      right: "A tiny canvas engine for playful interactive systems.",
+      right: "Grid-first canvas tooling for playful interactive products.",
     },
     hero: {
       actions: {
@@ -300,12 +300,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         install: "npm install",
         playground: "Open playground",
       },
-      copy: "Build small interactive Canvas scenes with grids, pixel art, sprites, animation, input, collisions and audio-ready add-ons.",
-      eyebrow: `v${libraryVersion} / Tiny Canvas Engine`,
+      copy: "A grid-first canvas library for pixel art, motion, input and arcade-ready interactive scenes.",
+      eyebrow: `v${libraryVersion} / Grid-First Canvas Library`,
       panelFooter: ["ESM + UMD", "0 runtime deps"],
       panelLabel: "Runtime code preview",
       subcopy:
-        "Start with browser-native arcade feedback, then opt into asset or music adapters only when a scene needs them.",
+        "Start with a visible grid, ship the first prototype fast, and add runtime or audio only when the scene needs more range.",
     },
     htmlLang: "en",
     liveBadge: "Live",
@@ -318,7 +318,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     localeNavAria: "Home language selector",
     localeSelectLabel: "Language",
     metaDescription:
-      "grid-canvas-system is a tiny Canvas engine for grids, pixel art, sprites, animation, input, collisions and playful interactive systems.",
+      "grid-canvas-system is a grid-first canvas library for pixel art, sprites, animation, input, collisions and audio-ready interactive scenes.",
     menuButtonLabel: "Toggle navigation menu",
     nav: {
       capabilities: "Capabilities",
@@ -327,29 +327,29 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       playground: "Playground",
     },
     pageTitle: "Grid Canvas System",
-    peekStrip: ["Grid helpers", "Pixel sprites", "State machines", "Visual snapshots"],
+    peekStrip: ["Grid-first API", "Pixel sprites", "Light runtime", "Audio add-ons"],
     primaryNavAria: "Primary navigation",
     release: {
       kicker: "Release",
       timeline: [
         {
-          summary: "Audio Arcade presets, custom loops, Howler and Tone adapters, plus vanilla audio demos.",
+          summary: "Built-in Audio Arcade presets, custom loops and optional Howler/Tone adapters for richer sound design.",
           version: libraryVersion,
         },
         {
-          summary: "Grid coordinate helpers and pointer tracking.",
+          summary: "Grid-aware pointer tracking and explicit coordinate helpers for interactive scenes.",
           version: "0.3.0",
         },
         {
-          summary: "Pixel sprites, animator, state machine and Grid Buddy.",
+          summary: "Pixel sprites, sprite animation, state machines and the Grid Buddy showcase.",
           version: "0.2.0",
         },
         {
-          summary: "Core canvas/grid API, drawing helpers and visual snapshots.",
+          summary: "The core grid canvas API, drawing primitives and snapshot-backed rendering confidence.",
           version: "0.1.x",
         },
       ],
-      title: "Audio add-ons and retro arcade sound with CI, visual tests and docs in sync.",
+      title: "Shipped with product discipline: audio, runtime, visual tests and docs move together.",
     },
     runtimeHint: "Focus canvas + arrow keys",
     sourceAriaPrefix: "Open source for",
@@ -367,19 +367,19 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       steps: [
         {
           command: "pnpm add grid-canvas-system",
-          note: "Install the core package and resolve the published audio subpaths.",
+          note: "Install the core library and keep optional audio lanes available when your scene grows.",
         },
         {
           command: "pnpm test",
-          note: "Run unit coverage against the runtime, drawing and audio addon APIs.",
+          note: "Check runtime, drawing and audio behavior before pushing a new scene.",
         },
         {
           command: "pnpm run test:visual",
-          note: "Verify visual snapshots before shipping rendering changes.",
+          note: "Protect rendering output with snapshot coverage before shipping visual changes.",
         },
         {
           command: "pnpm run build",
-          note: "Emit the package bundles and align the site with the current release.",
+          note: "Generate bundles and align the docs site with the current release.",
         },
       ],
     },
@@ -387,10 +387,10 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
   },
   es: {
     api: {
-      kicker: "Rutas de API",
+      kicker: "Rutas de arranque",
       lede:
-        "Cada ruta corresponde a una API publica documentada. La landing usa la misma fuente local en Astro, asi que el showcase evoluciona junto con la libreria.",
-      title: "Caminos copiables desde un canvas vacio hasta una escena en movimiento.",
+        "Instalalo, dibuja algo desde el primer dia y suma runtime, puntero y audio solo cuando la escena pida mas.",
+      title: "Del primer grid a una escena jugable en pocos pasos copiables.",
     },
     audioControls: {
       initialStatus: "Haz click en un control para desbloquear el audio del navegador.",
@@ -409,45 +409,45 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     capabilities: [
       {
         code: 'new GridCanvasSystem("canvas", { cellSize: 20 })',
-        name: "Canvas con grilla primero",
-        text: "Inicializa un canvas HTML con tamano predecible, render HiDPI, lineas de grilla visibles y etiquetas de coordenadas.",
+        name: "Canvas listo para grid",
+        text: "Levanta un canvas HTML nitido con tamano predecible, render HiDPI y una grilla siempre legible.",
       },
       {
         code: "grid.drawPixelSprite(sprite, options)",
         name: "Sprites pixel",
-        text: "Dibuja pixel art matricial con paletas estrictas, celdas transparentes y coordenadas absolutas de canvas.",
+        text: "Renderiza pixel art desde matrices simples para que los sprites sigan livianos, editables y faciles de publicar.",
       },
       {
         code: "drawPacman / drawShip / drawMessage",
-        name: "Formas arcade",
-        text: "Compone Pac-Man, fantasmas, proyectiles, naves, asteroides, sectores, lineas, polilineas y overlays de HUD.",
+        name: "Primitivas arcade",
+        text: "Suma Pac-Man, fantasmas, naves, asteroides, HUD y otras formas reutilizables sin reconstruirlas cada vez.",
       },
       {
         code: "GridCanvasSystem.runtime.createAnimationLoop",
-        name: "Helpers de runtime",
-        text: "Ejecuta animation loops, sprite animators y maquinas de estado sin adoptar un framework completo.",
+        name: "Runtime liviano",
+        text: "Anima, cambia de estado y mueve escenas con un runtime minimo que agrega vida sin sobrecarga de framework.",
       },
       {
         code: "createKeyTracker / createPointerTracker",
         name: "Input y movimiento",
-        text: "Sigue teclado y puntero, convierte angulos, aplica wrapping, prueba colisiones y mantiene trails o particulas.",
+        text: "Conecta teclado, puntero, colisiones, wrapping y helpers fisicos simples para interaccion tipo juego rapidamente.",
       },
       {
         code: "createArcadeAudio / createHowlerAssetAudio",
         name: "Add-ons de audio",
-        text: "Dispara SFX retro nativos del navegador y cues en loop, o suma adapters de Howler y Tone para assets y musica generativa.",
+        text: "Empieza con cues retro integrados y agrega Howler o Tone solo cuando quieras assets o musica generativa.",
       },
       {
         code: "canvasToGrid / gridToCanvas / snapPointToGrid",
         name: "Coordenadas de grilla",
-        text: "Convierte puntos de canvas a celdas, celdas a canvas y ajusta interacciones a la grilla de forma explicita.",
+        text: "Lleva clicks, touch y logica de escena a celdas con helpers explicitos de conversion y snap.",
       },
     ],
     capabilitiesSection: {
-      kicker: "Matriz de capacidades",
+      kicker: "Por que funciona",
       lede:
-        "El paquete mantiene el nucleo directo y suma primitivas reutilizables solo cuando destraban muchos demos: dibujo, movimiento, estado, input, particulas, interaccion con grilla y audio opcional.",
-      title: "Superficie pequena, runtime suficiente para sentirse vivo.",
+        "Todo esta pensado para escenas interactivas pequenas: buenos defaults de canvas, primitivas reutilizables y el runtime justo para que un prototipo se sienta listo para mostrar.",
+      title: "Grid primero. Prototipo jugable en minutos.",
     },
     codeBlockTitles: {
       audioArcade: "Audio Arcade",
@@ -460,43 +460,43 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       {
         href: "/es/docs/",
         label: "Guias",
-        text: "Instalacion, setup de audio, conceptos de runtime y guia inicial en espanol e ingles.",
+        text: "Pasa de la instalacion a la primera escena rapido, con setup, runtime y audio explicados con claridad.",
       },
       {
         href: "/playground/",
         label: "Playground",
-        text: "Edita y corre sprites pixel, loops de runtime, escenas HUD y cues arcade de audio nativo con Monaco.",
+        text: "Prueba la API en el navegador y ajusta sprites, loops, HUD y cues arcade en vivo.",
       },
       {
         href: "/es/docs/#audio-addons",
         label: "Audio",
-        text: "Elige entre cues arcade sin dependencias y adapters opcionales de Howler o Tone.",
+        text: "Elige tu ruta de audio: cues integrados, assets con Howler o musica con Tone.",
       },
       {
         href: `${repoUrl}/blob/main/docs/ESTUDIO_TECNICO.md`,
         label: "Estudio",
-        text: "Arquitectura, API publica, flujo de render, empaquetado y notas de verificacion.",
+        text: "Profundiza en arquitectura y decisiones de render cuando quieras la mirada tecnica completa.",
       },
       {
         href: `${repoUrl}/blob/main/docs/HALLAZGOS_Y_MEJORAS.md`,
         label: "Hallazgos",
-        text: "Mejoras aplicadas, riesgos pendientes y backlog tecnico actual.",
+        text: "Revisa mejoras ya enviadas, compromisos actuales y prioridades tecnicas.",
       },
       {
         href: `${repoUrl}/blob/main/docs/INVESTIGACION_INNOVACION_ESCALADO.md`,
         label: "Investigacion",
-        text: "Estrategia de innovacion, posicionamiento, comparacion con motores grandes y roadmap de escalado.",
+        text: "Entiende el posicionamiento, la direccion de producto y la comparacion frente a motores mas grandes.",
       },
       {
         href: `${repoUrl}/blob/main/CHANGELOG.md`,
         label: "Changelog",
-        text: `Notas de version desde 0.1.x hasta la expansion de audio en ${libraryVersion}.`,
+        text: `Sigue todo lo nuevo desde 0.1.x hasta la release actual ${libraryVersion}.`,
       },
     ],
     docsPath: "/es/docs/",
     docsSection: {
-      kicker: "Mapa de documentacion",
-      title: "Todo lo util queda a un click del paquete.",
+      kicker: "Aprende y valida",
+      title: "Docs, playground y codigo fuente quedan cerca del producto.",
     },
     examples: [
       {
@@ -504,45 +504,45 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         id: "buddy",
         name: "Grid Buddy",
         number: "01",
-        text: "Un companero pequeno construido con sprites pixel, animator, state machine y persistencia local.",
+        text: "Una demo compacta que muestra hasta donde llegan sprites, estado y persistencia con muy poco codigo.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/runtime`,
         id: "runtime",
         name: "Runtime",
         number: "02",
-        text: "Un actor en movimiento controlado por MassBody, teclado y requestAnimationFrame.",
+        text: "Un sandbox limpio para loops, movimiento de cuerpos e interaccion por teclado.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/audio-arcade`,
         id: "audio-arcade",
         name: "Audio Arcade",
         number: "03",
-        text: "Efectos retro, un patrol loop y mute desde el nuevo addon nativo del navegador.",
+        text: "Feedback retro instantaneo y loops listos sin cargar un stack de audio pesado.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/hud`,
         id: "hud",
         name: "HUD",
         number: "04",
-        text: "Etiquetas de valor, barras de estado y mensajes centrados para overlays tipo juego.",
+        text: "Overlays listos para score, barras, labels de estado y mensajes centrados.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla`,
         id: "shapes",
         name: "Formas Pixel",
         number: "05",
-        text: "Primitivas de Pac-Man, fantasma, proyectil, asteroide y nave.",
+        text: "Bloques arcade reutilizables para prototipos rapidos, herramientas juguetonas y pruebas visuales.",
       },
     ],
     examplesSection: {
-      kicker: "Galeria de ejemplos",
+      kicker: "Showcase en vivo",
       lede:
-        "Los ejemplos vanilla siguen siendo la ruta de referencia: compatibles con CDN, sin framework y ahora capaces de mostrar runtime, dibujo y patrones de audio nativo del navegador cerca del codigo fuente.",
-      title: "Demos legibles antes de la ceremonia del framework.",
+        "Cada ejemplo prueba una promesa concreta: sprites, movimiento, HUD, audio y piezas arcade reutilizables.",
+      title: "Mira la libreria trabajando como producto, no como discurso.",
     },
     footer: {
-      right: "Un motor Canvas pequeno para sistemas interactivos y juguetones.",
+      right: "Herramientas canvas orientadas a grid para productos interactivos con personalidad.",
     },
     hero: {
       actions: {
@@ -551,12 +551,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         install: "npm install",
         playground: "Abrir playground",
       },
-      copy: "Construye escenas Canvas pequenas e interactivas con grillas, pixel art, sprites, animacion, input, colisiones y add-ons de audio.",
-      eyebrow: `v${libraryVersion} / Motor Canvas Ligero`,
+      copy: "Una libreria canvas orientada a grid para pixel art, movimiento, input y escenas interactivas con sabor arcade.",
+      eyebrow: `v${libraryVersion} / Libreria Canvas Grid-First`,
       panelFooter: ["ESM + UMD", "0 dependencias runtime"],
       panelLabel: "Preview de codigo runtime",
       subcopy:
-        "Empieza con feedback arcade nativo del navegador y suma adapters de assets o musica solo cuando la escena lo necesite.",
+        "Empieza con una grilla visible, saca un primer prototipo rapido y agrega runtime o audio solo cuando la escena necesite mas alcance.",
     },
     htmlLang: "es",
     liveBadge: "En vivo",
@@ -569,7 +569,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     localeNavAria: "Selector de idioma de la home",
     localeSelectLabel: "Idioma",
     metaDescription:
-      "grid-canvas-system es un motor Canvas pequeno para grillas, pixel art, sprites, animacion, input, colisiones y sistemas interactivos.",
+      "grid-canvas-system es una libreria canvas grid-first para pixel art, sprites, animacion, input, colisiones y escenas interactivas con audio.",
     menuButtonLabel: "Abrir o cerrar navegacion",
     nav: {
       capabilities: "Capacidades",
@@ -578,29 +578,29 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       playground: "Playground",
     },
     pageTitle: "Grid Canvas System / Inicio",
-    peekStrip: ["Helpers de grilla", "Sprites pixel", "Maquinas de estado", "Snapshots visuales"],
+    peekStrip: ["API grid-first", "Sprites pixel", "Runtime liviano", "Add-ons de audio"],
     primaryNavAria: "Navegacion principal",
     release: {
       kicker: "Version",
       timeline: [
         {
-          summary: "Presets de Audio Arcade, loops personalizados, adapters de Howler y Tone, mas demos vanilla de audio.",
+          summary: "Audio Arcade integrado, loops personalizados y adapters opcionales de Howler y Tone para subir el nivel sonoro.",
           version: libraryVersion,
         },
         {
-          summary: "Helpers de coordenadas de grilla y seguimiento de puntero.",
+          summary: "Seguimiento de puntero y helpers de coordenadas para escenas interactivas con grid.",
           version: "0.3.0",
         },
         {
-          summary: "Sprites pixel, animator, state machine y Grid Buddy.",
+          summary: "Sprites pixel, animacion de sprites, state machine y el showcase Grid Buddy.",
           version: "0.2.0",
         },
         {
-          summary: "API base de canvas/grilla, helpers de dibujo y snapshots visuales.",
+          summary: "API base de canvas con grilla, primitivas de dibujo y confianza de render con snapshots.",
           version: "0.1.x",
         },
       ],
-      title: "Audio retro y add-ons de sonido con CI, tests visuales y docs sincronizadas.",
+      title: "Se entrega con disciplina de producto: audio, runtime, tests visuales y docs avanzan juntos.",
     },
     runtimeHint: "Enfoca el canvas y usa las flechas",
     sourceAriaPrefix: "Abrir codigo fuente de",
@@ -618,19 +618,19 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       steps: [
         {
           command: "pnpm add grid-canvas-system",
-          note: "Instala el paquete base y resuelve los subpaths publicados para audio.",
+          note: "Instala la libreria base y deja abiertas las rutas opcionales de audio para cuando la escena crezca.",
         },
         {
           command: "pnpm test",
-          note: "Ejecuta la cobertura unitaria sobre runtime, dibujo y APIs de audio addons.",
+          note: "Valida runtime, dibujo y audio antes de mover una escena a release.",
         },
         {
           command: "pnpm run test:visual",
-          note: "Verifica los snapshots visuales antes de publicar cambios de render.",
+          note: "Protege el render con snapshots antes de publicar cambios visuales.",
         },
         {
           command: "pnpm run build",
-          note: "Emite los bundles del paquete y alinea el site con la release actual.",
+          note: "Genera bundles y alinea el sitio con la version actual.",
         },
       ],
     },
@@ -638,10 +638,10 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
   },
   ja: {
     api: {
-      kicker: "APIレーン",
+      kicker: "スタートパス",
       lede:
-        "各レーンは公開APIに対応しています。ランディングページも同じローカルソースを使うので、ショーケースはライブラリと一緒に進化します。",
-      title: "空のcanvasから動くシーンまで、そのまま使える導線。",
+        "導入してすぐ描き始め、必要になった時だけ runtime、pointer、audio を足せます。",
+      title: "最初のグリッドから遊べるシーンまで、すぐ使える数ステップ。",
     },
     audioControls: {
       initialStatus: "操作するとブラウザ音声が有効になります。",
@@ -660,45 +660,45 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     capabilities: [
       {
         code: 'new GridCanvasSystem("canvas", { cellSize: 20 })',
-        name: "グリッド中心のcanvas",
-        text: "サイズ、HiDPI描画、グリッド線、座標ラベルを予測しやすい形で持つHTML canvasを初期化します。",
+        name: "グリッド対応canvas",
+        text: "予測しやすいサイズ、HiDPI 描画、見やすいグリッドを備えた HTML canvas をすぐに立ち上げられます。",
       },
       {
         code: "grid.drawPixelSprite(sprite, options)",
         name: "ピクセルスプライト",
-        text: "厳密なパレット、透明セル、絶対座標を使ってマトリクス型のピクセルアートを描画します。",
+        text: "シンプルな行列データからピクセルアートを描けるので、sprite を軽く保ったまま編集しやすくできます。",
       },
       {
         code: "drawPacman / drawShip / drawMessage",
-        name: "アーケード図形",
-        text: "Pac-Man、ゴースト、弾、宇宙船、アステロイド、セクタ、ライン、ポリライン、HUDを組み合わせられます。",
+        name: "アーケードプリミティブ",
+        text: "Pac-Man、ghost、ship、asteroid、HUD などの再利用パーツを、そのままシーンへ持ち込めます。",
       },
       {
         code: "GridCanvasSystem.runtime.createAnimationLoop",
-        name: "runtimeヘルパー",
-        text: "フルゲームフレームワークなしで animation loop、sprite animator、state machine を使えます。",
+        name: "軽量runtime",
+        text: "framework を抱え込まずに、loop、state 切替、scene の動きを最小限の runtime で組み立てられます。",
       },
       {
         code: "createKeyTracker / createPointerTracker",
         name: "入力と移動",
-        text: "キーボードとポインタを追跡し、角度変換、wrap、衝突判定、trailやparticleの更新を行います。",
+        text: "keyboard、pointer、collision、wrap、軽い物理 helper をつないで、ゲームらしい操作感を素早く作れます。",
       },
       {
         code: "createArcadeAudio / createHowlerAssetAudio",
         name: "音声アドオン",
-        text: "ブラウザネイティブなレトロSFXとループを使うか、HowlerとToneのadapterでasset再生や音楽生成を追加できます。",
+        text: "まずは内蔵のレトロ cue を使い、asset 再生や generative music が必要になったら Howler や Tone を足せます。",
       },
       {
         code: "canvasToGrid / gridToCanvas / snapPointToGrid",
         name: "グリッド座標",
-        text: "canvas上の点とセルを相互変換し、操作位置を明示的にグリッドへスナップできます。",
+        text: "click や touch、scene のロジックをセル基準へ戻せる explicit な変換と snap helper を用意しています。",
       },
     ],
     capabilitiesSection: {
-      kicker: "機能マトリクス",
+      kicker: "選ばれる理由",
       lede:
-        "コアは直接的なまま保ち、多くのデモを解放する時だけ再利用可能なプリミティブを追加します。描画、移動、状態、入力、particle、グリッド操作、そして任意の音声です。",
-      title: "小さな表面積、でも十分に生きているruntime。",
+        "小さなインタラクティブシーン向けに設計されています。canvas の強い初期値、再利用しやすい描画プリミティブ、そして手触りを出すのに十分な runtime をまとめています。",
+      title: "グリッドから始めて、数分で動く。",
     },
     codeBlockTitles: {
       audioArcade: "Audio Arcade",
@@ -711,43 +711,43 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       {
         href: "/docs/",
         label: "ガイド",
-        text: "導入、音声セットアップ、runtimeの考え方、そして英語とスペイン語のgetting-startedガイド。",
+        text: "導入から最初のシーンまでを素早く進められるように、setup、runtime、audio の道筋を整理しています。",
       },
       {
         href: "/playground/",
         label: "Playground",
-        text: "ピクセルスプライト、runtime loop、HUD、ブラウザネイティブなaudio arcade cueをMonacoで編集して実行できます。",
+        text: "ブラウザ上で API を試し、sprite、loop、HUD、arcade cue をその場で調整できます。",
       },
       {
         href: "/docs/#audio-addons",
         label: "音声",
-        text: "依存なしのarcade cueと、任意のHowler/Tone adapterを選べます。",
+        text: "内蔵 arcade cue、Howler asset、Tone の音楽生成から合う音声レーンを選べます。",
       },
       {
         href: `${repoUrl}/blob/main/docs/ESTUDIO_TECNICO.md`,
         label: "設計",
-        text: "アーキテクチャ、公開API、描画フロー、配布、検証メモ。",
+        text: "より深く知りたい時のために、architecture と rendering の判断を追えます。",
       },
       {
         href: `${repoUrl}/blob/main/docs/HALLAZGOS_Y_MEJORAS.md`,
         label: "改善",
-        text: "適用済みの改善、残るリスク、現在の技術バックログ。",
+        text: "出荷済みの改善、現在の tradeoff、次の技術優先度を確認できます。",
       },
       {
         href: `${repoUrl}/blob/main/docs/INVESTIGACION_INNOVACION_ESCALADO.md`,
         label: "調査",
-        text: "イノベーション戦略、市場ポジショニング、大規模エンジンとの比較、拡張ロードマップ。",
+        text: "市場での立ち位置、プロダクトの方向性、大きな engine との違いを見渡せます。",
       },
       {
         href: `${repoUrl}/blob/main/CHANGELOG.md`,
         label: "変更履歴",
-        text: `0.1.x から ${libraryVersion} のaudio拡張までのリリースノート。`,
+        text: `0.1.x から現在の ${libraryVersion} までの更新を追えます。`,
       },
     ],
     docsPath: "/docs/",
     docsSection: {
-      kicker: "ドキュメントマップ",
-      title: "必要なものへ、パッケージからすぐに届く。",
+      kicker: "学ぶ / 試す",
+      title: "Docs、Playground、source がプロダクトのすぐ隣にあります。",
     },
     examples: [
       {
@@ -755,45 +755,45 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         id: "buddy",
         name: "Grid Buddy",
         number: "01",
-        text: "ピクセルスプライト、animator、state machine、local persistenceで作った小さな相棒。",
+        text: "少ないコードで sprite、state、persistence がどこまで届くかを見せるコンパクトなデモ。",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/runtime`,
         id: "runtime",
         name: "Runtime",
         number: "02",
-        text: "MassBody、キーボード入力、requestAnimationFrameで動くアクター。",
+        text: "loop、body movement、keyboard 操作を素直に試せる motion sandbox。",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/audio-arcade`,
         id: "audio-arcade",
         name: "Audio Arcade",
         number: "03",
-        text: "レトロ効果音、patrol loop、mute制御を新しいブラウザネイティブaddonで提供。",
+        text: "重い audio stack なしで、即座にレトロな反応音と loop を入れられます。",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/hud`,
         id: "hud",
         name: "HUD",
         number: "04",
-        text: "値ラベル、ステータスバー、中央メッセージでゲーム風overlayを構成。",
+        text: "score、bar、status label、中央メッセージ向けの overlay をすぐ使えます。",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla`,
         id: "shapes",
         name: "Pixel Shapes",
         number: "05",
-        text: "Pac-Man、ghost、projectile、asteroid、spaceship のプリミティブ。",
+        text: "素早い試作や遊びのある UI に使える arcade 系の再利用ブロック。",
       },
     ],
     examplesSection: {
-      kicker: "サンプルギャラリー",
+      kicker: "ライブショーケース",
       lede:
-        "Vanillaサンプルは今も参照経路です。CDNでも使え、フレームワーク不要で、runtime・描画・ブラウザ音声のパターンをソースの近くで確認できます。",
-      title: "フレームワークの前に、読みやすいデモ。",
+        "各サンプルは sprite、motion、HUD、audio、arcade パーツという一つの約束を、平易なコードで証明します。",
+      title: "説明より先に、ライブラリが動くところを見せます。",
     },
     footer: {
-      right: "遊び心のあるインタラクティブシステム向けの小さなCanvasエンジン。",
+      right: "遊び心あるインタラクティブ製品向けの、グリッド起点の canvas ツール。",
     },
     hero: {
       actions: {
@@ -802,12 +802,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         install: "npm install",
         playground: "Playgroundを開く",
       },
-      copy: "グリッド、ピクセルアート、スプライト、アニメーション、入力、衝突判定、音声アドオン付きの小さなCanvasシーンを作れます。",
-      eyebrow: `v${libraryVersion} / 軽量Canvasエンジン`,
+      copy: "ピクセルアート、動き、入力、アーケード感のあるシーンを素早く形にする、グリッド起点の canvas ライブラリ。",
+      eyebrow: `v${libraryVersion} / グリッド起点の Canvas ライブラリ`,
       panelFooter: ["ESM + UMD", "runtime依存 0"],
       panelLabel: "runtimeコードプレビュー",
       subcopy:
-        "まずはブラウザネイティブなアーケード音を使い、必要になったらassetやmusic adapterを追加します。",
+        "まずは見えるグリッドから始め、最初のプロトタイプを早く出し、必要になった時だけ runtime や audio を広げられます。",
     },
     htmlLang: "ja",
     liveBadge: "ライブ",
@@ -820,7 +820,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     localeNavAria: "ホーム言語切替",
     localeSelectLabel: "言語",
     metaDescription:
-      "grid-canvas-system は、グリッド、ピクセルアート、スプライト、アニメーション、入力、衝突判定に向いた小さなCanvasエンジンです。",
+      "grid-canvas-system は、グリッド、ピクセルアート、sprite、animation、input、collision、audio 対応シーン向けの canvas ライブラリです。",
     menuButtonLabel: "ナビゲーションメニューを切り替え",
     nav: {
       capabilities: "機能",
@@ -829,29 +829,29 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       playground: "Playground",
     },
     pageTitle: "Grid Canvas System / ホーム",
-    peekStrip: ["グリッド補助", "ピクセルスプライト", "状態機械", "ビジュアルスナップショット"],
+    peekStrip: ["グリッドAPI", "ピクセルスプライト", "軽量runtime", "音声アドオン"],
     primaryNavAria: "主要ナビゲーション",
     release: {
       kicker: "バージョン",
       timeline: [
         {
-          summary: "Audio Arcadeのpreset、カスタムloop、Howler/Tone adapter、そしてvanilla audio demoを追加。",
+          summary: "内蔵 Audio Arcade preset、custom loop、Howler/Tone adapter で音の幅を広げました。",
           version: libraryVersion,
         },
         {
-          summary: "グリッド座標helperとpointer trackingを追加。",
+          summary: "grid 座標 helper と pointer tracking で操作系を強化。",
           version: "0.3.0",
         },
         {
-          summary: "ピクセルスプライト、animator、state machine、Grid Buddyを追加。",
+          summary: "pixel sprite、animator、state machine、Grid Buddy を追加。",
           version: "0.2.0",
         },
         {
-          summary: "canvas/grid API、描画helper、visual snapshotを確立。",
+          summary: "grid canvas API、描画 primitive、visual snapshot の基盤を確立。",
           version: "0.1.x",
         },
       ],
-      title: "レトロ音声アドオンをCI、ビジュアルテスト、ドキュメントと一緒に公開。",
+      title: "音、runtime、visual test、docs を一緒に前へ進める、出荷前提のライブラリ。",
     },
     runtimeHint: "canvasを選んで矢印キー",
     sourceAriaPrefix: "ソースを開く",
@@ -869,19 +869,19 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       steps: [
         {
           command: "pnpm add grid-canvas-system",
-          note: "コアパッケージを導入し、公開されているaudio subpathを解決します。",
+          note: "コアライブラリを導入し、必要になった時の audio レーンもそのまま広げられます。",
         },
         {
           command: "pnpm test",
-          note: "runtime、drawing、audio addon API に対するユニットテストを実行します。",
+          note: "runtime、drawing、audio の挙動を確認してから次のシーンへ進めます。",
         },
         {
           command: "pnpm run test:visual",
-          note: "描画変更を出す前に visual snapshot を確認します。",
+          note: "描画変更は snapshot で守りながら出荷できます。",
         },
         {
           command: "pnpm run build",
-          note: "パッケージのbundleを出力し、siteを現在のreleaseに合わせます。",
+          note: "bundle を生成し、site を現在の release に揃えます。",
         },
       ],
     },
