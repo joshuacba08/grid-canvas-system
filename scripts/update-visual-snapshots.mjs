@@ -391,6 +391,78 @@ function renderPixelSpriteScenario() {
   return backingCanvas;
 }
 
+function renderCompiledPixelSpriteScenario() {
+  const { backingCanvas, grid } = renderScenario(
+    "compiled-pixel-sprite",
+    PIXEL_SPRITE_OPTIONS,
+  );
+  const sprite = [
+    "00111100",
+    "01122110",
+    "11222211",
+    "12233221",
+    "11222211",
+    "01111110",
+    "00100100",
+  ];
+  const palette = GridCanvasSystem.createPixelPalette({
+    0: "transparent",
+    1: "#38bdf8",
+    2: "#f8fafc",
+    3: "#0f172a",
+  });
+  const compiled = GridCanvasSystem.compilePixelSprite(sprite, palette);
+  const flipped = GridCanvasSystem.compilePixelSprite(
+    GridCanvasSystem.flipPixelSpriteX(sprite),
+    palette,
+  );
+
+  grid.drawCompiledPixelSprite(compiled, {
+    x: 28,
+    y: 42,
+    pixelSize: 8,
+  });
+  grid.drawCompiledPixelSprite(GridCanvasSystem.tintPixelSprite(flipped, "#facc15"), {
+    opacity: 0.85,
+    x: 112,
+    y: 42,
+    pixelSize: 8,
+  });
+
+  return backingCanvas;
+}
+
+function renderTileMapScenario() {
+  const { backingCanvas, grid } = renderScenario("tilemap", PACMAN_OPTIONS);
+  const wall = GridCanvasSystem.compilePixelSprite(["1111", "1221", "1221", "1111"], {
+    1: "#22c55e",
+    2: "#052e16",
+  });
+  const coin = GridCanvasSystem.compilePixelSprite(["010", "111", "010"], {
+    0: "transparent",
+    1: "#facc15",
+  });
+
+  GridCanvasSystem.runtime.drawTileMap(
+    ["111111", "100001", "102301", "100001", "111111"],
+    {
+      1: wall,
+      2: coin,
+      3: {
+        color: "#38bdf8",
+        opacity: 0.85,
+      },
+    },
+    {
+      grid,
+      origin: { x: 40, y: 50 },
+      tileSize: 20,
+    },
+  );
+
+  return backingCanvas;
+}
+
 async function writeSnapshot(name, options) {
   const { backingCanvas } = renderScenario(name, options);
   const snapshotUrl = new URL(`${name}.png`, SNAPSHOT_DIR);
@@ -454,6 +526,20 @@ async function writePixelSpriteSnapshot() {
   await writeFile(snapshotUrl, backingCanvas.toBuffer("image/png"));
 }
 
+async function writeCompiledPixelSpriteSnapshot() {
+  const snapshotUrl = new URL("compiled-pixel-sprite.png", SNAPSHOT_DIR);
+  const backingCanvas = renderCompiledPixelSpriteScenario();
+
+  await writeFile(snapshotUrl, backingCanvas.toBuffer("image/png"));
+}
+
+async function writeTileMapSnapshot() {
+  const snapshotUrl = new URL("tilemap.png", SNAPSHOT_DIR);
+  const backingCanvas = renderTileMapScenario();
+
+  await writeFile(snapshotUrl, backingCanvas.toBuffer("image/png"));
+}
+
 await mkdir(SNAPSHOT_DIR, { recursive: true });
 await writeSnapshot("grid-baseline", BASELINE_OPTIONS);
 await writeSnapshot("grid-hidpi", HIDPI_OPTIONS);
@@ -465,3 +551,5 @@ await writeShipSnapshot();
 await writeProjectileSnapshot();
 await writeHudSnapshot();
 await writePixelSpriteSnapshot();
+await writeCompiledPixelSpriteSnapshot();
+await writeTileMapSnapshot();

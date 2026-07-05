@@ -445,15 +445,18 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
 export const docsApiGroupsByLocale: Record<DocsLocale, DocsApiGroup[]> = {
   en: [
     ["Core", "constructor, canvas, ctx, options, clearCanvas"],
-    ["Drawing", "sprites, shapes, lines, text, HUD"],
+    ["Drawing", "raw and compiled sprites, shapes, lines, text, HUD"],
     ["Audio", "arcade cues, loops, optional Howler and Tone adapters"],
-    ["Runtime", "loop, input, motion, state, collision, scenes"],
+    ["Runtime", "variable and fixed loops, input, motion, state, scenes, tilemaps"],
   ],
   es: [
     ["Base", "constructor, canvas, ctx, options, clearCanvas"],
-    ["Dibujo", "sprites, formas, lineas, texto, HUD"],
+    ["Dibujo", "sprites crudos y compilados, formas, lineas, texto, HUD"],
     ["Audio", "cues arcade, loops, adapters opcionales de Howler y Tone"],
-    ["Runtime", "loop, input, movimiento, estado, colision y escenas"],
+    [
+      "Runtime",
+      "loops variables y fijos, input, movimiento, estado, escenas y tilemaps",
+    ],
   ],
 };
 
@@ -462,47 +465,123 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
     {
       name: "Core",
       methods: [
-        ["new GridCanvasSystem(id, options?)", "Create and validate a managed 2D canvas."],
-        ["clearCanvas(options?)", "Clear the frame and optionally redraw the configured grid."],
-        ["canvas / ctx / options", "Supported escape hatches and resolved configuration."],
+        [
+          "new GridCanvasSystem(id, options?)",
+          "Create and validate a managed 2D canvas.",
+        ],
+        [
+          "clearCanvas(options?)",
+          "Clear the frame and optionally redraw the configured grid.",
+        ],
+        [
+          "canvas / ctx / options",
+          "Supported escape hatches and resolved configuration.",
+        ],
       ],
     },
     {
       name: "Drawing",
       methods: [
-        ["drawPixelSprite(sprite, options)", "Render strict palette-based pixel matrices."],
+        [
+          "drawPixelSprite(sprite, options)",
+          "Render strict palette-based pixel matrices.",
+        ],
+        [
+          "drawCompiledPixelSprite(compiled, options)",
+          "Render a precompiled pixel sprite repeatedly.",
+        ],
         ["drawLine(start, end, options?)", "Draw a managed line segment."],
         ["drawPolyline(points, options?)", "Draw an open or closed path."],
-        ["drawPacman(x, y, radius, mouth, options?)", "Draw an animated circular sector character."],
-        ["drawGhost(center, radius, options?)", "Draw configurable feet, eyes and rotation."],
-        ["drawShip(center, radius, options?)", "Draw a curved ship with guides and thruster."],
-        ["drawAsteroid(center, radius, shape, options?)", "Reuse deterministic asteroid shape data."],
+        [
+          "drawPacman(x, y, radius, mouth, options?)",
+          "Draw an animated circular sector character.",
+        ],
+        [
+          "drawGhost(center, radius, options?)",
+          "Draw configurable feet, eyes and rotation.",
+        ],
+        [
+          "drawShip(center, radius, options?)",
+          "Draw a curved ship with guides and thruster.",
+        ],
+        [
+          "drawAsteroid(center, radius, shape, options?)",
+          "Reuse deterministic asteroid shape data.",
+        ],
         ["drawBarIndicator(...)", "Draw a labeled proportional status bar."],
-        ["drawMessage(main, sub, center, options?)", "Draw a centered two-line overlay."],
+        [
+          "drawMessage(main, sub, center, options?)",
+          "Draw a centered two-line overlay.",
+        ],
       ],
     },
     {
       name: "Audio",
       methods: [
-        ["createArcadeAudio(options?)", "Create browser-native retro SFX and looping 8-bit cues."],
-        ["playShoot / playPickup / playExplosion", "Trigger the built-in arcade one-shot presets."],
-        ["playLoop / stopLoop / mute / dispose", "Control looping cues and browser audio lifecycle."],
-        ["createHowlerAssetAudio(config)", "Load asset playback and sprite-based SFX through Howler."],
-        ["createToneMusicAudio(options?)", "Trigger synth notes or registered sequences through Tone."],
+        [
+          "createArcadeAudio(options?)",
+          "Create browser-native retro SFX and looping 8-bit cues.",
+        ],
+        [
+          "playShoot / playPickup / playExplosion",
+          "Trigger the built-in arcade one-shot presets.",
+        ],
+        [
+          "playLoop / stopLoop / mute / dispose",
+          "Control looping cues and browser audio lifecycle.",
+        ],
+        [
+          "createHowlerAssetAudio(config)",
+          "Load asset playback and sprite-based SFX through Howler.",
+        ],
+        [
+          "createToneMusicAudio(options?)",
+          "Trigger synth notes or registered sequences through Tone.",
+        ],
       ],
     },
     {
       name: "Runtime",
       methods: [
-        ["createAnimationLoop(options)", "Run update and draw callbacks with elapsed seconds."],
-        ["createSpriteAnimator(options)", "Advance named frame IDs independently of rendering."],
+        [
+          "createAnimationLoop(options)",
+          "Run update and draw callbacks with elapsed seconds.",
+        ],
+        [
+          "createFixedStepLoop(options)",
+          "Run deterministic updates at a fixed simulation step.",
+        ],
+        [
+          "createSceneManager(options)",
+          "Coordinate enter, update, draw, exit and transition hooks.",
+        ],
+        [
+          "createSpriteAnimator(options)",
+          "Advance named frame IDs independently of rendering.",
+        ],
         ["createStateMachine(options)", "Validate explicit state transitions."],
-        ["createKeyTracker(target, options?)", "Track normalized keys on an explicit target."],
-        ["createPointerTracker(target, options?)", "Track canvas-relative pointer state."],
+        [
+          "createKeyTracker(target, options?)",
+          "Track normalized keys on an explicit target.",
+        ],
+        [
+          "createPointerTracker(target, options?)",
+          "Track canvas-relative pointer state.",
+        ],
         ["canvasToGrid / gridToCanvas", "Convert between absolute points and cells."],
-        ["hitTestPoint / hitTestRectangle / hitTestCircleRectangle", "Test common point, rectangle and mixed-shape collision targets."],
+        [
+          "drawTileMap / hitTestTileMap",
+          "Draw simple character maps and test solid tile collisions.",
+        ],
+        [
+          "hitTestPoint / hitTestRectangle / hitTestCircleRectangle",
+          "Test common point, rectangle and mixed-shape collision targets.",
+        ],
         ["circlesIntersect(a, b)", "Test overlap between two circular actors."],
-        ["createParticleBurst / stepParticles", "Create and advance lightweight particles."],
+        [
+          "createParticleBurst / stepParticles",
+          "Create and advance lightweight particles.",
+        ],
         ["MassBody", "Integrate force, velocity, rotation and wrapping."],
       ],
     },
@@ -511,46 +590,122 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
     {
       name: "Base",
       methods: [
-        ["new GridCanvasSystem(id, options?)", "Crea y valida un canvas 2D administrado."],
-        ["clearCanvas(options?)", "Limpia el frame y puede redibujar la grilla configurada."],
-        ["canvas / ctx / options", "Puntos de escape soportados y configuracion resuelta."],
+        [
+          "new GridCanvasSystem(id, options?)",
+          "Crea y valida un canvas 2D administrado.",
+        ],
+        [
+          "clearCanvas(options?)",
+          "Limpia el frame y puede redibujar la grilla configurada.",
+        ],
+        [
+          "canvas / ctx / options",
+          "Puntos de escape soportados y configuracion resuelta.",
+        ],
       ],
     },
     {
       name: "Dibujo",
       methods: [
-        ["drawPixelSprite(sprite, options)", "Renderiza matrices pixel con paletas estrictas."],
+        [
+          "drawPixelSprite(sprite, options)",
+          "Renderiza matrices pixel con paletas estrictas.",
+        ],
+        [
+          "drawCompiledPixelSprite(compiled, options)",
+          "Renderiza un sprite pixel compilado de forma repetida.",
+        ],
         ["drawLine(start, end, options?)", "Dibuja un segmento de linea administrado."],
         ["drawPolyline(points, options?)", "Dibuja una ruta abierta o cerrada."],
-        ["drawPacman(x, y, radius, mouth, options?)", "Dibuja un personaje de sector circular animado."],
-        ["drawGhost(center, radius, options?)", "Dibuja pies, ojos y rotacion configurables."],
-        ["drawShip(center, radius, options?)", "Dibuja una nave curva con guias y thruster."],
-        ["drawAsteroid(center, radius, shape, options?)", "Reutiliza datos deterministas de asteroides."],
+        [
+          "drawPacman(x, y, radius, mouth, options?)",
+          "Dibuja un personaje de sector circular animado.",
+        ],
+        [
+          "drawGhost(center, radius, options?)",
+          "Dibuja pies, ojos y rotacion configurables.",
+        ],
+        [
+          "drawShip(center, radius, options?)",
+          "Dibuja una nave curva con guias y thruster.",
+        ],
+        [
+          "drawAsteroid(center, radius, shape, options?)",
+          "Reutiliza datos deterministas de asteroides.",
+        ],
         ["drawBarIndicator(...)", "Dibuja una barra proporcional con etiqueta."],
-        ["drawMessage(main, sub, center, options?)", "Dibuja un overlay centrado de dos lineas."],
+        [
+          "drawMessage(main, sub, center, options?)",
+          "Dibuja un overlay centrado de dos lineas.",
+        ],
       ],
     },
     {
       name: "Audio",
       methods: [
-        ["createArcadeAudio(options?)", "Crea SFX retro nativos del navegador y cues 8-bit en loop."],
-        ["playShoot / playPickup / playExplosion", "Dispara los presets arcade integrados."],
-        ["playLoop / stopLoop / mute / dispose", "Controla loops y el ciclo de vida del audio en navegador."],
-        ["createHowlerAssetAudio(config)", "Carga reproduccion de assets y audio sprites con Howler."],
-        ["createToneMusicAudio(options?)", "Dispara notas sintetizadas o secuencias registradas con Tone."],
+        [
+          "createArcadeAudio(options?)",
+          "Crea SFX retro nativos del navegador y cues 8-bit en loop.",
+        ],
+        [
+          "playShoot / playPickup / playExplosion",
+          "Dispara los presets arcade integrados.",
+        ],
+        [
+          "playLoop / stopLoop / mute / dispose",
+          "Controla loops y el ciclo de vida del audio en navegador.",
+        ],
+        [
+          "createHowlerAssetAudio(config)",
+          "Carga reproduccion de assets y audio sprites con Howler.",
+        ],
+        [
+          "createToneMusicAudio(options?)",
+          "Dispara notas sintetizadas o secuencias registradas con Tone.",
+        ],
       ],
     },
     {
       name: "Runtime",
       methods: [
-        ["createAnimationLoop(options)", "Ejecuta callbacks de update y draw con segundos transcurridos."],
-        ["createSpriteAnimator(options)", "Avanza IDs de frames sin depender del render."],
+        [
+          "createAnimationLoop(options)",
+          "Ejecuta callbacks de update y draw con segundos transcurridos.",
+        ],
+        [
+          "createFixedStepLoop(options)",
+          "Ejecuta updates deterministas con un paso de simulacion fijo.",
+        ],
+        [
+          "createSceneManager(options)",
+          "Coordina enter, update, draw, exit y transition entre escenas.",
+        ],
+        [
+          "createSpriteAnimator(options)",
+          "Avanza IDs de frames sin depender del render.",
+        ],
         ["createStateMachine(options)", "Valida transiciones de estado explicitas."],
-        ["createKeyTracker(target, options?)", "Sigue teclas normalizadas sobre un target explicito."],
-        ["createPointerTracker(target, options?)", "Sigue el puntero relativo al canvas."],
+        [
+          "createKeyTracker(target, options?)",
+          "Sigue teclas normalizadas sobre un target explicito.",
+        ],
+        [
+          "createPointerTracker(target, options?)",
+          "Sigue el puntero relativo al canvas.",
+        ],
         ["canvasToGrid / gridToCanvas", "Convierte entre puntos absolutos y celdas."],
-        ["hitTestPoint / hitTestRectangle / hitTestCircleRectangle", "Prueba colisiones comunes de punto, rectangulo y formas mixtas."],
-        ["circlesIntersect(a, b)", "Prueba superposicion entre dos actores circulares."],
+        [
+          "drawTileMap / hitTestTileMap",
+          "Dibuja mapas de caracteres y prueba colisiones contra tiles solidos.",
+        ],
+        [
+          "hitTestPoint / hitTestRectangle / hitTestCircleRectangle",
+          "Prueba colisiones comunes de punto, rectangulo y formas mixtas.",
+        ],
+        [
+          "circlesIntersect(a, b)",
+          "Prueba superposicion entre dos actores circulares.",
+        ],
         ["createParticleBurst / stepParticles", "Crea y avanza particulas ligeras."],
         ["MassBody", "Integra fuerza, velocidad, rotacion y wrapping."],
       ],
@@ -560,44 +715,124 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
 
 export const docsRecipesByLocale: Record<DocsLocale, DocsRecipe[]> = {
   en: [
-    ["Prototype retro feedback", "Unlock browser audio and test the audio-arcade addon directly in the Playground.", "audio-arcade"],
-    ["Build Grid Pong", "Connect pointer input, paddle AI, collisions, scoring and match states.", "grid-pong"],
-    ["Make an action game", "Combine keyboard and touch input with projectiles, lives and particles.", "asteroid-dodge"],
-    ["Animate a sprite", "Combine a sprite animator, state machine and drawPixelSprite().", "grid-buddy"],
+    [
+      "Prototype retro feedback",
+      "Unlock browser audio and test the audio-arcade addon directly in the Playground.",
+      "audio-arcade",
+    ],
+    [
+      "Build Grid Pong",
+      "Connect pointer input, paddle AI, collisions, scoring and match states.",
+      "grid-pong",
+    ],
+    [
+      "Make an action game",
+      "Combine keyboard and touch input with projectiles, lives and particles.",
+      "asteroid-dodge",
+    ],
+    [
+      "Animate a sprite",
+      "Combine a sprite animator, state machine and drawPixelSprite().",
+      "grid-buddy",
+    ],
     ["Build a game HUD", "Compose score, health and centered status messages.", "hud"],
-    ["Snap pointer input", "Track a pointer and convert its position into a grid cell.", "grid-input"],
-    ["Explore collision response", "Move a circle through walls and collect circular targets.", "collision-course"],
-    ["Create a particle burst", "Advance short-lived scene particles with gravity and drag.", "particles"],
+    [
+      "Snap pointer input",
+      "Track a pointer and convert its position into a grid cell.",
+      "grid-input",
+    ],
+    [
+      "Explore collision response",
+      "Move a circle through walls and collect circular targets.",
+      "collision-course",
+    ],
+    [
+      "Create a particle burst",
+      "Advance short-lived scene particles with gravity and drag.",
+      "particles",
+    ],
   ],
   es: [
-    ["Prototipa feedback retro", "Desbloquea el audio del navegador y prueba audio-arcade directo en el Playground.", "audio-arcade"],
-    ["Construye Grid Pong", "Conecta input por puntero, IA de pala, colisiones, score y estados de partida.", "grid-pong"],
-    ["Haz un juego de accion", "Combina teclado y touch con proyectiles, vidas y particulas.", "asteroid-dodge"],
-    ["Anima un sprite", "Combina sprite animator, state machine y drawPixelSprite().", "grid-buddy"],
+    [
+      "Prototipa feedback retro",
+      "Desbloquea el audio del navegador y prueba audio-arcade directo en el Playground.",
+      "audio-arcade",
+    ],
+    [
+      "Construye Grid Pong",
+      "Conecta input por puntero, IA de pala, colisiones, score y estados de partida.",
+      "grid-pong",
+    ],
+    [
+      "Haz un juego de accion",
+      "Combina teclado y touch con proyectiles, vidas y particulas.",
+      "asteroid-dodge",
+    ],
+    [
+      "Anima un sprite",
+      "Combina sprite animator, state machine y drawPixelSprite().",
+      "grid-buddy",
+    ],
     ["Construye un HUD", "Compone score, salud y mensajes de estado centrados.", "hud"],
-    ["Ajusta el puntero a la grilla", "Sigue el puntero y convierte su posicion a una celda.", "grid-input"],
-    ["Explora respuesta a colisiones", "Mueve un circulo entre muros y recoge objetivos circulares.", "collision-course"],
-    ["Crea una rafaga de particulas", "Avanza particulas de vida corta con gravedad y drag.", "particles"],
+    [
+      "Ajusta el puntero a la grilla",
+      "Sigue el puntero y convierte su posicion a una celda.",
+      "grid-input",
+    ],
+    [
+      "Explora respuesta a colisiones",
+      "Mueve un circulo entre muros y recoge objetivos circulares.",
+      "collision-course",
+    ],
+    [
+      "Crea una rafaga de particulas",
+      "Avanza particulas de vida corta con gravedad y drag.",
+      "particles",
+    ],
   ],
 };
 
 export const docsErrorRowsByLocale: Record<DocsLocale, DocsErrorRow[]> = {
   en: [
-    ["Canvas not found", "The constructor ID must reference an existing canvas element."],
+    [
+      "Canvas not found",
+      "The constructor ID must reference an existing canvas element.",
+    ],
     ["Invalid grid rhythm", "majorStep must be an exact multiple of cellSize."],
     ["Irregular sprite", "Every sprite row must have the same character count."],
     ["Unknown palette key", "Every non-empty sprite character needs a palette entry."],
-    ["Audio still locked", "Web Audio needs a click, tap or key press before playback can start."],
-    ["Missing peer dependency", "Install howler and tone only in applications that use grid-canvas-system/audio."],
+    [
+      "Audio still locked",
+      "Web Audio needs a click, tap or key press before playback can start.",
+    ],
+    [
+      "Missing peer dependency",
+      "Install howler and tone only in applications that use grid-canvas-system/audio.",
+    ],
     ["Invalid transition", "transition() returns false and keeps the current state."],
   ],
   es: [
-    ["Canvas no encontrado", "El ID del constructor debe apuntar a un canvas existente."],
+    [
+      "Canvas no encontrado",
+      "El ID del constructor debe apuntar a un canvas existente.",
+    ],
     ["Ritmo de grilla invalido", "majorStep debe ser un multiplo exacto de cellSize."],
-    ["Sprite irregular", "Cada fila del sprite debe tener la misma cantidad de caracteres."],
-    ["Clave de paleta desconocida", "Cada caracter no vacio del sprite necesita una entrada en la paleta."],
-    ["Audio aun bloqueado", "Web Audio necesita click, toque o teclado antes de poder reproducir."],
-    ["Peer dependency faltante", "Instala howler y tone solo en apps que usen grid-canvas-system/audio."],
+    [
+      "Sprite irregular",
+      "Cada fila del sprite debe tener la misma cantidad de caracteres.",
+    ],
+    [
+      "Clave de paleta desconocida",
+      "Cada caracter no vacio del sprite necesita una entrada en la paleta.",
+    ],
+    [
+      "Audio aun bloqueado",
+      "Web Audio necesita click, toque o teclado antes de poder reproducir.",
+    ],
+    [
+      "Peer dependency faltante",
+      "Instala howler y tone solo en apps que usen grid-canvas-system/audio.",
+    ],
     ["Transicion invalida", "transition() devuelve false y mantiene el estado actual."],
   ],
 };
@@ -611,8 +846,17 @@ export const docsPerformanceNotesByLocale: Record<DocsLocale, DocsPerformanceNot
   ],
   es: [
     ["Limita DPR", "Usa un devicePixelRatio menor en canvases animados grandes."],
-    ["Reutiliza formas", "Crea datos de asteroides y paletas estaticas fuera de draw()."],
-    ["Pausa loops ocultos", "Deten la animacion cuando los previews salgan del viewport."],
-    ["Limita elapsed", "Configura maxElapsed para evitar saltos tras volver desde una pestana inactiva."],
+    [
+      "Reutiliza formas",
+      "Crea datos de asteroides y paletas estaticas fuera de draw().",
+    ],
+    [
+      "Pausa loops ocultos",
+      "Deten la animacion cuando los previews salgan del viewport.",
+    ],
+    [
+      "Limita elapsed",
+      "Configura maxElapsed para evitar saltos tras volver desde una pestana inactiva.",
+    ],
   ],
 };

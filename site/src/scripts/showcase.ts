@@ -1,7 +1,7 @@
 import GridCanvasSystem from "grid-canvas-system";
 import type { GridCanvasParticle } from "grid-canvas-system";
 
-const canvas = document.getElementById("hero-canvas") as HTMLCanvasElement | null;
+const heroCanvasId = "hero-canvas";
 
 const actorSprite = [
   "00111100",
@@ -37,7 +37,14 @@ let activePointer: ReturnType<
 let resizeTimer = 0;
 
 function mountShowcase(): void {
-  if (canvas === null || canvas.parentElement === null) {
+  const canvas = document.getElementById(heroCanvasId) as HTMLCanvasElement | null;
+
+  if (canvas === null || canvas.parentElement === null || !canvas.isConnected) {
+    activeLoop?.stop();
+    activePointer?.destroy();
+    activeLoop = null;
+    activePointer = null;
+
     return;
   }
 
@@ -47,7 +54,7 @@ function mountShowcase(): void {
   const bounds = canvas.parentElement.getBoundingClientRect();
   const width = Math.max(360, Math.round(bounds.width));
   const height = Math.max(420, Math.round(bounds.height));
-  const grid = new GridCanvasSystem("hero-canvas", {
+  const grid = new GridCanvasSystem(heroCanvasId, {
     width,
     height,
     backgroundColor: "#050607",
@@ -261,11 +268,9 @@ function seededRandom(seed: number): () => number {
   };
 }
 
-if (canvas !== null) {
-  mountShowcase();
+mountShowcase();
 
-  window.addEventListener("resize", () => {
-    window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(mountShowcase, 180);
-  });
-}
+window.addEventListener("resize", () => {
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(mountShowcase, 180);
+});

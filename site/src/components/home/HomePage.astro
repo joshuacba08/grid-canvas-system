@@ -1,5 +1,14 @@
 ---
-import { ArrowUpRight, Check, Cookie, Copy, Gamepad2, Menu, Moon, X } from "@lucide/astro";
+import {
+  ArrowUpRight,
+  Check,
+  Cookie,
+  Copy,
+  Gamepad2,
+  Menu,
+  Moon,
+  X,
+} from "@lucide/astro";
 import { codeToHtml } from "shiki";
 
 import { type HomeLocale, homeContentByLocale } from "../../data/homeContent";
@@ -21,12 +30,19 @@ const heroCode = `const grid = new GridCanvasSystem("canvas", {
   backgroundColor: "#050607"
 });
 
-const pointer = GridCanvasSystem.runtime
-  .createPointerTracker(grid.canvas);
+const player = GridCanvasSystem.compilePixelSprite([
+  "0110",
+  "1111",
+  "1001"
+], {
+  "0": "transparent",
+  "1": "#00D43B"
+});
 
 const loop = GridCanvasSystem.runtime
-  .createAnimationLoop({
+  .createFixedStepLoop({
     autoStart: true,
+    step: 1 / 60,
     update: tick,
     draw: render
   });`;
@@ -48,28 +64,37 @@ const grid = new GridCanvasSystem("canvas", {
   {
     title: content.codeBlockTitles.pixelSprite,
     lang: "typescript",
-    code: `grid.drawPixelSprite([
+    code: `const palette = GridCanvasSystem.createPixelPalette({
+  "0": "transparent",
+  "1": "#00D43B",
+  "2": "#4DA9FF"
+});
+
+const compiled = GridCanvasSystem.compilePixelSprite([
   "00111100",
   "01122110",
   "11222211"
-], {
+], palette);
+
+grid.drawCompiledPixelSprite(compiled, {
   x: 60,
   y: 45,
-  pixelSize: 8,
-  palette
+  pixelSize: 8
 });`,
   },
   {
     title: content.codeBlockTitles.runtime,
     lang: "typescript",
     code: `const loop = GridCanvasSystem.runtime
-  .createAnimationLoop({
+  .createFixedStepLoop({
     autoStart: true,
-    update(elapsed) {
-      animator.update(elapsed);
+    step: 1 / 60,
+    update(step) {
+      scene.update(step);
     },
     draw() {
       grid.clearCanvas();
+      scene.draw(grid);
     }
   });`,
   },
@@ -90,13 +115,21 @@ button.addEventListener("click", async () => {
   {
     title: content.codeBlockTitles.pointerGrid,
     lang: "typescript",
-    code: `const pointer = GridCanvasSystem.runtime
-  .createPointerTracker(grid.canvas);
+    code: `GridCanvasSystem.runtime.drawTileMap(
+  ["111111", "100001", "101101", "111111"],
+  {
+    "1": { color: "#00D43B" },
+    "0": { color: "transparent" }
+  },
+  { grid, tileSize: 20 }
+);
 
-const cell = GridCanvasSystem.runtime
-  .canvasToGrid(pointer.position(), {
-    cellSize: 20
-  });`,
+const hit = GridCanvasSystem.runtime.hitTestTileMap(
+  { x: 20, y: 20, width: 16, height: 16 },
+  ["111111", "100001", "101101", "111111"],
+  new Set(["1"]),
+  { tileSize: 20 }
+);`,
   },
 ];
 
@@ -120,7 +153,9 @@ const footerLinks = [
   { href: npmUrl, label: "npm" },
   { href: repoUrl, label: "GitHub" },
   {
-    href: content.docs[content.docs.length - 1]?.href ?? `${repoUrl}/blob/main/CHANGELOG.md`,
+    href:
+      content.docs[content.docs.length - 1]?.href ??
+      `${repoUrl}/blob/main/CHANGELOG.md`,
     label: content.docs[content.docs.length - 1]?.label ?? "Changelog",
   },
 ];
@@ -141,8 +176,165 @@ const latestRelease = content.release.timeline[0];
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Geist+Pixel&family=Noto+Sans+JP:wght@400;500;700&display=swap"
     />
+    <style is:inline>
+      html {
+        background: #050607;
+      }
+
+      body.grid-loader-active {
+        overflow: hidden;
+        background: #050607;
+      }
+
+      body.grid-loader-active .site-shell {
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .site-shell {
+        transition: opacity 180ms ease;
+      }
+
+      .grid-loader {
+        position: fixed;
+        z-index: 9999;
+        inset: 0;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 38%, rgba(0, 212, 59, 0.12), transparent 34rem),
+          linear-gradient(180deg, rgba(77, 169, 255, 0.08), transparent 30rem), #050607;
+        color: #e8f7ef;
+        font-family:
+          "Geist Pixel", "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+        transition:
+          opacity 360ms ease,
+          visibility 360ms ease;
+      }
+
+      .grid-loader[data-state="leaving"] {
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .grid-loader-frame {
+        position: relative;
+        width: 100%;
+        min-height: 100svh;
+      }
+
+      .grid-loader-header {
+        position: absolute;
+        z-index: 2;
+        top: clamp(24px, 8svh, 72px);
+        left: 50%;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        width: min(640px, calc(100vw - 40px));
+        align-items: center;
+        gap: 12px;
+        transform: translateX(-50%);
+      }
+
+      .grid-loader-title {
+        min-width: 0;
+        overflow: hidden;
+        color: #e8f7ef;
+        font-size: clamp(13px, 2.3vw, 16px);
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .grid-loader-mark {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        border: 1px solid rgba(0, 212, 59, 0.7);
+        background:
+          linear-gradient(90deg, transparent 43%, #00d43b 43% 57%, transparent 57%),
+          linear-gradient(transparent 43%, #00d43b 43% 57%, transparent 57%), #07110a;
+        box-shadow: 0 0 24px rgba(0, 212, 59, 0.36);
+      }
+
+      .grid-loader-percent {
+        color: #00d43b;
+        font-size: clamp(14px, 2vw, 18px);
+        text-align: right;
+      }
+
+      .grid-loader-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #050607;
+        image-rendering: pixelated;
+      }
+
+      @media (max-width: 620px) {
+        .grid-loader-header {
+          grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .grid-loader-percent {
+          grid-column: 1 / -1;
+          text-align: left;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .site-shell,
+        .grid-loader {
+          transition: none;
+        }
+      }
+    </style>
+    <noscript>
+      <style>
+        body.grid-loader-active .site-shell {
+          visibility: visible;
+          opacity: 1;
+          pointer-events: auto;
+        }
+
+        .grid-loader {
+          display: none;
+        }
+      </style>
+    </noscript>
+    <script is:inline>
+      window.setTimeout(() => {
+        if (document.documentElement.dataset.pageLoader === "complete") {
+          return;
+        }
+
+        document.documentElement.dataset.pageLoader = "complete";
+        document.body?.classList.remove("grid-loader-active");
+        document.querySelector("[data-page-loader]")?.remove();
+        window.requestAnimationFrame(() => {
+          document.dispatchEvent(new CustomEvent("grid-loader:complete"));
+        });
+      }, 8000);
+    </script>
   </head>
-  <body>
+  <body class="grid-loader-active">
+    <div class="grid-loader" data-page-loader role="status" aria-live="polite">
+      <div class="grid-loader-frame">
+        <div class="grid-loader-header">
+          <span class="grid-loader-mark" aria-hidden="true"></span>
+          <span class="grid-loader-title">{content.loader.label}</span>
+          <strong class="grid-loader-percent" data-page-loader-percent>0%</strong>
+        </div>
+        <canvas
+          id="page-loader-canvas"
+          class="grid-loader-canvas"
+          data-page-loader-canvas
+          aria-label={content.loader.canvasLabel}></canvas>
+      </div>
+    </div>
     <div class="site-shell">
       <header class="topbar" aria-label={content.primaryNavAria}>
         <a class="brand" href="#top" aria-label={content.brandAria}>
@@ -207,9 +399,15 @@ const latestRelease = content.release.timeline[0];
                 <p class="hero-copy">{content.hero.copy}</p>
                 <p class="hero-subcopy">{content.hero.subcopy}</p>
                 <div class="hero-actions" aria-label={content.primaryNavAria}>
-                  <a class="button primary" href={npmUrl}>{content.hero.actions.install}</a>
-                  <a class="button" href={content.docsPath}>{content.hero.actions.docs}</a>
-                  <a class="button" href="/playground/">{content.hero.actions.playground}</a>
+                  <a class="button primary" href={npmUrl}
+                    >{content.hero.actions.install}</a
+                  >
+                  <a class="button" href={content.docsPath}
+                    >{content.hero.actions.docs}</a
+                  >
+                  <a class="button" href="/playground/"
+                    >{content.hero.actions.playground}</a
+                  >
                   <a class="button" href={`${repoUrl}/tree/main/examples/vanilla`}>
                     {content.hero.actions.examples}
                   </a>
@@ -370,19 +568,25 @@ const latestRelease = content.release.timeline[0];
                     {example.id === "buddy" && (
                       <div class="buddy-controls" aria-label="Grid Buddy controls">
                         <button type="button" data-buddy-action="feed">
-                          <Cookie size={14} aria-hidden="true" /> {content.buddyControls.feed}
+                          <Cookie size={14} aria-hidden="true" />{" "}
+                          {content.buddyControls.feed}
                         </button>
                         <button type="button" data-buddy-action="play">
-                          <Gamepad2 size={14} aria-hidden="true" /> {content.buddyControls.play}
+                          <Gamepad2 size={14} aria-hidden="true" />{" "}
+                          {content.buddyControls.play}
                         </button>
                         <button type="button" data-buddy-action="nap">
-                          <Moon size={14} aria-hidden="true" /> {content.buddyControls.nap}
+                          <Moon size={14} aria-hidden="true" />{" "}
+                          {content.buddyControls.nap}
                         </button>
                       </div>
                     )}
                     {example.id === "audio-arcade" && (
                       <>
-                        <div class="example-controls" aria-label="Audio Arcade controls">
+                        <div
+                          class="example-controls"
+                          aria-label="Audio Arcade controls"
+                        >
                           <button type="button" data-home-audio-action="shoot">
                             {content.audioControls.shoot}
                           </button>
@@ -447,7 +651,9 @@ const latestRelease = content.release.timeline[0];
                 content.terminal.steps.map((step) => (
                   <article class="terminal-row" data-terminal-row data-state="pending">
                     <div class="terminal-row-main">
-                      <span class="terminal-prompt" aria-hidden="true">$</span>
+                      <span class="terminal-prompt" aria-hidden="true">
+                        $
+                      </span>
                       <code>{step.command}</code>
                       <span class="terminal-status" data-terminal-status>
                         {content.terminal.states.pending}
@@ -486,7 +692,8 @@ const latestRelease = content.release.timeline[0];
             <div class="footer-actions" aria-label={content.primaryNavAria}>
               <a class="button primary" href={npmUrl}>{content.hero.actions.install}</a>
               <a class="button" href={content.docsPath}>{content.hero.actions.docs}</a>
-              <a class="button" href="/playground/">{content.hero.actions.playground}</a>
+              <a class="button" href="/playground/">{content.hero.actions.playground}</a
+              >
             </div>
           </section>
 
@@ -504,9 +711,13 @@ const latestRelease = content.release.timeline[0];
             </div>
           </section>
 
-          <section class="footer-card footer-release-card" aria-label={content.release.kicker}>
+          <section
+            class="footer-card footer-release-card"
+            aria-label={content.release.kicker}
+          >
             <p class="footer-kicker">
-              {content.release.kicker} {version}
+              {content.release.kicker}
+              {version}
             </p>
             <div class="footer-version-row">
               <strong>v{version}</strong>
@@ -541,10 +752,11 @@ const latestRelease = content.release.timeline[0];
     </div>
 
     <script>
+      import "../../scripts/page-loader";
       import "../../scripts/copy";
-import "../../scripts/home";
-import "../../scripts/live-examples";
-import "../../scripts/showcase";
+      import "../../scripts/home";
+      import "../../scripts/live-examples";
+      import "../../scripts/showcase";
     </script>
     <script>
       import "../../scripts/motion";

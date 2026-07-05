@@ -1,7 +1,9 @@
 import { hitTestCircleRectangle, hitTestPoint, hitTestRectangle } from "./collision";
 import { createAnimationLoop } from "./createAnimationLoop";
+import { createFixedStepLoop } from "./createFixedStepLoop";
 import { createKeyTracker, normalizeKeyIdentifier } from "./createKeyTracker";
 import { createPointerTracker } from "./createPointerTracker";
+import { createSceneManager } from "./createSceneManager";
 import { createSpriteAnimator } from "./createSpriteAnimator";
 import { createStateMachine } from "./createStateMachine";
 import { canvasToGrid, gridToCanvas, snapPointToGrid } from "./grid";
@@ -20,6 +22,13 @@ import {
   layoutStack,
   stepParticles,
 } from "./scene";
+import {
+  drawTileMap,
+  getTileAt,
+  hitTestTileMap,
+  setTileAt,
+  tileToBounds,
+} from "./tilemap";
 
 export const GridCanvasRuntime = Object.freeze({
   angleToPoint,
@@ -27,9 +36,11 @@ export const GridCanvasRuntime = Object.freeze({
   circlesIntersect,
   canvasToGrid,
   createAnimationLoop,
+  createFixedStepLoop,
   createKeyTracker,
   createParticleBurst,
   createPointerTracker,
+  createSceneManager,
   createSpriteAnimator,
   createStateMachine,
   distanceBetweenPoints,
@@ -43,6 +54,11 @@ export const GridCanvasRuntime = Object.freeze({
   oscillate01,
   snapPointToGrid,
   stepParticles,
+  drawTileMap,
+  getTileAt,
+  hitTestTileMap,
+  setTileAt,
+  tileToBounds,
   vectorFromAngle,
   wrapPoint,
 });
@@ -56,9 +72,36 @@ export {
 } from "./scene";
 export { canvasToGrid, gridToCanvas, snapPointToGrid } from "./grid";
 export type { GridCanvasGridCell, GridCanvasGridOptions } from "./grid";
+export { createFixedStepLoop } from "./createFixedStepLoop";
+export type {
+  GridCanvasFixedStepLoop,
+  GridCanvasFixedStepLoopOptions,
+} from "./createFixedStepLoop";
 export { createPointerTracker } from "./createPointerTracker";
+export { createSceneManager } from "./createSceneManager";
+export type {
+  GridCanvasScene,
+  GridCanvasSceneManager,
+  GridCanvasSceneManagerOptions,
+} from "./createSceneManager";
 export { createSpriteAnimator } from "./createSpriteAnimator";
 export { createStateMachine } from "./createStateMachine";
+export {
+  drawTileMap,
+  getTileAt,
+  hitTestTileMap,
+  setTileAt,
+  tileToBounds,
+} from "./tilemap";
+export type {
+  GridCanvasTileDefinition,
+  GridCanvasTileMap,
+  GridCanvasTileMapDrawOptions,
+  GridCanvasTileMapDrawRenderer,
+  GridCanvasTileMapOptions,
+  GridCanvasTileObjectDefinition,
+  GridCanvasTileSet,
+} from "./tilemap";
 export type {
   GridCanvasAnimationLoop,
   GridCanvasAnimationLoopOptions,

@@ -10,13 +10,13 @@ import DocsAudioDemo from "../../../components/docs/DocsAudioDemo.astro";
 import DocsCallout from "../../../components/docs/DocsCallout.astro";
 import DocsSection from "../../../components/docs/DocsSection.astro";
 import {
-    docsApiGroupsByLocale,
-    docsErrorRowsByLocale,
-    docsMethodGroupsByLocale,
-    docsPerformanceNotesByLocale,
-    docsRecipesByLocale,
-    docsSnippetMap,
-    repoUrl,
+  docsApiGroupsByLocale,
+  docsErrorRowsByLocale,
+  docsMethodGroupsByLocale,
+  docsPerformanceNotesByLocale,
+  docsRecipesByLocale,
+  docsSnippetMap,
+  repoUrl,
 } from "../../../data/docsContent";
 
 <DocsSection id="installation" index="01" title="Instalacion">
@@ -39,8 +39,8 @@ import {
   </div>
   <CodeBlock snippet={docsSnippetMap.firstScene} />
   <p>
-    El constructor valida el elemento y las opciones al momento de crearlo, asi que
-    los errores de setup quedan cerca de su causa real.
+    El constructor valida el elemento y las opciones al momento de crearlo, asi que los
+    errores de setup quedan cerca de su causa real.
   </p>
 </DocsSection>
 
@@ -81,15 +81,18 @@ import {
   </p>
   <ol class="docs-steps">
     <li>
-      <span>01</span><strong>Update</strong>
+      <span>01</span>
+      <strong>Update</strong>
       <p>Avanza el estado con segundos transcurridos.</p>
     </li>
     <li>
-      <span>02</span><strong>Clear</strong>
+      <span>02</span>
+      <strong>Clear</strong>
       <p>Reinicia el frame y redibuja la grilla.</p>
     </li>
     <li>
-      <span>03</span><strong>Draw</strong>
+      <span>03</span>
+      <strong>Draw</strong>
       <p>Renderiza sprites, formas y overlays.</p>
     </li>
   </ol>
@@ -98,13 +101,24 @@ import {
 <DocsSection id="pixel-sprites" index="05" title="Sprites pixel">
   <p>
     Un sprite es un array readonly de strings con igual longitud. Cada caracter mapea a
-    un color de paleta; las entradas transparentes reservan espacio sin dibujar.
+    un color de paleta; las entradas transparentes reservan espacio sin dibujar. Compila
+    sprites repetidos una vez con <code>compilePixelSprite()</code> y luego renderizalos
+    con <code>drawCompiledPixelSprite()</code> dentro de loops.
   </p>
   <CodeBlock snippet={docsSnippetMap.sprite} />
   <div class="docs-rule-grid">
-    <div><strong>x / y</strong><span>Coordenadas absolutas en canvas</span></div>
-    <div><strong>pixelSize</strong><span>Tamano logico positivo del pixel</span></div>
-    <div><strong>palette</strong><span>Cada caracter debe existir en la paleta</span></div>
+    <div>
+      <strong>x / y</strong>
+      <span>Coordenadas absolutas en canvas</span>
+    </div>
+    <div>
+      <strong>pixelSize</strong>
+      <span>Tamano logico positivo del pixel</span>
+    </div>
+    <div>
+      <strong>palette</strong>
+      <span>Cada caracter debe existir en la paleta</span>
+    </div>
   </div>
 </DocsSection>
 
@@ -126,19 +140,25 @@ import {
 
 <DocsSection id="audio-addons" index="08" title="Add-ons de audio">
   <p>
-    La version 0.4.0 suma dos rutas opcionales de audio. Usa
+    El contrato 1.0.0 mantiene dos rutas opcionales de audio. Usa
     <code>grid-canvas-system/audio-arcade</code> cuando quieras cues retro nativos del
     navegador sin paquetes extra, o <code>grid-canvas-system/audio</code> cuando
-    necesites reproduccion de assets y adapters para musica generativa.
+    necesites reproduccion de assets y adapters para musica generativa. Audio es usable,
+    tipado y documentado, pero sigue clasificado como Experimental.
   </p>
   <div class="docs-api-table" role="table" aria-label="Mapa de add-ons de audio">
     <div role="row">
       <strong role="cell">audio-arcade</strong>
-      <span role="cell">SFX sin dependencias, loops preset, mute y control de ciclo de vida.</span>
+      <span role="cell">
+        SFX sin dependencias, loops preset, mute y control de ciclo de vida.
+      </span>
     </div>
     <div role="row">
       <strong role="cell">audio</strong>
-      <span role="cell">Adapters async de Howler y Tone para sprites de audio, notas sintetizadas y secuencias registradas.</span>
+      <span role="cell">
+        Adapters async de Howler y Tone para sprites de audio, notas sintetizadas y
+        secuencias registradas.
+      </span>
     </div>
   </div>
 </DocsSection>
@@ -152,13 +172,16 @@ import {
   <CodeBlock snippet={docsSnippetMap.audioArcade} />
   <DocsAudioDemo locale="es" variant="arcade" />
   <DocsCallout title="Nota de navegador">
-    Web Audio permanece suspendido hasta recibir click, tap o teclado. Trata la
-    primera interaccion como el gesto que desbloquea el addon.
+    Web Audio permanece suspendido hasta recibir click, tap o teclado. Trata la primera
+    interaccion como el gesto que desbloquea el addon.
   </DocsCallout>
   <a class="docs-playground-cta" href="/playground/?example=audio-arcade">
     <span>
       <strong>Abre el Playground de Audio Arcade</strong>
-      <small>Dispara SFX, deja corriendo un patrol loop e inspecciona el mismo addon usado por el ejemplo de la libreria.</small>
+      <small>
+        Dispara SFX, deja corriendo un patrol loop e inspecciona el mismo addon usado
+        por el ejemplo de la libreria.
+      </small>
     </span>
   </a>
 </DocsSection>
@@ -178,24 +201,33 @@ import {
     </div>
     <div>
       <strong>Tone</strong>
-      <span>Instrumentos sintetizados, disparo de notas y secuencias reutilizables.</span>
+      <span>
+        Instrumentos sintetizados, disparo de notas y secuencias reutilizables.
+      </span>
     </div>
     <div>
       <strong>Peers optativos</strong>
-      <span>Instala <code>howler</code> y <code>tone</code> solo en apps que usen este subpath.</span>
+      <span>
+        Instala <code>howler</code> y <code>tone</code> solo en apps que usen este
+        subpath.
+      </span>
     </div>
   </div>
   <nav class="docs-game-examples" aria-label="Fuentes de audio">
     <a href={`${repoUrl}/tree/main/examples/vanilla/audio-arcade`}>
       <span>
         <strong>Codigo fuente de Audio Arcade</strong>
-        <small>Preset SFX, patrol loop y flujo de mute sin paquetes externos de audio.</small>
+        <small>
+          Preset SFX, patrol loop y flujo de mute sin paquetes externos de audio.
+        </small>
       </span>
     </a>
     <a href={`${repoUrl}/tree/main/examples/vanilla/audio`}>
       <span>
         <strong>Codigo fuente de audio adapters</strong>
-        <small>Reproduccion de assets con Howler mas notas y secuencias con Tone.</small>
+        <small>
+          Reproduccion de assets con Howler mas notas y secuencias con Tone.
+        </small>
       </span>
     </a>
   </nav>
@@ -205,7 +237,9 @@ import {
   <p>
     El loop de runtime reporta tiempo transcurrido en segundos. Manten los cambios de
     estado dentro de <code>update</code> y el trabajo sobre canvas dentro de
-    <code>draw</code>; llama a <code>clearCanvas()</code> antes de renderizar el siguiente frame.
+    <code>draw</code>; llama a <code>clearCanvas()</code> antes de renderizar el
+    siguiente frame. Usa <code>createFixedStepLoop()</code> cuando colisiones o
+    movimiento por tiles necesiten pasos de simulacion iguales.
   </p>
   <CodeBlock snippet={docsSnippetMap.runtime} />
 </DocsSection>
@@ -229,21 +263,31 @@ import {
 <DocsSection id="game-architecture" index="14" title="Construye un juego pequeno">
   <p>
     Una escena jugable sigue el mismo ciclo explicito de redibujado con cuatro
-    responsabilidades conectadas. Lee input, avanza la simulacion con elapsed,
-    resuelve colisiones y luego dibuja el estado resultante.
+    responsabilidades conectadas. Lee input, avanza la simulacion con elapsed, resuelve
+    colisiones y luego dibuja el estado resultante. Para flujos de menu, juego, pausa y
+    game-over, deja las transiciones en <code>createSceneManager()</code>; para mundos
+    tipo maze, usa los helpers de tilemap en <code>GridCanvasSystem.runtime</code>.
   </p>
   <div class="docs-game-cycle" aria-label="Arquitectura de juego pequeno">
     <div>
-      <span>01</span><strong>Input</strong><small>Lee teclado, puntero o touch.</small>
+      <span>01</span>
+      <strong>Input</strong>
+      <small>Lee teclado, puntero o touch.</small>
     </div>
     <div>
-      <span>02</span><strong>Update</strong><small>Mueve actores usando tiempo transcurrido.</small>
+      <span>02</span>
+      <strong>Update</strong>
+      <small>Mueve actores usando tiempo transcurrido.</small>
     </div>
     <div>
-      <span>03</span><strong>Resolve</strong><small>Aplica colisiones, score y reglas.</small>
+      <span>03</span>
+      <strong>Resolve</strong>
+      <small>Aplica colisiones, score y reglas.</small>
     </div>
     <div>
-      <span>04</span><strong>Render</strong><small>Limpia una vez y dibuja mundo mas HUD.</small>
+      <span>04</span>
+      <strong>Render</strong>
+      <small>Limpia una vez y dibuja mundo mas HUD.</small>
     </div>
   </div>
   <CodeBlock snippet={docsSnippetMap.gameLoop} />
@@ -277,7 +321,9 @@ import {
   <a class="docs-playground-cta" href="/playground/">
     <span>
       <strong>Abre el Playground</strong>
-      <small>Estudios de dibujo, sistemas de runtime, cues de audio arcade y juegos jugables.</small>
+      <small>
+        Estudios de dibujo, sistemas de runtime, cues de audio arcade y juegos jugables.
+      </small>
     </span>
   </a>
 </DocsSection>

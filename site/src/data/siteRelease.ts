@@ -1,10 +1,10 @@
-export const libraryVersion = "0.4.1";
+export const libraryVersion = "1.0.0";
 
 export const currentRelease = {
   version: libraryVersion,
-  title: "Storytelling refresh and docs alignment",
+  title: "Stable grid-first canvas runtime",
   summary:
-    "Refresh the landing narrative, tighten the footer and align the README with the current package, exports and release metadata.",
+    "Freeze the public API, add compiled sprites, fixed-step loops, scene management, tilemaps and package export verification.",
 } as const;
 
 export interface ReleaseNote {
@@ -17,6 +17,41 @@ export const changelogCardText = `Release notes from 0.1.x through the current $
 export const releaseTimeline: readonly ReleaseNote[] = [
   {
     version: currentRelease.version,
+    summary:
+      "Stable public API, compiled sprites, fixed-step loops, scene manager, tilemaps and export smoke tests.",
+  },
+  {
+    version: "0.9.0",
+    summary:
+      "Public API and migration docs, type smoke tests and frozen names with legacy aliases separated.",
+  },
+  {
+    version: "0.8.0",
+    summary:
+      "Simple tilemaps with drawing and hit-testing helpers plus a maze-style demo.",
+  },
+  {
+    version: "0.7.0",
+    summary:
+      "Scene manager with enter/update/draw/exit/transition and a menu/game/pause/game-over demo.",
+  },
+  {
+    version: "0.6.0",
+    summary:
+      "Deterministic fixed-step loop alongside the untouched variable animation loop.",
+  },
+  {
+    version: "0.5.0",
+    summary:
+      "Pixel Sprite v2: compiled sprites, pure transforms, tinting, bounds, hit-testing and a benchmark.",
+  },
+  {
+    version: "0.4.2",
+    summary:
+      "Synchronized release metadata, packed-tarball export smoke test in CI and the public contract docs.",
+  },
+  {
+    version: "0.4.1",
     summary:
       "Commercial home storytelling refresh, tighter footer design and README/version alignment.",
   },

@@ -536,12 +536,21 @@ function mountAudioArcade(): void {
         textColor: "#e8f7ef",
         font: '11px "Geist Pixel", monospace',
       });
-      grid.drawBarIndicator("LOOP", 18, 40, 86, 10, activePreset === "none" ? 0 : 100, 100, {
-        fillColor: "#00d43b",
-        strokeColor: "#e8f7ef",
-        textColor: "#e8f7ef",
-        font: '11px "Geist Pixel", monospace',
-      });
+      grid.drawBarIndicator(
+        "LOOP",
+        18,
+        40,
+        86,
+        10,
+        activePreset === "none" ? 0 : 100,
+        100,
+        {
+          fillColor: "#00d43b",
+          strokeColor: "#e8f7ef",
+          textColor: "#e8f7ef",
+          font: '11px "Geist Pixel", monospace',
+        },
+      );
       grid.drawShip({ x: 262, y: 156 }, 42, {
         rotation: -Math.PI / 2,
         curve1: 0.4,
@@ -572,11 +581,16 @@ function mountAudioArcade(): void {
           y: 40,
         },
       );
-      grid.drawText(muted ? homeCopy[homeLocale].audio.muted : homeCopy[homeLocale].audio.live, 486, 24, {
-        color: muted ? "#ff5c7a" : "#00d43b",
-        font: '11px "Geist Pixel", monospace',
-        textAlign: "end",
-      });
+      grid.drawText(
+        muted ? homeCopy[homeLocale].audio.muted : homeCopy[homeLocale].audio.live,
+        486,
+        24,
+        {
+          color: muted ? "#ff5c7a" : "#00d43b",
+          font: '11px "Geist Pixel", monospace',
+          textAlign: "end",
+        },
+      );
     },
   });
 

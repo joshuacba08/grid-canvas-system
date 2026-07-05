@@ -1,3 +1,13 @@
+import {
+  compilePixelSprite,
+  resolveCompiledSprite,
+  resolveGeometryOptions,
+} from "../../drawing/pixelSprite";
+import type {
+  GridCanvasCompiledPixelSprite,
+  GridCanvasCompiledPixelSpriteDrawOptions,
+} from "../../drawing/pixelSprite";
+
 export interface GridCanvasSystemOptions {
   width?: number;
   height?: number;
@@ -47,6 +57,7 @@ export type GridCanvasPixelSprite = readonly string[];
 export type GridCanvasPixelPalette = Record<string, string | null | undefined>;
 
 export interface GridCanvasPixelSpriteDrawOptions {
+  opacity?: number;
   x: number;
   y: number;
   pixelSize: number;
@@ -481,40 +492,6 @@ class GridCanvasSystem {
     return value;
   }
 
-  private resolvePixelSprite(sprite: GridCanvasPixelSprite): GridCanvasPixelSprite {
-    if (!Array.isArray(sprite) || sprite.length === 0) {
-      throw new Error("sprite must contain at least one row");
-    }
-
-    const width = sprite[0]?.length ?? 0;
-
-    if (width === 0) {
-      throw new Error("sprite rows must not be empty");
-    }
-
-    sprite.forEach((row, index) => {
-      if (typeof row !== "string") {
-        throw new Error(`sprite[${index}] must be a string`);
-      }
-
-      if (row.length !== width) {
-        throw new Error("sprite rows must have the same length");
-      }
-    });
-
-    return sprite;
-  }
-
-  private resolvePixelPalette(
-    palette: GridCanvasPixelPalette | undefined,
-  ): GridCanvasPixelPalette {
-    if (palette === undefined || palette === null || typeof palette !== "object") {
-      throw new Error("options.palette must be an object");
-    }
-
-    return palette;
-  }
-
   private resolveFontSize(font: string, fallback: number): number {
     const match = font.match(/(\d+(?:\.\d+)?)px/i);
 
@@ -588,50 +565,40 @@ class GridCanvasSystem {
     sprite: GridCanvasPixelSprite,
     options: GridCanvasPixelSpriteDrawOptions,
   ): void {
-    const resolvedSprite = this.resolvePixelSprite(sprite);
-    const resolvedX = this.resolveFiniteNumber(options?.x, 0, "options.x");
-    const resolvedY = this.resolveFiniteNumber(options?.y, 0, "options.y");
-    const resolvedPixelSize = this.resolvePositiveNumber(
-      options?.pixelSize,
-      1,
-      "options.pixelSize",
-    );
-    const palette = this.resolvePixelPalette(options?.palette);
+    const compiled = compilePixelSprite(sprite, options?.palette);
+
+    this.drawCompiledPixelSprite(compiled, options);
+  }
+
+  drawCompiledPixelSprite(
+    compiled: GridCanvasCompiledPixelSprite,
+    options: GridCanvasCompiledPixelSpriteDrawOptions,
+  ): void {
+    const resolvedCompiled = resolveCompiledSprite(compiled);
+    const resolvedOptions = resolveGeometryOptions(options);
 
     this.withManagedContext(() => {
-      for (let rowIndex = 0; rowIndex < resolvedSprite.length; rowIndex += 1) {
-        const row = resolvedSprite[rowIndex];
+      const currentAlpha = Number.isFinite(this.ctx.globalAlpha)
+        ? this.ctx.globalAlpha
+        : 1;
 
-        for (let columnIndex = 0; columnIndex < row.length; columnIndex += 1) {
-          const pixelKey = row[columnIndex];
+      this.ctx.globalAlpha = currentAlpha * resolvedOptions.opacity;
 
-          if (!Object.prototype.hasOwnProperty.call(palette, pixelKey)) {
-            throw new Error(`palette is missing color for "${pixelKey}"`);
-          }
+      let lastColor: string | undefined;
 
-          const color = palette[pixelKey];
-
-          if (color === null || color === undefined) {
-            continue;
-          }
-
-          if (typeof color !== "string") {
-            throw new Error(`palette color for "${pixelKey}" must be a string`);
-          }
-
-          if (color.toLowerCase() === "transparent") {
-            continue;
-          }
-
-          this.ctx.fillStyle = color;
-          this.ctx.fillRect(
-            resolvedX + columnIndex * resolvedPixelSize,
-            resolvedY + rowIndex * resolvedPixelSize,
-            resolvedPixelSize,
-            resolvedPixelSize,
-          );
+      resolvedCompiled.pixels.forEach((pixel) => {
+        if (pixel.color !== lastColor) {
+          this.ctx.fillStyle = pixel.color;
+          lastColor = pixel.color;
         }
-      }
+
+        this.ctx.fillRect(
+          resolvedOptions.x + pixel.column * resolvedOptions.pixelSize,
+          resolvedOptions.y + pixel.row * resolvedOptions.pixelSize,
+          resolvedOptions.pixelSize,
+          resolvedOptions.pixelSize,
+        );
+      });
     });
   }
 

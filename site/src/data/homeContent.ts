@@ -89,6 +89,10 @@ interface HomeContent {
     subcopy: string;
   };
   htmlLang: string;
+  loader: {
+    canvasLabel: string;
+    label: string;
+  };
   liveBadge: string;
   liveDemoSuffix: string;
   localeLinks: LocaleLink[];
@@ -137,8 +141,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
   en: {
     api: {
       kicker: "Quick Start Paths",
-      lede:
-        "Install it, draw something on day one, then layer runtime, pointer logic and audio only when the scene earns it.",
+      lede: "Install it, draw something on day one, then layer runtime, pointer logic and audio only when the scene earns it.",
       title: "From first grid to playable scene in a few copyable steps.",
     },
     audioControls: {
@@ -162,9 +165,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Spin up a crisp HTML canvas with predictable sizing, HiDPI rendering and an always-readable grid.",
       },
       {
-        code: "grid.drawPixelSprite(sprite, options)",
-        name: "Pixel sprites",
-        text: "Render pixel art from simple matrices so sprites stay lightweight, editable and easy to ship.",
+        code: "compilePixelSprite / drawCompiledPixelSprite",
+        name: "Compiled sprites",
+        text: "Validate palette-backed pixel art once, then redraw cached sprites quickly inside animation loops.",
       },
       {
         code: "drawPacman / drawShip / drawMessage",
@@ -172,9 +175,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Drop in Pac-Man, ghosts, ships, asteroids, HUD pieces and other reusable shapes instead of rebuilding them.",
       },
       {
-        code: "GridCanvasSystem.runtime.createAnimationLoop",
-        name: "Lightweight runtime",
-        text: "Animate, switch states and drive scenes with a minimal runtime that adds motion without framework overhead.",
+        code: "createFixedStepLoop / createSceneManager",
+        name: "Deterministic runtime",
+        text: "Drive collisions, scene transitions and game flow with fixed-step loops plus a tiny scene manager.",
       },
       {
         code: "createKeyTracker / createPointerTracker",
@@ -187,23 +190,22 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Start with built-in retro cues, then plug in Howler or Tone when you want assets or generative music.",
       },
       {
-        code: "canvasToGrid / gridToCanvas / snapPointToGrid",
-        name: "Grid coordinates",
-        text: "Map clicks, touches and scene logic back to cells with explicit grid conversion and snapping helpers.",
+        code: "drawTileMap / hitTestTileMap",
+        name: "Tilemaps",
+        text: "Render simple character maps and test solid tiles without adding an engine or asset pipeline.",
       },
     ],
     capabilitiesSection: {
       kicker: "Why Teams Pick It",
-      lede:
-        "Everything here is tuned for small interactive scenes: strong canvas defaults, reusable drawing primitives and just enough runtime to make a prototype feel shippable.",
+      lede: "Everything here is tuned for small interactive scenes: strong canvas defaults, reusable drawing primitives and just enough runtime to make a prototype feel shippable.",
       title: "Grid-first by default. Playable in minutes.",
     },
     codeBlockTitles: {
       audioArcade: "Audio Arcade",
       install: "Install",
-      pixelSprite: "Pixel Sprite",
-      pointerGrid: "Pointer Grid",
-      runtime: "Runtime",
+      pixelSprite: "Compiled Sprite",
+      pointerGrid: "Tilemap",
+      runtime: "Fixed Step",
     },
     docs: [
       {
@@ -215,6 +217,16 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         href: "/playground/",
         label: "Playground",
         text: "Try the API in the browser and tweak sprites, loops, HUD overlays and arcade cues live.",
+      },
+      {
+        href: `${repoUrl}/blob/main/docs/PUBLIC_API.md`,
+        label: "Public API",
+        text: "See exactly which APIs are Stable, Experimental and Legacy for the 1.0.0 contract.",
+      },
+      {
+        href: `${repoUrl}/blob/main/docs/MIGRATION.md`,
+        label: "Migration",
+        text: "Move from 0.x to 1.0.0 with namespace guidance, audio status and compatibility notes.",
       },
       {
         href: "/docs/#audio-addons",
@@ -286,8 +298,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     ],
     examplesSection: {
       kicker: "Live Showcase",
-      lede:
-        "Each example proves a product promise in plain code: motion, sprites, HUD, audio and reusable arcade parts.",
+      lede: "Each example proves a product promise in plain code: motion, sprites, HUD, audio and reusable arcade parts.",
       title: "See the library working like a product, not a pitch.",
     },
     footer: {
@@ -308,6 +319,10 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         "Start with a visible grid, ship the first prototype fast, and add runtime or audio only when the scene needs more range.",
     },
     htmlLang: "en",
+    loader: {
+      canvasLabel: "Pac-Man loading animation",
+      label: "Grid boot",
+    },
     liveBadge: "Live",
     liveDemoSuffix: "live demo",
     localeLinks: [
@@ -334,7 +349,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       timeline: [
         {
           summary:
-            "Commercial home storytelling refresh, tighter footer design and README/version alignment.",
+            "Stable public API, compiled sprites, fixed-step loops, scene manager, tilemaps and export smoke tests.",
           version: libraryVersion,
         },
         {
@@ -343,19 +358,23 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
           version: "0.4.0",
         },
         {
-          summary: "Grid-aware pointer tracking and explicit coordinate helpers for interactive scenes.",
+          summary:
+            "Grid-aware pointer tracking and explicit coordinate helpers for interactive scenes.",
           version: "0.3.0",
         },
         {
-          summary: "Pixel sprites, sprite animation, state machines and the Grid Buddy showcase.",
+          summary:
+            "Pixel sprites, sprite animation, state machines and the Grid Buddy showcase.",
           version: "0.2.0",
         },
         {
-          summary: "The core grid canvas API, drawing primitives and snapshot-backed rendering confidence.",
+          summary:
+            "The core grid canvas API, drawing primitives and snapshot-backed rendering confidence.",
           version: "0.1.x",
         },
       ],
-      title: "Shipped with product discipline: positioning, docs and release metadata stay in sync.",
+      title:
+        "Shipped as a stable grid-first runtime with the public contract documented.",
     },
     runtimeHint: "Focus canvas + arrow keys",
     sourceAriaPrefix: "Open source for",
@@ -394,8 +413,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
   es: {
     api: {
       kicker: "Rutas de arranque",
-      lede:
-        "Instalalo, dibuja algo desde el primer dia y suma runtime, puntero y audio solo cuando la escena pida mas.",
+      lede: "Instalalo, dibuja algo desde el primer dia y suma runtime, puntero y audio solo cuando la escena pida mas.",
       title: "Del primer grid a una escena jugable en pocos pasos copiables.",
     },
     audioControls: {
@@ -419,9 +437,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Levanta un canvas HTML nitido con tamano predecible, render HiDPI y una grilla siempre legible.",
       },
       {
-        code: "grid.drawPixelSprite(sprite, options)",
-        name: "Sprites pixel",
-        text: "Renderiza pixel art desde matrices simples para que los sprites sigan livianos, editables y faciles de publicar.",
+        code: "compilePixelSprite / drawCompiledPixelSprite",
+        name: "Sprites compilados",
+        text: "Valida pixel art con paleta una vez y luego redibuja sprites cacheados rapido dentro de loops.",
       },
       {
         code: "drawPacman / drawShip / drawMessage",
@@ -429,9 +447,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Suma Pac-Man, fantasmas, naves, asteroides, HUD y otras formas reutilizables sin reconstruirlas cada vez.",
       },
       {
-        code: "GridCanvasSystem.runtime.createAnimationLoop",
-        name: "Runtime liviano",
-        text: "Anima, cambia de estado y mueve escenas con un runtime minimo que agrega vida sin sobrecarga de framework.",
+        code: "createFixedStepLoop / createSceneManager",
+        name: "Runtime deterministico",
+        text: "Controla colisiones, transiciones y flujo de juego con loops fixed-step y un scene manager pequeno.",
       },
       {
         code: "createKeyTracker / createPointerTracker",
@@ -444,23 +462,22 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Empieza con cues retro integrados y agrega Howler o Tone solo cuando quieras assets o musica generativa.",
       },
       {
-        code: "canvasToGrid / gridToCanvas / snapPointToGrid",
-        name: "Coordenadas de grilla",
-        text: "Lleva clicks, touch y logica de escena a celdas con helpers explicitos de conversion y snap.",
+        code: "drawTileMap / hitTestTileMap",
+        name: "Tilemaps",
+        text: "Renderiza mapas de caracteres y prueba tiles solidos sin sumar un motor ni pipeline de assets.",
       },
     ],
     capabilitiesSection: {
       kicker: "Por que funciona",
-      lede:
-        "Todo esta pensado para escenas interactivas pequenas: buenos defaults de canvas, primitivas reutilizables y el runtime justo para que un prototipo se sienta listo para mostrar.",
+      lede: "Todo esta pensado para escenas interactivas pequenas: buenos defaults de canvas, primitivas reutilizables y el runtime justo para que un prototipo se sienta listo para mostrar.",
       title: "Grid primero. Prototipo jugable en minutos.",
     },
     codeBlockTitles: {
       audioArcade: "Audio Arcade",
       install: "Instalacion",
-      pixelSprite: "Sprite Pixel",
-      pointerGrid: "Puntero y grilla",
-      runtime: "Runtime",
+      pixelSprite: "Sprite compilado",
+      pointerGrid: "Tilemap",
+      runtime: "Fixed Step",
     },
     docs: [
       {
@@ -472,6 +489,16 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         href: "/playground/",
         label: "Playground",
         text: "Prueba la API en el navegador y ajusta sprites, loops, HUD y cues arcade en vivo.",
+      },
+      {
+        href: `${repoUrl}/blob/main/docs/PUBLIC_API.md`,
+        label: "API publica",
+        text: "Consulta que APIs son Stable, Experimental y Legacy dentro del contrato 1.0.0.",
+      },
+      {
+        href: `${repoUrl}/blob/main/docs/MIGRATION.md`,
+        label: "Migracion",
+        text: "Pasa de 0.x a 1.0.0 con guia de namespaces, estado de audio y compatibilidad.",
       },
       {
         href: "/es/docs/#audio-addons",
@@ -543,12 +570,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     ],
     examplesSection: {
       kicker: "Showcase en vivo",
-      lede:
-        "Cada ejemplo prueba una promesa concreta: sprites, movimiento, HUD, audio y piezas arcade reutilizables.",
+      lede: "Cada ejemplo prueba una promesa concreta: sprites, movimiento, HUD, audio y piezas arcade reutilizables.",
       title: "Mira la libreria trabajando como producto, no como discurso.",
     },
     footer: {
-      right: "Herramientas canvas orientadas a grid para productos interactivos con personalidad.",
+      right:
+        "Herramientas canvas orientadas a grid para productos interactivos con personalidad.",
     },
     hero: {
       actions: {
@@ -565,6 +592,10 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         "Empieza con una grilla visible, saca un primer prototipo rapido y agrega runtime o audio solo cuando la escena necesite mas alcance.",
     },
     htmlLang: "es",
+    loader: {
+      canvasLabel: "Animacion de carga de Pac-Man",
+      label: "Arranque grid",
+    },
     liveBadge: "En vivo",
     liveDemoSuffix: "demo en vivo",
     localeLinks: [
@@ -584,14 +615,19 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       playground: "Playground",
     },
     pageTitle: "Grid Canvas System / Inicio",
-    peekStrip: ["API grid-first", "Sprites pixel", "Runtime liviano", "Add-ons de audio"],
+    peekStrip: [
+      "API grid-first",
+      "Sprites pixel",
+      "Runtime liviano",
+      "Add-ons de audio",
+    ],
     primaryNavAria: "Navegacion principal",
     release: {
       kicker: "Version",
       timeline: [
         {
           summary:
-            "Refresh comercial de la home, footer mas compacto y alineacion del README con la version real.",
+            "API publica estable, sprites compilados, loops fixed-step, scene manager, tilemaps y smoke tests de exports.",
           version: libraryVersion,
         },
         {
@@ -600,19 +636,23 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
           version: "0.4.0",
         },
         {
-          summary: "Seguimiento de puntero y helpers de coordenadas para escenas interactivas con grid.",
+          summary:
+            "Seguimiento de puntero y helpers de coordenadas para escenas interactivas con grid.",
           version: "0.3.0",
         },
         {
-          summary: "Sprites pixel, animacion de sprites, state machine y el showcase Grid Buddy.",
+          summary:
+            "Sprites pixel, animacion de sprites, state machine y el showcase Grid Buddy.",
           version: "0.2.0",
         },
         {
-          summary: "API base de canvas con grilla, primitivas de dibujo y confianza de render con snapshots.",
+          summary:
+            "API base de canvas con grilla, primitivas de dibujo y confianza de render con snapshots.",
           version: "0.1.x",
         },
       ],
-      title: "Se entrega con disciplina de producto: posicionamiento, docs y metadatos avanzan juntos.",
+      title:
+        "Se entrega como runtime grid-first estable con contrato publico documentado.",
     },
     runtimeHint: "Enfoca el canvas y usa las flechas",
     sourceAriaPrefix: "Abrir codigo fuente de",
@@ -651,8 +691,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
   ja: {
     api: {
       kicker: "スタートパス",
-      lede:
-        "導入してすぐ描き始め、必要になった時だけ runtime、pointer、audio を足せます。",
+      lede: "導入してすぐ描き始め、必要になった時だけ runtime、pointer、audio を足せます。",
       title: "最初のグリッドから遊べるシーンまで、すぐ使える数ステップ。",
     },
     audioControls: {
@@ -676,9 +715,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "予測しやすいサイズ、HiDPI 描画、見やすいグリッドを備えた HTML canvas をすぐに立ち上げられます。",
       },
       {
-        code: "grid.drawPixelSprite(sprite, options)",
-        name: "ピクセルスプライト",
-        text: "シンプルな行列データからピクセルアートを描けるので、sprite を軽く保ったまま編集しやすくできます。",
+        code: "compilePixelSprite / drawCompiledPixelSprite",
+        name: "compiled sprite",
+        text: "palette 付きの pixel art を一度検証し、loop 内では cache 済み sprite を素早く再描画できます。",
       },
       {
         code: "drawPacman / drawShip / drawMessage",
@@ -686,9 +725,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Pac-Man、ghost、ship、asteroid、HUD などの再利用パーツを、そのままシーンへ持ち込めます。",
       },
       {
-        code: "GridCanvasSystem.runtime.createAnimationLoop",
-        name: "軽量runtime",
-        text: "framework を抱え込まずに、loop、state 切替、scene の動きを最小限の runtime で組み立てられます。",
+        code: "createFixedStepLoop / createSceneManager",
+        name: "決定的runtime",
+        text: "fixed-step loop と小さな scene manager で、collision、transition、game flow を扱えます。",
       },
       {
         code: "createKeyTracker / createPointerTracker",
@@ -701,23 +740,22 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "まずは内蔵のレトロ cue を使い、asset 再生や generative music が必要になったら Howler や Tone を足せます。",
       },
       {
-        code: "canvasToGrid / gridToCanvas / snapPointToGrid",
-        name: "グリッド座標",
-        text: "click や touch、scene のロジックをセル基準へ戻せる explicit な変換と snap helper を用意しています。",
+        code: "drawTileMap / hitTestTileMap",
+        name: "tilemap",
+        text: "文字ベースの map を描画し、solid tile を engine や asset pipeline なしで判定できます。",
       },
     ],
     capabilitiesSection: {
       kicker: "選ばれる理由",
-      lede:
-        "小さなインタラクティブシーン向けに設計されています。canvas の強い初期値、再利用しやすい描画プリミティブ、そして手触りを出すのに十分な runtime をまとめています。",
+      lede: "小さなインタラクティブシーン向けに設計されています。canvas の強い初期値、再利用しやすい描画プリミティブ、そして手触りを出すのに十分な runtime をまとめています。",
       title: "グリッドから始めて、数分で動く。",
     },
     codeBlockTitles: {
       audioArcade: "Audio Arcade",
       install: "導入",
-      pixelSprite: "ピクセルスプライト",
-      pointerGrid: "ポインタとグリッド",
-      runtime: "Runtime",
+      pixelSprite: "compiled sprite",
+      pointerGrid: "tilemap",
+      runtime: "fixed step",
     },
     docs: [
       {
@@ -729,6 +767,16 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         href: "/playground/",
         label: "Playground",
         text: "ブラウザ上で API を試し、sprite、loop、HUD、arcade cue をその場で調整できます。",
+      },
+      {
+        href: `${repoUrl}/blob/main/docs/PUBLIC_API.md`,
+        label: "Public API",
+        text: "1.0.0 contract で Stable、Experimental、Legacy に分かれる API を確認できます。",
+      },
+      {
+        href: `${repoUrl}/blob/main/docs/MIGRATION.md`,
+        label: "Migration",
+        text: "0.x から 1.0.0 へ移るための namespace、audio status、互換性メモをまとめています。",
       },
       {
         href: "/docs/#audio-addons",
@@ -800,8 +848,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     ],
     examplesSection: {
       kicker: "ライブショーケース",
-      lede:
-        "各サンプルは sprite、motion、HUD、audio、arcade パーツという一つの約束を、平易なコードで証明します。",
+      lede: "各サンプルは sprite、motion、HUD、audio、arcade パーツという一つの約束を、平易なコードで証明します。",
       title: "説明より先に、ライブラリが動くところを見せます。",
     },
     footer: {
@@ -822,6 +869,10 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         "まずは見えるグリッドから始め、最初のプロトタイプを早く出し、必要になった時だけ runtime や audio を広げられます。",
     },
     htmlLang: "ja",
+    loader: {
+      canvasLabel: "Pac-Man ローディングアニメーション",
+      label: "Grid boot",
+    },
     liveBadge: "ライブ",
     liveDemoSuffix: "ライブデモ",
     localeLinks: [
@@ -848,11 +899,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       timeline: [
         {
           summary:
-            "ホームのストーリーテリング刷新、フッターの圧縮、README とバージョン表記の整合を行いました。",
+            "安定した public API、compiled sprite、fixed-step loop、scene manager、tilemap、export smoke test を追加。",
           version: libraryVersion,
         },
         {
-          summary: "内蔵 Audio Arcade preset、custom loop、Howler/Tone adapter で音の幅を広げました。",
+          summary:
+            "内蔵 Audio Arcade preset、custom loop、Howler/Tone adapter で音の幅を広げました。",
           version: "0.4.0",
         },
         {
@@ -868,7 +920,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
           version: "0.1.x",
         },
       ],
-      title: "ポジショニング、docs、リリース表記まで揃えて出荷するライブラリです。",
+      title: "public contract を明文化した、安定版の grid-first runtime です。",
     },
     runtimeHint: "canvasを選んで矢印キー",
     sourceAriaPrefix: "ソースを開く",

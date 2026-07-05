@@ -42,5 +42,11 @@ jobs:
       - name: Build package
         run: pnpm run build
 
+      - name: Verify package types
+        run: pnpm run verify:types
+
       - name: Verify package contents
         run: npm pack --dry-run
+
+      - name: Verify package exports
+        run: pnpm run verify:package-exports

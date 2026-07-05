@@ -27,7 +27,8 @@ const copy = {
   es: {
     adapters: {
       asset: "Se reprodujo un asset de Howler desde un WAV generado en memoria.",
-      initial: "Las dependencias del site estan listas. Haz click en un control para iniciar audio.",
+      initial:
+        "Las dependencias del site estan listas. Haz click en un control para iniciar audio.",
       note: "Se disparo una nota lead de una sola vez.",
       stop: "Se detuvo el tema en loop.",
       theme: "Se inicio la secuencia en loop de Tone.",
@@ -355,12 +356,21 @@ function mountAudioAdaptersDemo(): void {
       const pulse = GridCanvasSystem.runtime.oscillate01(time, 1.8);
 
       grid.clearCanvas();
-      grid.drawBarIndicator("SFX", 18, 18, 88, 10, assetAudio === undefined ? 0 : 100, 100, {
-        fillColor: "#34d399",
-        strokeColor: "#e8f7ef",
-        textColor: "#e8f7ef",
-        font: '11px "Geist Pixel", monospace',
-      });
+      grid.drawBarIndicator(
+        "SFX",
+        18,
+        18,
+        88,
+        10,
+        assetAudio === undefined ? 0 : 100,
+        100,
+        {
+          fillColor: "#34d399",
+          strokeColor: "#e8f7ef",
+          textColor: "#e8f7ef",
+          font: '11px "Geist Pixel", monospace',
+        },
+      );
       grid.drawBarIndicator("SEQ", 18, 40, 88, 10, themeRunning ? 100 : 0, 100, {
         fillColor: "#ffb14a",
         strokeColor: "#e8f7ef",

@@ -2,6 +2,83 @@
 
 All notable changes to `grid-canvas-system` are documented here.
 
+## 1.0.0
+
+### Added
+
+- Added Pixel Sprite v2 helpers: `createPixelPalette`, `compilePixelSprite`, `flipPixelSpriteX`, `flipPixelSpriteY`, `tintPixelSprite`, `getPixelSpriteBounds`, and `hitTestPixelSprite`.
+- Added `grid.drawCompiledPixelSprite()` for reusable compiled pixel art with optional opacity.
+- Added `GridCanvasSystem.runtime.createFixedStepLoop()` for deterministic update steps.
+- Added `GridCanvasSystem.runtime.createSceneManager()` for menu/game/pause/game-over style scene flows.
+- Added simple runtime tilemaps with `drawTileMap`, `getTileAt`, `setTileAt`, `tileToBounds`, and `hitTestTileMap`.
+- Added package export smoke verification that packs the package, installs the tarball in a temporary project, and imports root, audio, audio-arcade, and package metadata subpaths.
+- Added public API and migration docs plus new vanilla examples for compiled sprites and tilemap scenes.
+
+### Changed
+
+- Classified the root canvas, drawing, pixel sprite, runtime and tilemap APIs as the stable `1.0.0` contract.
+- Kept audio subpaths published and typed, while documenting them as Experimental.
+- Kept legacy runtime aliases on `GridCanvasSystem`, but new runtime helpers now live only under `GridCanvasSystem.runtime`.
+
+> The `0.4.2` through `0.9.0` entries below track the incremental milestones that led to the stable `1.0.0` release.
+
+## 0.9.0
+
+### Added
+
+- Added `docs/PUBLIC_API.md` and `docs/MIGRATION.md`, officially classifying the Stable, Experimental, and Legacy surfaces.
+- Added TypeScript type smoke tests (`tsconfig.types-smoke.json`, `tests/types/`) for the root export, runtime namespace, and subpaths.
+
+### Changed
+
+- Froze the final public names and separated legacy aliases: existing runtime helpers stay mirrored on `GridCanvasSystem.*`, while new helpers live only under `GridCanvasSystem.runtime.*`.
+
+## 0.8.0
+
+### Added
+
+- Added simple runtime tilemaps with `drawTileMap`, plus `getTileAt`, `setTileAt`, `tileToBounds`, and `hitTestTileMap`.
+- Added a maze-style vanilla demo with tile-based collisions against solid tiles.
+
+## 0.7.0
+
+### Added
+
+- Added `GridCanvasSystem.runtime.createSceneManager()` with `enter`, `update`, `draw`, `exit`, and `transition` lifecycle hooks.
+- Added a menu/game/pause/game-over demo that keeps audio decoupled from the core.
+
+## 0.6.0
+
+### Added
+
+- Added `GridCanvasSystem.runtime.createFixedStepLoop()` for deterministic fixed-step updates with `maxUpdatesPerFrame`.
+
+### Changed
+
+- Kept `createAnimationLoop` intact and documented when to choose a variable loop versus a fixed-step loop.
+
+## 0.5.0
+
+### Added
+
+- Added Pixel Sprite v2: `compilePixelSprite(sprite, palette)` and the `GridCanvasCompiledPixelSprite` type.
+- Added `grid.drawCompiledPixelSprite(compiled, options)` supporting `x`, `y`, `pixelSize`, and `opacity`.
+- Added pure helpers `createPixelPalette`, `flipPixelSpriteX`, `flipPixelSpriteY`, and `tintPixelSprite`.
+- Added `getPixelSpriteBounds` and `hitTestPixelSprite` for interaction and demos.
+- Added a compiled-sprite demo, docs, and a benchmark comparing compiled sprites against `drawPixelSprite`.
+
+## 0.4.2
+
+### Added
+
+- Added `scripts/verify-package-exports.mjs` to validate imports from the packed tarball: root, `audio`, `audio-arcade`, and `package.json`.
+- Wired the exports smoke test into CI after `pnpm run build` and `npm pack --dry-run`.
+
+### Changed
+
+- Synchronized release metadata across `package.json`, README, changelog, site, and docs.
+- Documented the initial public contract (Stable, Experimental, Legacy) without removing existing APIs.
+
 ## 0.4.1
 
 ### Changed

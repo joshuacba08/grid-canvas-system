@@ -22,18 +22,21 @@ It is built for small interactive products, education demos, toy engines, game p
 
 - [npm package](https://www.npmjs.com/package/grid-canvas-system)
 - [Documentation index](./docs/README.md)
+- [Public API contract](./docs/PUBLIC_API.md)
+- [Migration guide](./docs/MIGRATION.md)
 - [Examples guide](./docs/EXAMPLES.md)
 - [Changelog](./CHANGELOG.md)
 
 ## Current release
 
-The package is currently at **0.4.1**.
+The package is currently at **1.0.0**.
 
-`0.4.1` is a documentation and presentation patch on top of the `0.4.0` audio release:
+`1.0.0` freezes the small grid-first canvas runtime as stable:
 
-- Refreshes the home storytelling and footer so the package reads like a product library instead of an implementation note.
-- Aligns the README with the shipped API surface, current package manager workflow and exported types.
-- Keeps the `0.4.0` audio layer in place: `grid-canvas-system/audio-arcade` for browser-native retro cues and `grid-canvas-system/audio` for optional `howler` and `tone` workflows.
+- Adds Pixel Sprite v2 with compiled sprites, pure transforms, tinting, bounds and hit testing.
+- Adds fixed-step loops, scene management and simple tilemaps under `GridCanvasSystem.runtime`.
+- Publishes `PUBLIC_API.md` and `MIGRATION.md` so Stable, Experimental and Legacy surfaces are explicit.
+- Keeps audio available through subpaths, but classifies it as Experimental until a later post-1.0 hardening pass.
 
 ## Installation
 
@@ -109,6 +112,8 @@ The package stays intentionally small and splits cleanly into three layers:
 ## Audio Addons
 
 Audio stays outside the root export so the main Canvas layer remains small, while scenes that need sound can opt into the right lane.
+
+The audio subpaths remain usable in `1.0.0`, but they are classified as Experimental in the public API contract while browser autoplay, adapter coverage and richer examples keep maturing.
 
 ### Arcade audio addon
 
@@ -241,6 +246,45 @@ grid.drawPixelSprite(
     },
   },
 );
+```
+
+### Compiled pixel sprite example
+
+Use compiled sprites when the same matrix is drawn repeatedly inside an animation loop. The compile step validates palette coverage once, then `drawCompiledPixelSprite()` reuses the cached pixels.
+
+```js
+import GridCanvasSystem from "grid-canvas-system";
+
+const grid = new GridCanvasSystem("canvas");
+const pointer = GridCanvasSystem.runtime.createPointerTracker(grid.canvas);
+const sprite = ["010", "111", "010"];
+const palette = GridCanvasSystem.createPixelPalette({
+  0: "transparent",
+  1: "#facc15",
+});
+const compiled = GridCanvasSystem.compilePixelSprite(sprite, palette);
+const tinted = GridCanvasSystem.tintPixelSprite(compiled, "#38bdf8");
+
+grid.drawCompiledPixelSprite(tinted, {
+  x: 80,
+  y: 60,
+  pixelSize: 12,
+  opacity: 0.9,
+});
+
+const bounds = GridCanvasSystem.getPixelSpriteBounds(tinted, {
+  x: 80,
+  y: 60,
+  pixelSize: 12,
+});
+const point = pointer.position();
+const hit =
+  point !== null &&
+  GridCanvasSystem.hitTestPixelSprite(point, tinted, {
+    x: 80,
+    y: 60,
+    pixelSize: 12,
+  });
 ```
 
 ### Pac-Man example
@@ -388,6 +432,26 @@ GridCanvasSystem.runtime.createAnimationLoop({
 });
 ```
 
+Use `createAnimationLoop()` for visual motion that can scale with elapsed time. Use `createFixedStepLoop()` when collisions, tile movement or deterministic gameplay should advance in equal simulation steps.
+
+```js
+const fixedLoop = GridCanvasSystem.runtime.createFixedStepLoop({
+  autoStart: true,
+  step: 1 / 60,
+  maxUpdatesPerFrame: 5,
+  update(step) {
+    player.update(step);
+  },
+  draw(alpha) {
+    grid.clearCanvas();
+    player.draw(alpha);
+  },
+});
+
+fixedLoop.stop();
+fixedLoop.start();
+```
+
 ### Sprite animation and state example
 
 ```js
@@ -415,6 +479,61 @@ animator.play(machine.getState());
 animator.update(1 / 60);
 
 const frame = animator.getFrame();
+```
+
+### Scene manager example
+
+```js
+const scenes = GridCanvasSystem.runtime.createSceneManager({
+  initial: "menu",
+  scenes: {
+    menu: {
+      draw: () => grid.drawMessage("READY", "Press enter", { x: 160, y: 90 }),
+    },
+    game: {
+      enter: () => resetGame(),
+      update: (elapsed) => updateGame(elapsed),
+      draw: () => drawGame(),
+      exit: () => saveScore(),
+    },
+    pause: {
+      draw: () => grid.drawMessage("PAUSED", "Press enter", { x: 160, y: 90 }),
+    },
+  },
+});
+
+scenes.transition("game");
+scenes.update(1 / 60);
+scenes.draw();
+```
+
+### Tilemap example
+
+```js
+const wall = GridCanvasSystem.compilePixelSprite(["11", "11"], {
+  1: "#22c55e",
+});
+const map = ["11111", "10001", "10201", "11111"];
+
+GridCanvasSystem.runtime.drawTileMap(
+  map,
+  {
+    1: wall,
+    2: "#facc15",
+  },
+  {
+    grid,
+    origin: { x: 40, y: 40 },
+    tileSize: 24,
+  },
+);
+
+const playerHitsWall = GridCanvasSystem.runtime.hitTestTileMap(
+  { x: player.x, y: player.y, width: 14, height: 14 },
+  map,
+  ["1"],
+  { origin: { x: 40, y: 40 }, tileSize: 24 },
+);
 ```
 
 ### Grid coordinate helpers example
@@ -588,6 +707,7 @@ The library has the following methods:
 - `drawBarIndicator(label, x, y, width, height, value, max, options?)`: Draws a label plus a proportional status bar.
 - `drawMessage(mainText, subText, center, options?)`: Draws a two-line centered message overlay.
 - `drawPixelSprite(sprite, options)`: Draws matrix/string-based pixel art with a strict palette and absolute canvas coordinates.
+- `drawCompiledPixelSprite(compiled, options)`: Draws a precompiled pixel sprite with `x`, `y`, `pixelSize`, and optional `opacity`.
 - `drawLine(start, end, options?)`: Draws a line without manipulating `ctx` directly.
 - `drawPolyline(points, options?)`: Draws a polyline or closed path through a high-level API.
 - `drawCoordinate(x, y, options?)`: Draws the coordinate label at the provided position.
@@ -598,6 +718,8 @@ The library has the following methods:
 Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime`:
 
 - `createAnimationLoop(options)`: Lightweight `requestAnimationFrame` loop with elapsed seconds.
+- `createFixedStepLoop(options)`: Deterministic loop that advances update logic in fixed simulation steps.
+- `createSceneManager(options)`: Small scene flow helper with `enter`, `update`, `draw`, `exit`, and `transition`.
 - `createSpriteAnimator(options)`: Pure sprite animation helper that advances frame IDs by elapsed seconds.
 - `createStateMachine(options)`: Small finite state machine helper with boolean transition results.
 - `MassBody`: Reusable physics/movement body with `update`, `push`, `twist`, `speed`, and `movementAngle`.
@@ -606,6 +728,11 @@ Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime
 - `canvasToGrid(point, options)`: Converts absolute canvas coordinates into `{ column, row }`.
 - `gridToCanvas(cell, options)`: Converts a grid cell into its top-left absolute canvas point.
 - `snapPointToGrid(point, options)`: Snaps a canvas point to the top-left of its containing grid cell.
+- `drawTileMap(map, tileset, options)`: Draws simple character tilemaps with color, raw sprite or compiled sprite tiles.
+- `getTileAt(point, map, options)`: Reads the tile under an absolute canvas point.
+- `setTileAt(map, cell, value)`: Returns a new map with one tile changed.
+- `tileToBounds(cell, options)`: Converts a tile cell into an absolute canvas rectangle.
+- `hitTestTileMap(rect, map, solidTiles, options)`: Checks a rectangle against solid tile IDs.
 - `appendTrailPoint(trail, point, maxPoints)`: Keeps a bounded point trail without mutating the original array.
 - `createParticleBurst(origin, count, options?)`: Creates a simple particle burst with angle, spread, speed, size, and lifetime controls.
 - `hitTestPoint(point, target)`: Checks a point against either a circle or an axis-aligned rectangle.
@@ -621,7 +748,7 @@ Static utilities exposed on the optional runtime layer `GridCanvasSystem.runtime
 - `circlesIntersect(a, b)`: Detects circular collision overlap.
 - `wrapPoint(point, bounds, radius?)`: Applies wrap-around positioning inside rectangular bounds.
 
-For backward compatibility, those helpers also remain mirrored as direct static properties on `GridCanvasSystem`.
+For backward compatibility, runtime helpers shipped before `1.0.0` also remain mirrored as direct static properties on `GridCanvasSystem`. New runtime helpers stay only under `GridCanvasSystem.runtime`.
 
 ## Advanced Usage
 
@@ -653,6 +780,11 @@ The package exports:
 - `GridCanvasBounds`
 - `GridCanvasCircleLike`
 - `GridCanvasCollisionTarget`
+- `GridCanvasCompiledPixel`
+- `GridCanvasCompiledPixelSprite`
+- `GridCanvasCompiledPixelSpriteDrawOptions`
+- `GridCanvasFixedStepLoop`
+- `GridCanvasFixedStepLoopOptions`
 - `GridCanvasGridCell`
 - `GridCanvasGridOptions`
 - `GridCanvasParticle`
@@ -668,8 +800,12 @@ The package exports:
 - `GridCanvasPixelPalette`
 - `GridCanvasPixelSprite`
 - `GridCanvasPixelSpriteDrawOptions`
+- `GridCanvasPixelSpriteGeometryOptions`
 - `GridCanvasProjectileOptions`
 - `GridCanvasRectangleLike`
+- `GridCanvasScene`
+- `GridCanvasSceneManager`
+- `GridCanvasSceneManagerOptions`
 - `GridCanvasShipOptions`
 - `GridCanvasSize`
 - `GridCanvasStackAlign`
@@ -687,6 +823,13 @@ The package exports:
 - `GridCanvasSystemOptions`
 - `GridCanvasSystemResolvedOptions`
 - `GridCanvasTextOptions`
+- `GridCanvasTileDefinition`
+- `GridCanvasTileMap`
+- `GridCanvasTileMapDrawOptions`
+- `GridCanvasTileMapDrawRenderer`
+- `GridCanvasTileMapOptions`
+- `GridCanvasTileObjectDefinition`
+- `GridCanvasTileSet`
 - `GridCanvasVelocity`
 - `GridCanvasValueLabelOptions`
 

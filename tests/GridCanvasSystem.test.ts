@@ -5,6 +5,7 @@ import GridCanvasSystem from "../src";
 interface MockCanvasContext {
   strokeStyle: string | CanvasGradient | CanvasPattern;
   fillStyle: string | CanvasGradient | CanvasPattern;
+  globalAlpha: number;
   lineWidth: number;
   font: string;
   textAlign: CanvasTextAlign;
@@ -33,6 +34,7 @@ function createMockContext(): MockCanvasContext {
   return {
     strokeStyle: "",
     fillStyle: "",
+    globalAlpha: 1,
     lineWidth: 0,
     font: "",
     textAlign: "start",
@@ -292,6 +294,95 @@ describe("GridCanvasSystem", () => {
     expect(() => grid.drawPixelSprite(["1"], options)).toThrow(
       'palette is missing color for "1"',
     );
+  });
+
+  it("compiles, transforms, tints and hit-tests pixel sprites", () => {
+    const palette = GridCanvasSystem.createPixelPalette({
+      0: "transparent",
+      1: "#00ff00",
+      2: "#ff00ff",
+    });
+    const compiled = GridCanvasSystem.compilePixelSprite(["012", "120"], palette);
+
+    expect(compiled).toEqual({
+      height: 2,
+      pixels: [
+        { color: "#00ff00", column: 1, row: 0 },
+        { color: "#ff00ff", column: 2, row: 0 },
+        { color: "#00ff00", column: 0, row: 1 },
+        { color: "#ff00ff", column: 1, row: 1 },
+      ],
+      width: 3,
+    });
+    expect(GridCanvasSystem.flipPixelSpriteX(["012", "120"])).toEqual(["210", "021"]);
+    expect(GridCanvasSystem.flipPixelSpriteY(["012", "120"])).toEqual(["120", "012"]);
+    expect(GridCanvasSystem.tintPixelSprite(compiled, "#ffffff").pixels[0].color).toBe(
+      "#ffffff",
+    );
+    expect(
+      GridCanvasSystem.getPixelSpriteBounds(compiled, {
+        x: 10,
+        y: 12,
+        pixelSize: 4,
+      }),
+    ).toEqual({ x: 10, y: 12, width: 12, height: 8 });
+    expect(
+      GridCanvasSystem.hitTestPixelSprite({ x: 15, y: 13 }, compiled, {
+        x: 10,
+        y: 12,
+        pixelSize: 4,
+      }),
+    ).toBe(true);
+    expect(
+      GridCanvasSystem.hitTestPixelSprite({ x: 11, y: 13 }, compiled, {
+        x: 10,
+        y: 12,
+        pixelSize: 4,
+      }),
+    ).toBe(false);
+  });
+
+  it("getPixelSpriteBounds measures raw sprites without a palette", () => {
+    expect(
+      GridCanvasSystem.getPixelSpriteBounds(["012", "120"], {
+        x: 1,
+        y: 2,
+        pixelSize: 3,
+      }),
+    ).toEqual({ x: 1, y: 2, width: 9, height: 6 });
+  });
+
+  it("hitTestPixelSprite requires transparency information for raw sprites", () => {
+    expect(() =>
+      GridCanvasSystem.hitTestPixelSprite({ x: 0, y: 0 }, ["012", "120"], {
+        x: 0,
+        y: 0,
+        pixelSize: 3,
+      }),
+    ).toThrow(
+      "hitTestPixelSprite requires a compiled sprite or a palette to resolve transparency",
+    );
+  });
+
+  it("drawCompiledPixelSprite renders cached pixels with optional opacity", () => {
+    const grid = new GridCanvasSystem("canvas");
+    const compiled = GridCanvasSystem.compilePixelSprite(["10"], {
+      0: "transparent",
+      1: "#00ff00",
+    });
+
+    mockContext.fillRect.mockClear();
+    grid.drawCompiledPixelSprite(compiled, {
+      opacity: 0.5,
+      pixelSize: 5,
+      x: 20,
+      y: 30,
+    });
+
+    expect(mockContext.globalAlpha).toBe(0.5);
+    expect(mockContext.fillStyle).toBe("#00ff00");
+    expect(mockContext.fillRect).toHaveBeenCalledTimes(1);
+    expect(mockContext.fillRect).toHaveBeenCalledWith(20, 30, 5, 5);
   });
 
   it("drawLine provides an encapsulated drawing path without direct ctx access", () => {

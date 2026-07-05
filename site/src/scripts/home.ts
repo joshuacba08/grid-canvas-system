@@ -1,6 +1,8 @@
 const menuButton = document.querySelector<HTMLButtonElement>("[data-home-menu]");
 const nav = document.querySelector<HTMLElement>("[data-home-nav]");
-const localeSelect = document.querySelector<HTMLSelectElement>("[data-home-locale-select]");
+const localeSelect = document.querySelector<HTMLSelectElement>(
+  "[data-home-locale-select]",
+);
 const navLinks = Array.from(
   document.querySelectorAll<HTMLAnchorElement>("[data-home-nav-link]"),
 );

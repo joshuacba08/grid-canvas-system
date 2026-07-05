@@ -51,5 +51,11 @@ jobs:
       - name: Build package
         run: pnpm build
 
+      - name: Verify package types
+        run: pnpm run verify:types
+
+      - name: Verify package exports
+        run: pnpm run verify:package-exports
+
       - name: Publish to npm
         run: npm publish

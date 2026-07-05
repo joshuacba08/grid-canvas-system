@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixel Sprite v2</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, sans-serif;
+        background: #080b0f;
+        color: #e5edf5;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+      }
+
+      main {
+        width: min(100% - 32px, 560px);
+      }
+
+      h1,
+      p {
+        margin: 0 0 12px;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        border: 1px solid #334155;
+        image-rendering: pixelated;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Pixel Sprite v2</h1>
+      <p>
+        Move the pointer over either compiled sprite to test bounds and opaque pixels.
+      </p>
+      <canvas id="canvas"></canvas>
+    </main>
+
+    <script type="module">
+      import GridCanvasSystem from "../../../dist/grid-canvas-system.es.js";
+
+      const sprite = [
+        "00111100",
+        "01122110",
+        "11222211",
+        "12233221",
+        "11222211",
+        "01111110",
+        "00100100",
+      ];
+      const palette = GridCanvasSystem.createPixelPalette({
+        0: "transparent",
+        1: "#38bdf8",
+        2: "#f8fafc",
+        3: "#0f172a",
+      });
+      const grid = new GridCanvasSystem("canvas", {
+        width: 560,
+        height: 300,
+        backgroundColor: "#050708",
+        gridColor: "rgba(56, 189, 248, 0.16)",
+        cellSize: 20,
+        majorStep: 40,
+      });
+      const pointer = GridCanvasSystem.runtime.createPointerTracker(grid.canvas, {
+        preventDefault: false,
+      });
+      const compiled = GridCanvasSystem.compilePixelSprite(sprite, palette);
+      const flipped = GridCanvasSystem.compilePixelSprite(
+        GridCanvasSystem.flipPixelSpriteX(sprite),
+        palette,
+      );
+      const goldSprite = GridCanvasSystem.tintPixelSprite(flipped, "#facc15");
+      const sprites = [
+        {
+          compiled,
+          label: "compiled",
+          options: { x: 130, y: 74, pixelSize: 18 },
+        },
+        {
+          compiled: goldSprite,
+          label: "flipped + tint",
+          options: { x: 310, y: 74, pixelSize: 18, opacity: 0.86 },
+        },
+      ];
+
+      function drawBounds(bounds, color) {
+        grid.drawPolyline(
+          [
+            { x: bounds.x, y: bounds.y },
+            { x: bounds.x + bounds.width, y: bounds.y },
+            { x: bounds.x + bounds.width, y: bounds.y + bounds.height },
+            { x: bounds.x, y: bounds.y + bounds.height },
+          ],
+          {
+            closePath: true,
+            color,
+            lineWidth: 2,
+          },
+        );
+      }
+
+      GridCanvasSystem.runtime.createAnimationLoop({
+        autoStart: true,
+        draw() {
+          const pointerPosition = pointer.position();
+
+          grid.clearCanvas();
+
+          sprites.forEach(({ compiled: currentSprite, label, options }) => {
+            const hit =
+              pointerPosition !== null &&
+              GridCanvasSystem.hitTestPixelSprite(
+                pointerPosition,
+                currentSprite,
+                options,
+              );
+            const bounds = GridCanvasSystem.getPixelSpriteBounds(
+              currentSprite,
+              options,
+            );
+
+            grid.drawCompiledPixelSprite(currentSprite, options);
+            drawBounds(bounds, hit ? "#facc15" : "#38bdf8");
+            grid.drawText(hit ? `${label}: hit` : label, bounds.x, bounds.y + 156, {
+              color: hit ? "#facc15" : "#e5edf5",
+              font: "14px sans-serif",
+            });
+          });
+        },
+      });
+    </script>
+  </body>
+</html>

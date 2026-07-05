@@ -8,9 +8,9 @@ import * as monaco from "monaco-editor/esm/vs/editor/editor.api.js";
 import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
 import {
-    getPlaygroundExample,
-    playgroundExamples,
-    type PlaygroundExampleId,
+  getPlaygroundExample,
+  playgroundExamples,
+  type PlaygroundExampleId,
 } from "../data/playgroundExamples";
 
 type FileName = "javascript" | "html";
@@ -235,7 +235,7 @@ if (editorHost !== null) {
       "GridCanvasSystem.runtime.createPointerTracker(grid.canvas)",
     ],
     ["canvasToGrid", "GridCanvasSystem.runtime.canvasToGrid(point, { cellSize })"],
-    ["createArcadeAudio", 'createArcadeAudio({ masterVolume: 0.72 })'],
+    ["createArcadeAudio", "createArcadeAudio({ masterVolume: 0.72 })"],
     ["playLoop", 'await audio.playLoop("patrol")'],
   ] as const;
 

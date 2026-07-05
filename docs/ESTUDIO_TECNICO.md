@@ -4,7 +4,7 @@
 
 `grid-canvas-system` es una libreria pequena enfocada en preparar un `canvas` HTML con una cuadricula visible y ofrecer una capa encapsulada de dibujo para sistemas visuales interactivos.
 
-La implementacion actual sigue siendo simple y directa, pero ya incorpora una base bastante mas solida que la inicial: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, pixel art declarativo, shapes reutilizables, overlays de HUD, un runtime ligero para animacion, sprite animation, maquinas de estado, conversion explicita entre grid/canvas, input de teclado y puntero, movimiento y helpers neutros de escena, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
+La implementacion actual sigue siendo simple y directa, pero ya incorpora una base estable para `1.0.0`: validacion de DOM, tipos publicados, configuracion visual, soporte HiDPI, helpers geometricos, pixel art declarativo y compilado, shapes reutilizables, overlays de HUD, un runtime ligero para animacion variable y fixed-step, scene manager, tilemaps simples, sprite animation, maquinas de estado, conversion explicita entre grid/canvas, input de teclado y puntero, movimiento y helpers neutros de escena, pruebas automatizadas, snapshots PNG versionados y compatibilidad actualizada con `pnpm`.
 
 ## Estructura actual
 
@@ -20,8 +20,10 @@ src/
       GridCanvasSystem.ts
   runtime/
     createAnimationLoop.ts
+    createFixedStepLoop.ts
     createKeyTracker.ts
     createPointerTracker.ts
+    createSceneManager.ts
     createSpriteAnimator.ts
     createStateMachine.ts
     grid.ts
@@ -29,6 +31,7 @@ src/
     MassBody.ts
     motion.ts
     scene.ts
+    tilemap.ts
     types.ts
 examples/
   vanilla/
@@ -50,6 +53,10 @@ examples/
       index.html
     spaceship/
       index.html
+    sprite-v2/
+      index.html
+    tilemap-scene/
+      index.html
 ```
 
 ## Arquitectura
@@ -58,7 +65,7 @@ La libreria expone una clase principal, `GridCanvasSystem`, y consolida su uso e
 
 1. Capa core: inicializacion, validacion del DOM, ajuste del canvas, soporte HiDPI y contrato base (`canvas`, `ctx`, `options`).
 2. Capa visual: configuracion de la cuadricula, pixel art y methods encapsulados de dibujo.
-3. Capa runtime opcional: animacion, sprite animation, maquinas de estado, input, conversion grid/canvas, fisica ligera y helpers neutros de escena accesibles como `GridCanvasSystem.runtime`.
+3. Capa runtime opcional: animacion variable, fixed-step, scene manager, tilemaps, sprite animation, maquinas de estado, input, conversion grid/canvas, fisica ligera y helpers neutros de escena accesibles como `GridCanvasSystem.runtime`.
 
 Archivo principal:
 
@@ -85,7 +92,7 @@ Punto de entrada:
 7. Resaltar lineas mayores con una linea mas gruesa y una etiqueta numerica.
 8. Permitir dibujar una etiqueta de coordenadas manualmente.
 9. Exponer una capa de dibujo encapsulada para texto, pixel art, lineas, sectores y shapes reutilizables.
-10. Exponer utilidades runtime reutilizables para bucles de animacion, sprite animation, maquinas de estado, seguimiento de teclado y puntero, conversion grid/canvas, movimiento y colisiones geometricas simples.
+10. Exponer utilidades runtime reutilizables para bucles de animacion, fixed-step, scene manager, tilemaps, sprite animation, maquinas de estado, seguimiento de teclado y puntero, conversion grid/canvas, movimiento y colisiones geometricas simples.
 11. Limpiar el canvas y volver a dibujar la cuadricula.
 
 ## API publica real
@@ -121,6 +128,7 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 
 - `drawText(text: string, x: number, y: number, options?: GridCanvasTextOptions)`: dibuja texto usando el estado gestionado por la libreria.
 - `drawPixelSprite(sprite: GridCanvasPixelSprite, options: GridCanvasPixelSpriteDrawOptions)`: dibuja pixel art declarativo con coordenadas canvas absolutas, `pixelSize` positivo y paleta estricta.
+- `drawCompiledPixelSprite(compiled: GridCanvasCompiledPixelSprite, options: GridCanvasCompiledPixelSpriteDrawOptions)`: dibuja pixel art compilado para reutilizar sprites dentro de loops.
 - `drawGhost(center: GridCanvasPoint, radius: number, options?: GridCanvasGhostOptions)`: dibuja un fantasma parametrizable con pies y ojos.
 - `drawProjectile(center: GridCanvasPoint, radius: number, life: number, options?: GridCanvasProjectileOptions)`: dibuja un proyectil circular con color por defecto dependiente de su vida restante.
 - `polarToCartesian(center: GridCanvasPoint, radius: number, angle: number): GridCanvasPoint`: convierte coordenadas polares en un punto del canvas.
@@ -140,6 +148,8 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 ### Utilidades runtime expuestas en `GridCanvasSystem.runtime`
 
 - `createAnimationLoop(options: GridCanvasAnimationLoopOptions): GridCanvasAnimationLoop`: crea un bucle basado en `requestAnimationFrame` con `elapsed` en segundos.
+- `createFixedStepLoop(options: GridCanvasFixedStepLoopOptions): GridCanvasFixedStepLoop`: crea un bucle deterministico con pasos de simulacion fijos.
+- `createSceneManager(options: GridCanvasSceneManagerOptions): GridCanvasSceneManager`: gestiona escenas con `enter`, `update`, `draw`, `exit` y `transition`.
 - `createSpriteAnimator(options: GridCanvasSpriteAnimatorOptions): GridCanvasSpriteAnimator`: gestiona animaciones de sprites devolviendo el frame actual sin dibujar.
 - `createStateMachine(options: GridCanvasStateMachineOptions): GridCanvasStateMachine`: gestiona estados y transiciones simples con retorno booleano.
 - `MassBody`: clase reutilizable para posicion, velocidad, giro, empuje y wrap-around.
@@ -148,6 +158,7 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 - `canvasToGrid(point, options)`: convierte coordenadas canvas absolutas a celda `{ column, row }`.
 - `gridToCanvas(cell, options)`: convierte una celda de grilla al punto canvas superior izquierdo.
 - `snapPointToGrid(point, options)`: ajusta un punto canvas al origen de su celda.
+- `drawTileMap(map, tileset, options)`, `getTileAt(point, map, options)`, `setTileAt(map, cell, value)`, `tileToBounds(cell, options)` y `hitTestTileMap(rect, map, solidTiles, options)`: helpers para tilemaps simples basados en filas de caracteres.
 - `hitTestPoint(point, target)`: detecta si un punto toca un circulo o un rectangulo axis-aligned.
 - `hitTestRectangle(a, b)`: detecta solape entre dos rectangulos axis-aligned.
 - `hitTestCircleRectangle(circle, rectangle)`: detecta contacto entre un circulo y un rectangulo axis-aligned.
@@ -158,7 +169,7 @@ Esto es una decision deliberada de API: `canvas` y `ctx` funcionan como puntos d
 - `normalizeKeyIdentifier(key)`: normaliza `key` y `keyCode` legados.
 - `vectorFromAngle(angle, magnitude?)`, `angleToPoint(from, to)`, `oscillate01(time, frequency?)`, `distanceBetweenPoints(a, b)`, `circlesIntersect(a, b)` y `wrapPoint(point, bounds, radius?)`: utilidades de movimiento, oscilacion y colision.
 
-Por compatibilidad, estas utilidades tambien siguen disponibles como propiedades estaticas directas del export principal.
+Por compatibilidad, las utilidades runtime publicadas antes de `1.0.0` tambien siguen disponibles como propiedades estaticas directas del export principal. Los helpers nuevos se documentan solo en `GridCanvasSystem.runtime`.
 
 ### Configuracion visual relevante
 
@@ -207,7 +218,7 @@ La libreria queda consolidada alrededor de tres capas:
 - `main`: `dist/grid-canvas-system.umd.js`
 - `module`: `dist/grid-canvas-system.es.js`
 - `types`: `dist/index.d.ts`
-- `exports`: entrada principal con tipos y build ESM, mas acceso a `./package.json`.
+- `exports`: entrada principal con tipos y build ESM, subpaths `./audio`, `./audio-arcade` y acceso a `./package.json`.
 - `sideEffects`: `false` para facilitar tree-shaking en bundlers.
 - `files`: globs explicitos para `CHANGELOG.md`, `dist/**/*.js`, `dist/**/*.d.ts` y `docs`
 
@@ -217,6 +228,8 @@ La build se genera en dos pasos:
 2. TypeScript emite los archivos `.d.ts` en `dist/`.
 
 Pruebas automatizadas:
+
+- Smoke de paquete: `scripts/verify-package-exports.mjs` empaqueta, instala el tarball temporalmente e importa root, `audio`, `audio-arcade` y `package.json`.
 
 - Vitest con entorno `jsdom`.
 - Validaciones de constructor.

@@ -12,10 +12,7 @@ import {
 } from "@lucide/astro";
 import { getEntry, render } from "astro:content";
 
-import {
-  docsShellByLocale,
-  type DocsLocale,
-} from "../../data/docsContent";
+import { docsShellByLocale, type DocsLocale } from "../../data/docsContent";
 import { libraryVersion } from "../../data/siteRelease";
 import "../../styles/global.css";
 import "../../styles/docs.css";
@@ -83,13 +80,19 @@ if (entry !== undefined) {
           <b>{shell.docsBadge}</b>
         </a>
         <div class="docs-top-actions">
-          <a class="docs-locale-switch" href={shell.alternatePath}>{shell.alternateLabel}</a>
+          <a class="docs-locale-switch" href={shell.alternatePath}
+            >{shell.alternateLabel}</a
+          >
           <a class="docs-playground-link" href="/playground/">
             <Play size={13} fill="currentColor" aria-hidden="true" />
             <span>{shell.playgroundLabel}</span>
           </a>
           <span class="docs-version">v{libraryVersion}</span>
-          <a class="docs-icon-link" href="https://github.com/joshuacba08/grid-canvas-system" aria-label={shell.repoAria}>
+          <a
+            class="docs-icon-link"
+            href="https://github.com/joshuacba08/grid-canvas-system"
+            aria-label={shell.repoAria}
+          >
             <GitFork size={17} aria-hidden="true" />
           </a>
         </div>
@@ -157,10 +160,18 @@ if (entry !== undefined) {
           <nav class="docs-pagination" aria-label="Documentation pagination">
             <a href="/">
               <ArrowLeft size={16} aria-hidden="true" />
-              <span><small>{shell.pagination.backLabel}</small>{shell.pagination.backText}</span>
+              <span
+                ><small>{shell.pagination.backLabel}</small>{
+                  shell.pagination.backText
+                }</span
+              >
             </a>
             <a href="/playground/">
-              <span><small>{shell.pagination.nextLabel}</small>{shell.pagination.nextText}</span>
+              <span
+                ><small>{shell.pagination.nextLabel}</small>{
+                  shell.pagination.nextText
+                }</span
+              >
               <ArrowRight size={16} aria-hidden="true" />
             </a>
           </nav>
@@ -177,8 +188,8 @@ if (entry !== undefined) {
 
     <script>
       import "../../scripts/copy";
-import "../../scripts/docs";
-import "../../scripts/docs-live-examples";
+      import "../../scripts/docs";
+      import "../../scripts/docs-live-examples";
     </script>
   </body>
 </html>

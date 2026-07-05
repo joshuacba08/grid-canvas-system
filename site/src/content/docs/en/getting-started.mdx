@@ -10,28 +10,29 @@ import DocsAudioDemo from "../../../components/docs/DocsAudioDemo.astro";
 import DocsCallout from "../../../components/docs/DocsCallout.astro";
 import DocsSection from "../../../components/docs/DocsSection.astro";
 import {
-    docsApiGroupsByLocale,
-    docsErrorRowsByLocale,
-    docsMethodGroupsByLocale,
-    docsPerformanceNotesByLocale,
-    docsRecipesByLocale,
-    docsSnippetMap,
-    repoUrl,
+  docsApiGroupsByLocale,
+  docsErrorRowsByLocale,
+  docsMethodGroupsByLocale,
+  docsPerformanceNotesByLocale,
+  docsRecipesByLocale,
+  docsSnippetMap,
+  repoUrl,
 } from "../../../data/docsContent";
 
 <DocsSection id="installation" index="01" title="Installation">
   <p>
     Install the package with your project package manager. The default export includes
-    the canvas class and exposes optional helpers under <code>GridCanvasSystem.runtime</code>.
-    Audio lives in separate subpaths so visual scenes stay light until you opt in.
+    the canvas class and exposes optional helpers under{" "}
+    <code>GridCanvasSystem.runtime</code>. Audio lives in separate subpaths so visual
+    scenes stay light until you opt in.
   </p>
   <CodeBlock snippet={docsSnippetMap.install} />
 </DocsSection>
 
 <DocsSection id="first-scene" index="02" title="Your first scene">
   <p>
-    Add a canvas element, then initialize it by ID. Sizes use logical CSS pixels;
-    HiDPI scaling is handled internally.
+    Add a canvas element, then initialize it by ID. Sizes use logical CSS pixels; HiDPI
+    scaling is handled internally.
   </p>
   <div class="docs-markup-line">
     <code>&lt;canvas id="canvas"&gt;&lt;/canvas&gt;</code>
@@ -79,15 +80,18 @@ import {
   </p>
   <ol class="docs-steps">
     <li>
-      <span>01</span><strong>Update</strong>
+      <span>01</span>
+      <strong>Update</strong>
       <p>Advance state with elapsed seconds.</p>
     </li>
     <li>
-      <span>02</span><strong>Clear</strong>
+      <span>02</span>
+      <strong>Clear</strong>
       <p>Reset the frame and redraw the grid.</p>
     </li>
     <li>
-      <span>03</span><strong>Draw</strong>
+      <span>03</span>
+      <strong>Draw</strong>
       <p>Render sprites, shapes and overlays.</p>
     </li>
   </ol>
@@ -96,13 +100,24 @@ import {
 <DocsSection id="pixel-sprites" index="05" title="Pixel sprites">
   <p>
     A sprite is a readonly array of equal-length strings. Each character maps to a
-    palette value; transparent entries reserve space without drawing a pixel.
+    palette value; transparent entries reserve space without drawing a pixel. Compile
+    repeated sprites once with <code>compilePixelSprite()</code>, then render them with
+    <code>drawCompiledPixelSprite()</code> inside animation loops.
   </p>
   <CodeBlock snippet={docsSnippetMap.sprite} />
   <div class="docs-rule-grid">
-    <div><strong>x / y</strong><span>Absolute canvas coordinates</span></div>
-    <div><strong>pixelSize</strong><span>Positive logical pixel size</span></div>
-    <div><strong>palette</strong><span>Every character must be defined</span></div>
+    <div>
+      <strong>x / y</strong>
+      <span>Absolute canvas coordinates</span>
+    </div>
+    <div>
+      <strong>pixelSize</strong>
+      <span>Positive logical pixel size</span>
+    </div>
+    <div>
+      <strong>palette</strong>
+      <span>Every character must be defined</span>
+    </div>
   </div>
 </DocsSection>
 
@@ -123,19 +138,25 @@ import {
 
 <DocsSection id="audio-addons" index="08" title="Audio add-ons">
   <p>
-    Version 0.4.0 adds two optional audio paths. Reach for
-    <code>grid-canvas-system/audio-arcade</code> when you want browser-native retro
-    cues with no extra packages, or use <code>grid-canvas-system/audio</code> when you
-    need asset playback and generative music adapters.
+    The 1.0.0 contract keeps two optional audio paths. Reach for
+    <code>grid-canvas-system/audio-arcade</code> when you want browser-native retro cues
+    with no extra packages, or use <code>grid-canvas-system/audio</code> when you need
+    asset playback and generative music adapters. Audio is usable, typed and documented,
+    but still classified as Experimental.
   </p>
   <div class="docs-api-table" role="table" aria-label="Audio addon map">
     <div role="row">
       <strong role="cell">audio-arcade</strong>
-      <span role="cell">Zero-dependency SFX, preset loops, mute and lifecycle controls.</span>
+      <span role="cell">
+        Zero-dependency SFX, preset loops, mute and lifecycle controls.
+      </span>
     </div>
     <div role="row">
       <strong role="cell">audio</strong>
-      <span role="cell">Async Howler and Tone adapters for asset sprites, synth notes and registered sequences.</span>
+      <span role="cell">
+        Async Howler and Tone adapters for asset sprites, synth notes and registered
+        sequences.
+      </span>
     </div>
   </div>
 </DocsSection>
@@ -143,8 +164,8 @@ import {
 <DocsSection id="audio-arcade" index="09" title="Audio Arcade quick start">
   <p>
     <code>createArcadeAudio()</code> stays close to the rest of the library: create the
-    controller once, unlock playback from a user gesture, then trigger presets or
-    loops when your scene state changes.
+    controller once, unlock playback from a user gesture, then trigger presets or loops
+    when your scene state changes.
   </p>
   <CodeBlock snippet={docsSnippetMap.audioArcade} />
   <DocsAudioDemo locale="en" variant="arcade" />
@@ -155,7 +176,10 @@ import {
   <a class="docs-playground-cta" href="/playground/?example=audio-arcade">
     <span>
       <strong>Open the Audio Arcade playground</strong>
-      <small>Trigger SFX, loop a patrol cue and inspect the same subpath addon used by the library example.</small>
+      <small>
+        Trigger SFX, loop a patrol cue and inspect the same subpath addon used by the
+        library example.
+      </small>
     </span>
   </a>
 </DocsSection>
@@ -179,14 +203,19 @@ import {
     </div>
     <div>
       <strong>Opt-in peers</strong>
-      <span>Install <code>howler</code> and <code>tone</code> only in apps that use this subpath.</span>
+      <span>
+        Install <code>howler</code> and <code>tone</code> only in apps that use this
+        subpath.
+      </span>
     </div>
   </div>
   <nav class="docs-game-examples" aria-label="Audio source examples">
     <a href={`${repoUrl}/tree/main/examples/vanilla/audio-arcade`}>
       <span>
         <strong>Audio Arcade source</strong>
-        <small>Preset SFX, patrol loop and mute flow built without external audio packages.</small>
+        <small>
+          Preset SFX, patrol loop and mute flow built without external audio packages.
+        </small>
       </span>
     </a>
     <a href={`${repoUrl}/tree/main/examples/vanilla/audio`}>
@@ -202,7 +231,9 @@ import {
   <p>
     The runtime loop reports elapsed time in seconds. Keep state changes in
     <code>update</code> and canvas work in <code>draw</code>; call
-    <code>clearCanvas()</code> before rendering the next frame.
+    <code>clearCanvas()</code> before rendering the next frame. Use
+    <code>createFixedStepLoop()</code> when collisions or tile movement need equal
+    simulation steps.
   </p>
   <CodeBlock snippet={docsSnippetMap.runtime} />
 </DocsSection>
@@ -225,21 +256,31 @@ import {
 <DocsSection id="game-architecture" index="14" title="Build a small game">
   <p>
     A playable scene is the same explicit redraw cycle with four connected
-    responsibilities. Read input first, advance simulation with elapsed seconds,
-    resolve collisions, then draw the resulting state.
+    responsibilities. Read input first, advance simulation with elapsed seconds, resolve
+    collisions, then draw the resulting state. For menu, game, pause and game-over
+    flows, keep scene transitions in <code>createSceneManager()</code>; for maze-like
+    worlds, use the tilemap helpers under <code>GridCanvasSystem.runtime</code>.
   </p>
   <div class="docs-game-cycle" aria-label="Small game architecture">
     <div>
-      <span>01</span><strong>Input</strong><small>Track keys, pointer or touch.</small>
+      <span>01</span>
+      <strong>Input</strong>
+      <small>Track keys, pointer or touch.</small>
     </div>
     <div>
-      <span>02</span><strong>Update</strong><small>Move actors using elapsed time.</small>
+      <span>02</span>
+      <strong>Update</strong>
+      <small>Move actors using elapsed time.</small>
     </div>
     <div>
-      <span>03</span><strong>Resolve</strong><small>Apply collisions, score and rules.</small>
+      <span>03</span>
+      <strong>Resolve</strong>
+      <small>Apply collisions, score and rules.</small>
     </div>
     <div>
-      <span>04</span><strong>Render</strong><small>Clear once, then draw world and HUD.</small>
+      <span>04</span>
+      <strong>Render</strong>
+      <small>Clear once, then draw world and HUD.</small>
     </div>
   </div>
   <CodeBlock snippet={docsSnippetMap.gameLoop} />
@@ -267,13 +308,15 @@ import {
 <DocsSection id="playground" index="15" title="Playground">
   <p>
     Edit executable scenes with Monaco Editor and run them against the current local
-    library build. Every run starts in a fresh preview frame, so animation loops,
-    input listeners and audio contexts do not leak between scenes.
+    library build. Every run starts in a fresh preview frame, so animation loops, input
+    listeners and audio contexts do not leak between scenes.
   </p>
   <a class="docs-playground-cta" href="/playground/">
     <span>
       <strong>Open the Playground</strong>
-      <small>Drawing studies, runtime systems, audio arcade cues and complete playable games.</small>
+      <small>
+        Drawing studies, runtime systems, audio arcade cues and complete playable games.
+      </small>
     </span>
   </a>
 </DocsSection>

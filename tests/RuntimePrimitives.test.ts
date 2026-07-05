@@ -52,6 +52,18 @@ describe("runtime and utility exports", () => {
     expect(runtime.MassBody).toBe(MassBody);
     expect(runtime.stepParticles).toBe(stepParticles);
     expect(runtime.wrapPoint).toBe(wrapPoint);
+    expect(runtime.createFixedStepLoop).toBeTypeOf("function");
+    expect(runtime.createSceneManager).toBeTypeOf("function");
+    expect(runtime.drawTileMap).toBeTypeOf("function");
+    expect(
+      Object.prototype.hasOwnProperty.call(GridCanvasSystem, "createFixedStepLoop"),
+    ).toBe(false);
+    expect(
+      Object.prototype.hasOwnProperty.call(GridCanvasSystem, "createSceneManager"),
+    ).toBe(false);
+    expect(Object.prototype.hasOwnProperty.call(GridCanvasSystem, "drawTileMap")).toBe(
+      false,
+    );
   });
 
   it("provides vector, angle, oscillation and collision helpers", () => {
@@ -374,6 +386,186 @@ describe("runtime and utility exports", () => {
     loop.frame(5000);
 
     expect(update).toHaveBeenNthCalledWith(2, 0.1, 5000);
+  });
+
+  it("createFixedStepLoop runs deterministic updates and exposes interpolation alpha", () => {
+    const updates: number[] = [];
+    const draws: number[] = [];
+    const loop = runtime.createFixedStepLoop({
+      draw: (alpha) => draws.push(alpha),
+      maxUpdatesPerFrame: 3,
+      requestFrame: vi.fn(() => 1),
+      step: 1 / 60,
+      update: (step) => updates.push(step),
+    });
+
+    loop.frame(0);
+    loop.frame(1000 / 60);
+    loop.frame(1000 / 60 + 1000 / 120);
+
+    expect(updates).toEqual([1 / 60]);
+    expect(draws[0]).toBe(0);
+    expect(draws[1]).toBe(0);
+    expect(draws[2]).toBeCloseTo(0.5);
+    expect(() =>
+      runtime.createFixedStepLoop({
+        step: 0,
+      }),
+    ).toThrow("step must be a positive finite number");
+  });
+
+  it("createFixedStepLoop caps updates and carries the sub-step remainder", () => {
+    const updates: number[] = [];
+    const draws: number[] = [];
+    const step = 1 / 60;
+    const loop = runtime.createFixedStepLoop({
+      draw: (alpha) => draws.push(alpha),
+      maxUpdatesPerFrame: 3,
+      requestFrame: vi.fn(() => 1),
+      step,
+      update: () => updates.push(step),
+    });
+
+    loop.frame(0);
+    // A huge frame gap: 5 whole steps plus a 0.5-step remainder in seconds.
+    loop.frame(step * 5.5 * 1000);
+
+    // Updates are capped at maxUpdatesPerFrame instead of spiralling.
+    expect(updates).toHaveLength(3);
+    // The remainder is preserved, so alpha is not pinned to 1.
+    expect(draws[1]).toBeCloseTo(0.5);
+
+    // The next frame with no elapsed time must not run a banked extra update.
+    loop.frame(step * 5.5 * 1000);
+    expect(updates).toHaveLength(3);
+    expect(draws[2]).toBeCloseTo(0.5);
+  });
+
+  it("createSceneManager transitions, updates and draws small scene flows", () => {
+    const events: string[] = [];
+    const manager = runtime.createSceneManager<string>({
+      initial: "menu",
+      scenes: {
+        game: {
+          draw: (context) => events.push(`draw:${context}`),
+          enter: (previous) => events.push(`enter-game:${previous}`),
+          exit: (next) => events.push(`exit-game:${next}`),
+          update: (elapsed) => events.push(`update:${elapsed}`),
+        },
+        menu: {
+          enter: (previous) => events.push(`enter-menu:${previous}`),
+          exit: (next) => events.push(`exit-menu:${next}`),
+        },
+      },
+    });
+
+    expect(manager.getSceneId()).toBe("menu");
+    expect(manager.transition("game")).toBe(true);
+    manager.update(0.25);
+    manager.draw("canvas");
+    expect(manager.transition("missing")).toBe(false);
+    manager.reset();
+
+    expect(events).toEqual([
+      "enter-menu:null",
+      "exit-menu:game",
+      "enter-game:menu",
+      "update:0.25",
+      "draw:canvas",
+      "exit-game:menu",
+      "enter-menu:game",
+    ]);
+  });
+
+  it("tilemap helpers read, write, bound, draw and hit-test simple maps", () => {
+    const map = ["111", "102", "111"] as const;
+    const ctx = {
+      fillRect: vi.fn(),
+      fillStyle: "",
+      restore: vi.fn(),
+      save: vi.fn(),
+    };
+    const grid = {
+      ctx,
+      drawCompiledPixelSprite: vi.fn(),
+      drawPixelSprite: vi.fn(),
+    };
+
+    expect(
+      runtime.getTileAt({ x: 33, y: 17 }, map, {
+        tileSize: 16,
+      }),
+    ).toBe("2");
+    expect(runtime.setTileAt(map, { column: 1, row: 1 }, "9")).toEqual([
+      "111",
+      "192",
+      "111",
+    ]);
+    expect(
+      runtime.tileToBounds(
+        { column: 2, row: 1 },
+        {
+          origin: { x: 4, y: 8 },
+          tileSize: 16,
+        },
+      ),
+    ).toEqual({ x: 36, y: 24, width: 16, height: 16 });
+    expect(
+      runtime.hitTestTileMap({ x: 2, y: 2, width: 12, height: 12 }, map, ["1"], {
+        tileSize: 16,
+      }),
+    ).toBe(true);
+    runtime.drawTileMap(
+      map,
+      {
+        "1": "#123456",
+        "2": ["1"],
+      },
+      {
+        grid,
+        palette: { "1": "#abcdef" },
+        tileSize: 16,
+      },
+    );
+
+    expect(ctx.fillRect).toHaveBeenCalled();
+    expect(grid.drawPixelSprite).toHaveBeenCalledWith(["1"], {
+      opacity: undefined,
+      palette: { "1": "#abcdef" },
+      pixelSize: 16,
+      x: 32,
+      y: 16,
+    });
+  });
+
+  it("drawTileMap fits non-square sprites inside the tile", () => {
+    const ctx = {
+      fillRect: vi.fn(),
+      fillStyle: "",
+      restore: vi.fn(),
+      save: vi.fn(),
+    };
+    const grid = {
+      ctx,
+      drawCompiledPixelSprite: vi.fn(),
+      drawPixelSprite: vi.fn(),
+    };
+    // A 2-wide, 4-tall compiled sprite rendered into a 16px tile: width would
+    // suggest pixelSize 8, but height must clamp it to 4 so it never overflows.
+    const tallSprite = {
+      height: 4,
+      pixels: [{ color: "#ffffff", column: 0, row: 0 }],
+      width: 2,
+    };
+
+    runtime.drawTileMap(["A"], { A: tallSprite }, { grid, tileSize: 16 });
+
+    expect(grid.drawCompiledPixelSprite).toHaveBeenCalledWith(tallSprite, {
+      opacity: undefined,
+      pixelSize: 4,
+      x: 0,
+      y: 0,
+    });
   });
 
   it("createKeyTracker tracks pressed keys and prevents default only for configured keys", () => {

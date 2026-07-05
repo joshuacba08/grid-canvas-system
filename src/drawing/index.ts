@@ -18,3 +18,18 @@ export type {
   GridCanvasTextOptions,
   GridCanvasValueLabelOptions,
 } from "../modules/vanilla/GridCanvasSystem";
+export {
+  compilePixelSprite,
+  createPixelPalette,
+  flipPixelSpriteX,
+  flipPixelSpriteY,
+  getPixelSpriteBounds,
+  hitTestPixelSprite,
+  tintPixelSprite,
+} from "./pixelSprite";
+export type {
+  GridCanvasCompiledPixel,
+  GridCanvasCompiledPixelSprite,
+  GridCanvasCompiledPixelSpriteDrawOptions,
+  GridCanvasPixelSpriteGeometryOptions,
+} from "./pixelSprite";
