@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Arcade</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        background: #080f1a;
+        color: #dbeafe;
+        display: grid;
+        gap: 16px;
+        justify-items: center;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      button,
+      select {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #60a5fa;
+        background: #0f172a;
+        color: inherit;
+      }
+
+      canvas {
+        border: 4px solid #38bdf8;
+        border-radius: 12px;
+      }
+
+      #status {
+        min-height: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Audio Arcade</h1>
+    <p>
+      Click any control to unlock browser audio, trigger SFX, or start a looping retro
+      cue.
+    </p>
+    <div class="controls">
+      <button id="shoot">Shoot</button>
+      <button id="pickup">Pickup</button>
+      <button id="explosion">Explosion</button>
+      <select id="loop-preset">
+        <option value="patrol">Patrol Loop</option>
+        <option value="danger">Danger Loop</option>
+        <option value="victory">Victory Loop</option>
+      </select>
+      <button id="play-loop">Play Loop</button>
+      <button id="stop-loop">Stop Loop</button>
+      <button id="mute">Mute</button>
+    </div>
+    <div id="status">Ready.</div>
+    <canvas id="canvas"></canvas>
+    <script type="module">
+      import GridCanvasSystem from "../../../dist/grid-canvas-system.es.js";
+      import { createArcadeAudio } from "../../../dist/audio-arcade/index.js";
+
+      const grid = new GridCanvasSystem("canvas", {
+        width: 420,
+        height: 240,
+        backgroundColor: "#08111d",
+        gridColor: "rgba(56, 189, 248, 0.15)",
+        gridLabelColor: "#1d4ed8",
+        coordinateLabelColor: "#93c5fd",
+      });
+      const audio = createArcadeAudio({
+        masterVolume: 0.7,
+      });
+      const status = document.getElementById("status");
+      const preset = document.getElementById("loop-preset");
+      let activeLoopId;
+      let muted = false;
+
+      function renderScene(loopLabel = "none") {
+        grid.clearCanvas();
+        grid.drawShip({ x: 210, y: 132 }, 44, {
+          rotation: -Math.PI / 2,
+          curve1: 0.4,
+          curve2: 0.78,
+          thruster: loopLabel !== "none",
+          fillColor: "#0f172a",
+          strokeColor: "#f8fafc",
+        });
+        grid.drawProjectile({ x: 210, y: 72 }, 10, 0.9, {
+          fillColor: "#38bdf8",
+          strokeColor: "#e0f2fe",
+        });
+        grid.drawText(`loop: ${loopLabel}`, 18, 22, {
+          color: "#dbeafe",
+          font: "14px monospace",
+        });
+        grid.drawMessage("Arcade Audio", "SFX + 8-bit loops via subpath addon", {
+          x: 210,
+          y: 38,
+        });
+      }
+
+      function setStatus(message) {
+        status.textContent = message;
+        renderScene(activeLoopId ?? "none");
+      }
+
+      renderScene();
+
+      document.getElementById("shoot").addEventListener("click", async () => {
+        await audio.playShoot();
+        setStatus("Played shoot SFX.");
+      });
+
+      document.getElementById("pickup").addEventListener("click", async () => {
+        await audio.playPickup();
+        setStatus("Played pickup SFX.");
+      });
+
+      document.getElementById("explosion").addEventListener("click", async () => {
+        await audio.playExplosion();
+        setStatus("Played explosion SFX.");
+      });
+
+      document.getElementById("play-loop").addEventListener("click", async () => {
+        activeLoopId = await audio.playLoop(preset.value);
+        setStatus(`Loop "${preset.value}" is running.`);
+      });
+
+      document.getElementById("stop-loop").addEventListener("click", () => {
+        audio.stopLoop(activeLoopId);
+        activeLoopId = undefined;
+        setStatus("Stopped active loop.");
+      });
+
+      document.getElementById("mute").addEventListener("click", () => {
+        muted = audio.mute();
+        setStatus(muted ? "Muted arcade audio." : "Unmuted arcade audio.");
+      });
+
+      window.addEventListener("beforeunload", () => {
+        audio.dispose();
+      });
+    </script>
+  </body>
+</html>

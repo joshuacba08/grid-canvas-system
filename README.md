@@ -32,6 +32,16 @@ npm install grid-canvas-system
 pnpm install grid-canvas-system
 ```
 
+### Optional audio addons
+
+`grid-canvas-system/audio-arcade` works without extra dependencies.
+
+`grid-canvas-system/audio` expects the peer dependencies you plan to use:
+
+```bash
+pnpm add tone howler
+```
+
 ## Usage
 
 To use the library, you can follow these steps:
@@ -74,6 +84,62 @@ The library is now organized around three simple layers:
 1. Core canvas layer: initialization, DOM validation, sizing, HiDPI setup, `canvas`, `ctx`, and `options`.
 2. Drawing layer: grid configuration plus reusable drawing methods like `drawPixelSprite()`, `drawPacman()`, `drawShip()`, `drawProjectile()`, and HUD-style overlays.
 3. Optional runtime layer: animation, sprite animation, state machines, input, grid coordinate conversion, simple physics, and scene helpers through `GridCanvasSystem.runtime`.
+
+## Audio Addons
+
+Audio stays outside the root export so the main canvas library remains small.
+
+### Arcade audio addon
+
+`grid-canvas-system/audio-arcade` provides browser-only retro SFX and lightweight 8-bit loops.
+
+```js
+import { createArcadeAudio } from "grid-canvas-system/audio-arcade";
+
+const arcadeAudio = createArcadeAudio({
+  masterVolume: 0.75,
+});
+
+await arcadeAudio.playShoot();
+const loopId = await arcadeAudio.playLoop("patrol");
+arcadeAudio.stopLoop(loopId);
+```
+
+### Adapter addon
+
+`grid-canvas-system/audio` exposes async factories for `howler` asset playback and `tone` music.
+
+```js
+import { createHowlerAssetAudio, createToneMusicAudio } from "grid-canvas-system/audio";
+
+const assetAudio = await createHowlerAssetAudio({
+  laser: {
+    src: ["/audio/laser.wav"],
+    volume: 0.45,
+  },
+});
+
+const musicAudio = await createToneMusicAudio({
+  bpm: 132,
+  instruments: {
+    lead: "synth",
+    bass: "membrane",
+  },
+});
+
+musicAudio.registerSequence("theme", {
+  loop: true,
+  steps: [
+    { instrumentId: "lead", note: "C4", time: 0, duration: "8n" },
+    { instrumentId: "bass", note: "C2", time: "0:1:0", duration: "4n" },
+  ],
+});
+```
+
+### Browser note
+
+Start audio from a user gesture such as a click or keypress because browsers usually
+block autoplay until the page has been interacted with.
 
 ### Usage with options
 
@@ -601,6 +667,9 @@ The package exports:
 - `GridCanvasTextOptions`
 - `GridCanvasValueLabelOptions`
 
+The audio subpaths export their own focused types such as `ArcadeSequence`,
+`HowlerAssetMap`, `ToneInstrumentKind`, and `ToneSequence`.
+
 ## Testing
 
 Format the complete workspace before running the test suite:
@@ -676,6 +745,8 @@ See also:
 
 - [Example setup and authoring guide](./docs/EXAMPLES.md)
 - [Asteroid example](./examples/vanilla/asteroid/index.html)
+- [Audio arcade example](./examples/vanilla/audio-arcade/index.html)
+- [Audio adapters example](./examples/vanilla/audio/index.html)
 - [Collision course example](./examples/vanilla/collisions/index.html)
 - [Ghost example](./examples/vanilla/ghost/index.html)
 - [Grid Buddy example](./examples/vanilla/grid-buddy/index.html)

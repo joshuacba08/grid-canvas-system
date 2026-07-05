@@ -11,6 +11,12 @@ pnpm build
 pnpm dev
 ```
 
+The `audio` example also needs the optional peer dependencies:
+
+```bash
+pnpm add tone howler
+```
+
 Vite prints the local URL, usually `http://localhost:5173`. Open an example through
 that server instead of double-clicking the HTML file:
 
@@ -19,6 +25,8 @@ http://localhost:5173/examples/vanilla/sprite-state/
 http://localhost:5173/examples/vanilla/collisions/
 http://localhost:5173/examples/vanilla/runtime/
 http://localhost:5173/examples/vanilla/grid-buddy/
+http://localhost:5173/examples/vanilla/audio-arcade/
+http://localhost:5173/examples/vanilla/audio/
 ```
 
 Re-run `pnpm build` after changing library source. Vite serves the example files, but
@@ -32,6 +40,8 @@ it does not rebuild the package bundle used by them.
 | `collisions`                   | Keyboard/touch movement and collision response           |
 | `runtime`                      | Animation loop, keyboard input, and `MassBody` motion    |
 | `grid-buddy`                   | Advanced multi-state showcase with stats and persistence |
+| `audio-arcade`                 | Built-in retro SFX and lightweight 8-bit loop presets    |
+| `audio`                        | Optional `howler` asset playback and `tone` music        |
 | `hud`                          | Labels, bars, and centered messages                      |
 | `pacman`, `ghost`, `spaceship` | Individual arcade drawing primitives                     |
 | `asteroid`, `projectile`       | Reusable shapes and animated projectiles                 |

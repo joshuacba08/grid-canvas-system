@@ -2,6 +2,15 @@
 
 All notable changes to `grid-canvas-system` are documented here.
 
+## 0.4.0
+
+### Added
+
+- Added the `grid-canvas-system/audio-arcade` subpath addon with retro sound effects, mute/volume controls, and lightweight looping 8-bit sequences.
+- Added the `grid-canvas-system/audio` subpath addon with async `howler` and `tone` adapters for asset playback and generative music.
+- Added build support for audio subpath bundles and published type declarations for both addons.
+- Added vanilla audio demos plus automated coverage for the new audio APIs.
+
 ## 0.3.0
 
 ### Added

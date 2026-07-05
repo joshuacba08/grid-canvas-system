@@ -1,6 +1,6 @@
 {
   "name": "grid-canvas-system",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "private": false,
   "sideEffects": false,
@@ -14,11 +14,21 @@
       "import": "./dist/grid-canvas-system.es.js",
       "default": "./dist/grid-canvas-system.es.js"
     },
+    "./audio": {
+      "types": "./dist/audio/index.d.ts",
+      "import": "./dist/audio/index.js",
+      "default": "./dist/audio/index.js"
+    },
+    "./audio-arcade": {
+      "types": "./dist/audio-arcade/index.d.ts",
+      "import": "./dist/audio-arcade/index.js",
+      "default": "./dist/audio-arcade/index.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc -p tsconfig.build.json",
+    "build": "vite build && vite build --config vite.audio.config.ts && tsc -p tsconfig.build.json",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
@@ -55,6 +65,18 @@
   "homepage": "https://github.com/joshuacba08/grid-canvas-system#readme",
   "bugs": {
     "url": "https://github.com/joshuacba08/grid-canvas-system/issues"
+  },
+  "peerDependencies": {
+    "howler": "^2.2.4",
+    "tone": "^15.1.22"
+  },
+  "peerDependenciesMeta": {
+    "howler": {
+      "optional": true
+    },
+    "tone": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@napi-rs/canvas": "^1.0.0",

@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Audio Adapters</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: system-ui, sans-serif;
+        background: #020617;
+        color: #e2e8f0;
+        display: grid;
+        gap: 16px;
+        justify-items: center;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+      }
+
+      button {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #34d399;
+        background: #0f172a;
+        color: inherit;
+      }
+
+      canvas {
+        border: 4px solid #34d399;
+        border-radius: 12px;
+      }
+
+      #status {
+        min-height: 1.5rem;
+        max-width: 700px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Audio Adapters</h1>
+    <p>
+      This example uses <code>grid-canvas-system/audio</code>. Install peer dependencies
+      with <code>pnpm add tone howler</code> before trying the buttons below.
+    </p>
+    <div class="controls">
+      <button id="play-asset">Play Howler Asset</button>
+      <button id="play-tone">Play Tone Sequence</button>
+      <button id="trigger-lead">Trigger Lead Note</button>
+      <button id="stop-tone">Stop Tone Sequence</button>
+    </div>
+    <div id="status">Waiting for peer dependencies and a user gesture.</div>
+    <canvas id="canvas"></canvas>
+    <script type="module">
+      import GridCanvasSystem from "../../../dist/grid-canvas-system.es.js";
+      import {
+        createHowlerAssetAudio,
+        createToneMusicAudio,
+      } from "../../../dist/audio/index.js";
+
+      const grid = new GridCanvasSystem("canvas", {
+        width: 460,
+        height: 240,
+        backgroundColor: "#04111f",
+        gridColor: "rgba(52, 211, 153, 0.18)",
+        gridLabelColor: "#065f46",
+        coordinateLabelColor: "#6ee7b7",
+      });
+      const status = document.getElementById("status");
+      let assetAudio;
+      let toneAudio;
+
+      function setStatus(message) {
+        status.textContent = message;
+      }
+
+      function renderScene() {
+        grid.clearCanvas();
+        grid.drawMessage("Audio Adapters", "Howler assets + Tone music factories", {
+          x: 230,
+          y: 40,
+        });
+        grid.drawBarIndicator("peer deps", 18, 16, 120, 12, 2, 2, {
+          fillColor: "#34d399",
+          trackColor: "rgba(255, 255, 255, 0.15)",
+          textColor: "#d1fae5",
+        });
+        grid.drawGhost({ x: 120, y: 150 }, 34, {
+          fillColor: "#10b981",
+          strokeColor: "#ecfeff",
+          feet: 5,
+        });
+        grid.drawPacman(330, 150, 34, 0.8, {
+          fillColor: "#facc15",
+          strokeColor: "#082f49",
+          lineWidth: 3,
+        });
+      }
+
+      function createBeepWavDataUri({
+        durationMs = 140,
+        frequency = 660,
+        sampleRate = 22050,
+        volume = 0.35,
+      } = {}) {
+        const sampleCount = Math.max(1, Math.floor((sampleRate * durationMs) / 1000));
+        const buffer = new ArrayBuffer(44 + sampleCount * 2);
+        const view = new DataView(buffer);
+        const bytes = new Uint8Array(buffer);
+
+        function writeText(offset, value) {
+          for (let index = 0; index < value.length; index += 1) {
+            view.setUint8(offset + index, value.charCodeAt(index));
+          }
+        }
+
+        writeText(0, "RIFF");
+        view.setUint32(4, 36 + sampleCount * 2, true);
+        writeText(8, "WAVE");
+        writeText(12, "fmt ");
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true);
+        view.setUint16(22, 1, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * 2, true);
+        view.setUint16(32, 2, true);
+        view.setUint16(34, 16, true);
+        writeText(36, "data");
+        view.setUint32(40, sampleCount * 2, true);
+
+        for (let index = 0; index < sampleCount; index += 1) {
+          const time = index / sampleRate;
+          const envelope = 1 - index / sampleCount;
+          const sample =
+            Math.sin(time * Math.PI * 2 * frequency) * envelope * volume * 0x7fff;
+
+          view.setInt16(44 + index * 2, sample, true);
+        }
+
+        let binary = "";
+
+        for (const byte of bytes) {
+          binary += String.fromCharCode(byte);
+        }
+
+        return `data:audio/wav;base64,${btoa(binary)}`;
+      }
+
+      async function ensureAssetAudio() {
+        if (assetAudio !== undefined) {
+          return assetAudio;
+        }
+
+        assetAudio = await createHowlerAssetAudio({
+          beep: {
+            src: [createBeepWavDataUri()],
+            volume: 0.45,
+          },
+        });
+
+        return assetAudio;
+      }
+
+      async function ensureToneAudio() {
+        if (toneAudio !== undefined) {
+          return toneAudio;
+        }
+
+        toneAudio = await createToneMusicAudio({
+          bpm: 132,
+          masterVolume: 0.65,
+          instruments: {
+            lead: "synth",
+            kick: "membrane",
+          },
+        });
+
+        toneAudio.registerSequence("theme", {
+          loop: true,
+          steps: [
+            { instrumentId: "lead", note: "C4", time: 0, duration: "8n" },
+            { instrumentId: "lead", note: "E4", time: "0:1:0", duration: "8n" },
+            { instrumentId: "lead", note: "G4", time: "0:2:0", duration: "8n" },
+            { instrumentId: "kick", note: "C2", time: "0:3:0", duration: "4n" },
+          ],
+        });
+
+        return toneAudio;
+      }
+
+      renderScene();
+
+      document.getElementById("play-asset").addEventListener("click", async () => {
+        try {
+          const audio = await ensureAssetAudio();
+
+          audio.play("beep");
+          setStatus("Played a Howler asset from a generated WAV data URI.");
+        } catch (error) {
+          setStatus(error instanceof Error ? error.message : String(error));
+        }
+      });
+
+      document.getElementById("play-tone").addEventListener("click", async () => {
+        try {
+          const audio = await ensureToneAudio();
+
+          await audio.playSequence("theme");
+          setStatus("Started the Tone sequence.");
+        } catch (error) {
+          setStatus(error instanceof Error ? error.message : String(error));
+        }
+      });
+
+      document.getElementById("trigger-lead").addEventListener("click", async () => {
+        try {
+          const audio = await ensureToneAudio();
+
+          await audio.trigger("lead", "A4", "8n");
+          setStatus("Triggered a one-shot Tone lead note.");
+        } catch (error) {
+          setStatus(error instanceof Error ? error.message : String(error));
+        }
+      });
+
+      document.getElementById("stop-tone").addEventListener("click", async () => {
+        try {
+          const audio = await ensureToneAudio();
+
+          audio.stopSequence("theme");
+          setStatus("Stopped the Tone sequence.");
+        } catch (error) {
+          setStatus(error instanceof Error ? error.message : String(error));
+        }
+      });
+    </script>
+  </body>
+</html>

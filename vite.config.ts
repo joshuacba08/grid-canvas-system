@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
 
+const external = ["howler", "tone"];
+
 export default defineConfig({
   build: {
     lib: {
@@ -9,7 +11,7 @@ export default defineConfig({
       formats: ["es", "umd"],
     },
     rollupOptions: {
-      external: [],
+      external,
       output: {
         globals: {},
       },
