@@ -2,6 +2,14 @@
 
 All notable changes to `grid-canvas-system` are documented here.
 
+## 0.4.1
+
+### Changed
+
+- Refreshed the home storytelling across English, Spanish, and Japanese to position the package more clearly as a product library.
+- Redesigned the home footer with stronger release, navigation, and call-to-action blocks, then tightened its vertical footprint.
+- Updated the README to match the shipped API, current workspace tooling, and the active `0.4.1` release narrative.
+
 ## 0.4.0
 
 ### Added

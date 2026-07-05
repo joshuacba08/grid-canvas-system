@@ -333,8 +333,14 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       kicker: "Release",
       timeline: [
         {
-          summary: "Built-in Audio Arcade presets, custom loops and optional Howler/Tone adapters for richer sound design.",
+          summary:
+            "Commercial home storytelling refresh, tighter footer design and README/version alignment.",
           version: libraryVersion,
+        },
+        {
+          summary:
+            "Built-in Audio Arcade presets, custom loops and optional Howler/Tone adapters for richer sound design.",
+          version: "0.4.0",
         },
         {
           summary: "Grid-aware pointer tracking and explicit coordinate helpers for interactive scenes.",
@@ -349,7 +355,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
           version: "0.1.x",
         },
       ],
-      title: "Shipped with product discipline: audio, runtime, visual tests and docs move together.",
+      title: "Shipped with product discipline: positioning, docs and release metadata stay in sync.",
     },
     runtimeHint: "Focus canvas + arrow keys",
     sourceAriaPrefix: "Open source for",
@@ -584,8 +590,14 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       kicker: "Version",
       timeline: [
         {
-          summary: "Audio Arcade integrado, loops personalizados y adapters opcionales de Howler y Tone para subir el nivel sonoro.",
+          summary:
+            "Refresh comercial de la home, footer mas compacto y alineacion del README con la version real.",
           version: libraryVersion,
+        },
+        {
+          summary:
+            "Audio Arcade integrado, loops personalizados y adapters opcionales de Howler y Tone para subir el nivel sonoro.",
+          version: "0.4.0",
         },
         {
           summary: "Seguimiento de puntero y helpers de coordenadas para escenas interactivas con grid.",
@@ -600,7 +612,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
           version: "0.1.x",
         },
       ],
-      title: "Se entrega con disciplina de producto: audio, runtime, tests visuales y docs avanzan juntos.",
+      title: "Se entrega con disciplina de producto: posicionamiento, docs y metadatos avanzan juntos.",
     },
     runtimeHint: "Enfoca el canvas y usa las flechas",
     sourceAriaPrefix: "Abrir codigo fuente de",
@@ -835,8 +847,13 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       kicker: "バージョン",
       timeline: [
         {
-          summary: "内蔵 Audio Arcade preset、custom loop、Howler/Tone adapter で音の幅を広げました。",
+          summary:
+            "ホームのストーリーテリング刷新、フッターの圧縮、README とバージョン表記の整合を行いました。",
           version: libraryVersion,
+        },
+        {
+          summary: "内蔵 Audio Arcade preset、custom loop、Howler/Tone adapter で音の幅を広げました。",
+          version: "0.4.0",
         },
         {
           summary: "grid 座標 helper と pointer tracking で操作系を強化。",
@@ -851,7 +868,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
           version: "0.1.x",
         },
       ],
-      title: "音、runtime、visual test、docs を一緒に前へ進める、出荷前提のライブラリ。",
+      title: "ポジショニング、docs、リリース表記まで揃えて出荷するライブラリです。",
     },
     runtimeHint: "canvasを選んで矢印キー",
     sourceAriaPrefix: "ソースを開く",

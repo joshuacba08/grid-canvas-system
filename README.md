@@ -1,32 +1,55 @@
-# Grid System for Canvas
+# Grid Canvas System
 
 [![npm version](https://img.shields.io/npm/v/grid-canvas-system.svg)](https://www.npmjs.com/package/grid-canvas-system)
 [![CI](https://github.com/joshuacba08/grid-canvas-system/actions/workflows/ci.yml/badge.svg)](https://github.com/joshuacba08/grid-canvas-system/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/grid-canvas-system.svg)](https://www.npmjs.com/package/grid-canvas-system)
 
-This library is a tiny canvas engine for grids, pixel art, sprites and playful interactive systems.
+Grid Canvas System is a grid-first Canvas library for pixel art, motion, input, HUD overlays and arcade-ready interactive scenes.
 
-In addition to the grid itself, the library now includes reusable drawing helpers, pixel sprite rendering, coordinate labels, line primitives, circular sectors, Pac-Man, ghosts, projectiles, configurable spaceship shapes, persistent asteroid shapes, HUD-style overlays, grid coordinate helpers, collision/motion utilities, keyboard and pointer tracking, lightweight scene helpers, sprite animation, state machines, and an optional animation runtime.
+Start with a visible grid and a crisp HiDPI canvas. Then add reusable drawing primitives, pixel sprites, sprite animation, state machines, pointer helpers, collisions and optional audio only when the scene needs more range.
 
-In my professional use, I have found this tool very useful for education and game development. Students or animators can position elements precisely and visualize their coordinates.
+It is built for small interactive products, education demos, toy engines, game prototypes, visual experiments and any Canvas workflow where you want fast feedback without adopting a heavyweight framework.
+
+## Why teams pick it
+
+- Grid-first defaults with predictable sizing, visible coordinates and HiDPI rendering.
+- Reusable pixel and arcade primitives like sprites, Pac-Man, ghosts, ships, asteroids, projectiles and HUD overlays.
+- Lightweight runtime helpers for animation, state, pointer tracking, collisions and scene logic.
+- Optional audio lanes: browser-native retro cues, Howler asset playback and Tone-powered music.
+- Vanilla examples, CDN support and published TypeScript types.
+
+## Quick links
+
+- [npm package](https://www.npmjs.com/package/grid-canvas-system)
+- [Documentation index](./docs/README.md)
+- [Examples guide](./docs/EXAMPLES.md)
+- [Changelog](./CHANGELOG.md)
+
+## Current release
+
+The package is currently at **0.4.1**.
+
+`0.4.1` is a documentation and presentation patch on top of the `0.4.0` audio release:
+
+- Refreshes the home storytelling and footer so the package reads like a product library instead of an implementation note.
+- Aligns the README with the shipped API surface, current package manager workflow and exported types.
+- Keeps the `0.4.0` audio layer in place: `grid-canvas-system/audio-arcade` for browser-native retro cues and `grid-canvas-system/audio` for optional `howler` and `tone` workflows.
 
 ## Installation
 
-To install the library, you can follow these steps:
-
-### Installation via CDN
+### CDN
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/grid-canvas-system/dist/grid-canvas-system.umd.js"></script>
 ```
 
-### Installation with NPM
+### npm
 
 ```bash
 npm install grid-canvas-system
 ```
 
-### Installation with pnpm
+### pnpm
 
 ```bash
 pnpm install grid-canvas-system
@@ -34,19 +57,17 @@ pnpm install grid-canvas-system
 
 ### Optional audio addons
 
-`grid-canvas-system/audio-arcade` works without extra dependencies.
+`grid-canvas-system/audio-arcade` ships with no extra dependencies and is the fastest way to add retro browser audio.
 
-`grid-canvas-system/audio` expects the peer dependencies you plan to use:
+`grid-canvas-system/audio` opens richer audio workflows and expects the peer dependencies you plan to use:
 
 ```bash
 pnpm add tone howler
 ```
 
-## Usage
+## Quick start
 
-To use the library, you can follow these steps:
-
-### Usage with CDN
+### CDN
 
 ```html
 <!DOCTYPE html>
@@ -69,7 +90,7 @@ To use the library, you can follow these steps:
 </html>
 ```
 
-### Usage with NPM
+### npm
 
 ```js
 import GridCanvasSystem from "grid-canvas-system";
@@ -79,7 +100,7 @@ const newCanvas = new GridCanvasSystem("canvas");
 
 ## Layers
 
-The library is now organized around three simple layers:
+The package stays intentionally small and splits cleanly into three layers:
 
 1. Core canvas layer: initialization, DOM validation, sizing, HiDPI setup, `canvas`, `ctx`, and `options`.
 2. Drawing layer: grid configuration plus reusable drawing methods like `drawPixelSprite()`, `drawPacman()`, `drawShip()`, `drawProjectile()`, and HUD-style overlays.
@@ -87,11 +108,11 @@ The library is now organized around three simple layers:
 
 ## Audio Addons
 
-Audio stays outside the root export so the main canvas library remains small.
+Audio stays outside the root export so the main Canvas layer remains small, while scenes that need sound can opt into the right lane.
 
 ### Arcade audio addon
 
-`grid-canvas-system/audio-arcade` provides browser-only retro SFX and lightweight 8-bit loops.
+`grid-canvas-system/audio-arcade` provides browser-only retro SFX and lightweight 8-bit loops for instant arcade feedback.
 
 ```js
 import { createArcadeAudio } from "grid-canvas-system/audio-arcade";
@@ -107,7 +128,7 @@ arcadeAudio.stopLoop(loopId);
 
 ### Adapter addon
 
-`grid-canvas-system/audio` exposes async factories for `howler` asset playback and `tone` music.
+`grid-canvas-system/audio` exposes async factories for `howler` asset playback and `tone` music when you want a bigger sound palette.
 
 ```js
 import { createHowlerAssetAudio, createToneMusicAudio } from "grid-canvas-system/audio";
@@ -141,7 +162,7 @@ musicAudio.registerSequence("theme", {
 Start audio from a user gesture such as a click or keypress because browsers usually
 block autoplay until the page has been interacted with.
 
-### Usage with options
+### Configuration example
 
 ```js
 import GridCanvasSystem from "grid-canvas-system";
@@ -167,7 +188,7 @@ const newCanvas = new GridCanvasSystem("canvas", {
 });
 ```
 
-### Preferred encapsulated usage
+### Encapsulated drawing example
 
 ```js
 import GridCanvasSystem from "grid-canvas-system";
@@ -317,7 +338,7 @@ grid.drawValueLabel("score", 2450, 312, 18, {
 grid.drawMessage("GAME OVER", "Press space to play again", { x: 160, y: 62 });
 ```
 
-### Runtime example
+### Runtime loop example
 
 ```js
 import GridCanvasSystem from "grid-canvas-system";
@@ -367,7 +388,7 @@ GridCanvasSystem.runtime.createAnimationLoop({
 });
 ```
 
-### Sprite animation and state machine example
+### Sprite animation and state example
 
 ```js
 import GridCanvasSystem from "grid-canvas-system";
@@ -504,6 +525,7 @@ const hudSlots = GridCanvasSystem.runtime.layoutStack(
 ## Documentation
 
 - [Documentation index](./docs/README.md)
+- [Examples guide](./docs/EXAMPLES.md)
 - [Technical study](./docs/ESTUDIO_TECNICO.md)
 - [Findings and improvements](./docs/HALLAZGOS_Y_MEJORAS.md)
 - [Innovation and scaling research](./docs/INVESTIGACION_INNOVACION_ESCALADO.md)
@@ -614,7 +636,7 @@ The preferred path for common drawing is the encapsulated API: `drawText`, `draw
 
 ## Why not Phaser, PixiJS or Konva?
 
-Those projects are excellent when you need a full game framework, a high-performance renderer, or an interactive object model. `grid-canvas-system` is intentionally smaller: it focuses on learning-friendly Canvas scenes, grids, pixel art, lightweight runtime helpers, and examples that can be read in minutes. The goal is not to replace larger engines, but to make small playful visual systems easy to build without adopting a heavy architecture.
+Those projects are excellent when you need a full game framework, a high-performance renderer, or a large interactive object model. `grid-canvas-system` is intentionally smaller: it gives you a visible grid, fast drawing primitives, lightweight runtime helpers and readable examples that get small scenes moving quickly. The goal is not to replace larger engines, but to make grid-aware Canvas work feel direct and shippable.
 
 ## TypeScript
 
@@ -665,12 +687,15 @@ The package exports:
 - `GridCanvasSystemOptions`
 - `GridCanvasSystemResolvedOptions`
 - `GridCanvasTextOptions`
+- `GridCanvasVelocity`
 - `GridCanvasValueLabelOptions`
 
 The audio subpaths export their own focused types such as `ArcadeSequence`,
 `HowlerAssetMap`, `ToneInstrumentKind`, and `ToneSequence`.
 
 ## Testing
+
+These commands reflect the current workspace setup (`pnpm@11.7.0` in `package.json`).
 
 Format the complete workspace before running the test suite:
 
@@ -680,15 +705,15 @@ pnpm run format:check
 ```
 
 ```bash
-npm test
+pnpm test
 ```
 
 ```bash
-npm run test:visual
+pnpm run test:visual
 ```
 
 ```bash
-npm run test:visual:update
+pnpm run test:visual:update
 ```
 
 When a visual snapshot fails, the test runner now writes `expected`, `actual`, and `diff` PNG artifacts into `tests/__artifacts__/` to make regressions easier to inspect.
@@ -704,6 +729,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the development workflow, formattin
 contract, and pull-request checklist.
 
 ## Examples
+
+The vanilla examples are the fastest way to evaluate the library as a product: plain HTML, readable source and focused scenarios.
 
 ```html
 <!DOCTYPE html>
@@ -759,10 +786,10 @@ See also:
 
 ### Output
 
-Image preview
+Preview
 ![image](https://i.ibb.co/jHRJn7k/image.png)
 
-## Ideas
+## What to build
 
 - Build reusable shapes like Pac-Man on top of `drawCircleSector()`.
 - Add arcade overlays with `drawBarIndicator()`, `drawValueLabel()`, and `drawMessage()`.

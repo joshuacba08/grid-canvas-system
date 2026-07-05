@@ -1,10 +1,10 @@
-export const libraryVersion = "0.4.0";
+export const libraryVersion = "0.4.1";
 
 export const currentRelease = {
   version: libraryVersion,
-  title: "Audio addons and retro arcade sound",
+  title: "Storytelling refresh and docs alignment",
   summary:
-    "Add browser-native arcade SFX plus optional Howler and Tone adapters without losing the lightweight Canvas workflow.",
+    "Refresh the landing narrative, tighten the footer and align the README with the current package, exports and release metadata.",
 } as const;
 
 export interface ReleaseNote {
@@ -12,11 +12,16 @@ export interface ReleaseNote {
   summary: string;
 }
 
-export const changelogCardText = `Release notes from 0.1.x through the current ${libraryVersion} audio expansion.`;
+export const changelogCardText = `Release notes from 0.1.x through the current ${libraryVersion} release.`;
 
 export const releaseTimeline: readonly ReleaseNote[] = [
   {
     version: currentRelease.version,
+    summary:
+      "Commercial home storytelling refresh, tighter footer design and README/version alignment.",
+  },
+  {
+    version: "0.4.0",
     summary:
       "Audio Arcade presets, custom loops, Howler and Tone adapters, plus vanilla audio demos.",
   },
