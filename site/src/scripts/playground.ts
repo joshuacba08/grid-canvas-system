@@ -1,16 +1,16 @@
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api.js";
 import "monaco-editor/esm/vs/basic-languages/javascript/javascript.contribution.js";
 import "monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatching.js";
 import "monaco-editor/esm/vs/editor/contrib/comment/browser/comment.js";
 import "monaco-editor/esm/vs/editor/contrib/find/browser/findController.js";
 import "monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js";
 import "monaco-editor/esm/vs/editor/contrib/linesOperations/browser/linesOperations.js";
+import * as monaco from "monaco-editor/esm/vs/editor/editor.api.js";
 import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
 import {
-  getPlaygroundExample,
-  playgroundExamples,
-  type PlaygroundExampleId,
+    getPlaygroundExample,
+    playgroundExamples,
+    type PlaygroundExampleId,
 } from "../data/playgroundExamples";
 
 type FileName = "javascript" | "html";

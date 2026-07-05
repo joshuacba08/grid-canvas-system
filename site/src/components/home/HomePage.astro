@@ -1,5 +1,5 @@
 ---
-import { ArrowUpRight, Check, Cookie, Copy, Gamepad2, Moon } from "@lucide/astro";
+import { ArrowUpRight, Check, Cookie, Copy, Gamepad2, Menu, Moon, X } from "@lucide/astro";
 import { codeToHtml } from "shiki";
 
 import { type HomeLocale, homeContentByLocale } from "../../data/homeContent";
@@ -12,6 +12,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const content = homeContentByLocale[locale];
+const currentHomeHref = locale === "en" ? "/" : `/${locale}/`;
 const version = libraryVersion;
 const repoUrl = "https://github.com/joshuacba08/grid-canvas-system";
 const npmUrl = "https://www.npmjs.com/package/grid-canvas-system";
@@ -136,28 +137,47 @@ const highlightedCodeBlocks = await Promise.all(
           <span class="brand-mark" aria-hidden="true"></span>
           <span>Grid Canvas System</span>
         </a>
-        <nav class="nav-links" aria-label={content.primaryNavAria}>
-          <a href="#capabilities">{content.nav.capabilities}</a>
-          <a href={content.docsPath}>{content.nav.docs}</a>
-          <a href="/playground/">{content.nav.playground}</a>
-          <a href="#examples">{content.nav.examples}</a>
-          <div class="nav-locale-links" aria-label={content.localeNavAria}>
-            {
-              content.localeLinks.map((link) => (
-                <a
-                  class:list={[
-                    "nav-locale-link",
-                    { "is-active": link.href === (locale === "en" ? "/" : `/${locale}/`) },
-                  ]}
-                  href={link.href}
-                >
-                  {link.label}
-                </a>
-              ))
-            }
-          </div>
-          <a class="nav-keep" href={npmUrl}>npm</a>
+        <nav
+          id="home-nav-panel"
+          class="nav-links"
+          aria-label={content.primaryNavAria}
+          data-home-nav
+          data-open="false"
+        >
+          <a href="#capabilities" data-home-nav-link>{content.nav.capabilities}</a>
+          <a href={content.docsPath} data-home-nav-link>{content.nav.docs}</a>
+          <a href="/playground/" data-home-nav-link>{content.nav.playground}</a>
+          <a href="#examples" data-home-nav-link>{content.nav.examples}</a>
+          <a class="nav-keep" href={npmUrl} data-home-nav-link>npm</a>
         </nav>
+        <div class="topbar-tools">
+          <span class="nav-version" aria-label={`${content.versionLabel} ${version}`}>
+            v{version}
+          </span>
+          <label class="nav-locale-select" aria-label={content.localeNavAria}>
+            <span class="sr-only">{content.localeSelectLabel}</span>
+            <select data-home-locale-select aria-label={content.localeSelectLabel}>
+              {
+                content.localeLinks.map((link) => (
+                  <option value={link.href} selected={link.href === currentHomeHref}>
+                    {link.label}
+                  </option>
+                ))
+              }
+            </select>
+          </label>
+          <button
+            class="home-menu-button"
+            type="button"
+            aria-label={content.menuButtonLabel}
+            aria-expanded="false"
+            aria-controls="home-nav-panel"
+            data-home-menu
+          >
+            <Menu class="menu-open-icon" size={18} aria-hidden="true" />
+            <X class="menu-close-icon" size={18} aria-hidden="true" />
+          </button>
+        </div>
       </header>
 
       <main id="top">
@@ -387,12 +407,45 @@ const highlightedCodeBlocks = await Promise.all(
             <p class="section-kicker">{content.release.kicker} {version}</p>
             <h2>{content.release.title}</h2>
           </div>
-          <div class="install-panel">
-            <pre><code>{`pnpm add grid-canvas-system
-
-pnpm test
-pnpm run test:visual
-pnpm run build`}</code></pre>
+          <div
+            class="install-panel terminal-panel"
+            data-home-terminal
+            data-terminal-done-label={content.terminal.states.done}
+            data-terminal-pending-label={content.terminal.states.pending}
+            data-terminal-phase-done={content.terminal.phaseDone}
+            data-terminal-phase-idle={content.terminal.phaseIdle}
+            data-terminal-working-label={content.terminal.states.working}
+          >
+            <header class="terminal-header">
+              <div class="terminal-lights" aria-hidden="true">
+                <i></i>
+                <i></i>
+                <i></i>
+              </div>
+              <div class="terminal-title">
+                <strong>{content.terminal.headerTitle}</strong>
+                <span>{content.terminal.headerSubtitle}</span>
+              </div>
+              <span class="terminal-phase" data-terminal-phase>
+                {content.terminal.phaseIdle}
+              </span>
+            </header>
+            <div class="terminal-body">
+              {
+                content.terminal.steps.map((step) => (
+                  <article class="terminal-row" data-terminal-row data-state="pending">
+                    <div class="terminal-row-main">
+                      <span class="terminal-prompt" aria-hidden="true">$</span>
+                      <code>{step.command}</code>
+                      <span class="terminal-status" data-terminal-status>
+                        {content.terminal.states.pending}
+                      </span>
+                    </div>
+                    <small>{step.note}</small>
+                  </article>
+                ))
+              }
+            </div>
           </div>
           <div class="release-list" aria-label="Release highlights">
             {
@@ -414,9 +467,10 @@ pnpm run build`}</code></pre>
     </div>
 
     <script>
-      import "../../scripts/showcase";
-      import "../../scripts/live-examples";
       import "../../scripts/copy";
+      import "../../scripts/home";
+      import "../../scripts/live-examples";
+      import "../../scripts/showcase";
     </script>
     <script>
       import "../../scripts/motion";

@@ -1,5 +1,5 @@
-import GridCanvasSystem from "grid-canvas-system";
 import type { GridCanvasAnimationLoop } from "grid-canvas-system";
+import GridCanvasSystem from "grid-canvas-system";
 import { createArcadeAudio } from "../../../src/audio-arcade";
 
 interface LiveDemo {

@@ -118,6 +118,157 @@ motion.add("(prefers-reduced-motion: no-preference)", () => {
       });
     });
 
+  gsap.utils.toArray<HTMLElement>("[data-home-terminal]").forEach((panel) => {
+    const rows = Array.from(
+      panel.querySelectorAll<HTMLElement>("[data-terminal-row]"),
+    );
+    const phase = panel.querySelector<HTMLElement>("[data-terminal-phase]");
+    const pendingLabel = panel.dataset.terminalPendingLabel ?? "Queued";
+    const workingLabel = panel.dataset.terminalWorkingLabel ?? "Working";
+    const doneLabel = panel.dataset.terminalDoneLabel ?? "Done";
+    const idlePhase = panel.dataset.terminalPhaseIdle ?? pendingLabel;
+    const donePhase = panel.dataset.terminalPhaseDone ?? doneLabel;
+    const timeline = gsap.timeline({
+      paused: true,
+      repeat: -1,
+      repeatDelay: 0.45,
+    });
+
+    function setRowState(
+      row: HTMLElement,
+      state: "done" | "pending" | "working",
+    ): void {
+      row.dataset.state = state;
+
+      const status = row.querySelector<HTMLElement>("[data-terminal-status]");
+
+      if (status === null) {
+        return;
+      }
+
+      status.textContent =
+        state === "working"
+          ? workingLabel
+          : state === "done"
+            ? doneLabel
+            : pendingLabel;
+    }
+
+    function resetRows(): void {
+      rows.forEach((row) => {
+        setRowState(row, "pending");
+        gsap.set(row, {
+          backgroundColor: "rgba(77, 169, 255, 0.04)",
+          borderColor: "rgba(77, 169, 255, 0.16)",
+          boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
+          scale: 1,
+          y: 0,
+        });
+      });
+
+      if (phase !== null) {
+        phase.textContent = idlePhase;
+      }
+    }
+
+    resetRows();
+
+    rows.forEach((row, index) => {
+      const status = row.querySelector<HTMLElement>("[data-terminal-status]");
+
+      timeline
+        .call(() => {
+          rows.forEach((otherRow, otherIndex) => {
+            setRowState(otherRow, otherIndex < index ? "done" : "pending");
+          });
+          setRowState(row, "working");
+
+          if (phase !== null) {
+            phase.textContent = workingLabel;
+          }
+        })
+        .to(
+          row,
+          {
+            backgroundColor: "rgba(0, 212, 59, 0.1)",
+            borderColor: "rgba(0, 212, 59, 0.38)",
+            boxShadow: "0 18px 44px rgba(0, 0, 0, 0.24)",
+            duration: 0.28,
+            ease: "power2.out",
+            scale: 1.01,
+            y: -4,
+          },
+          index === 0 ? 0 : ">",
+        );
+
+      if (status !== null) {
+        timeline.to(
+          status,
+          {
+            duration: 0.28,
+            ease: "power2.out",
+            scale: 1.05,
+          },
+          "<",
+        );
+      }
+
+      timeline
+        .to({}, { duration: 0.55 })
+        .call(() => {
+          setRowState(row, "done");
+
+          if (phase !== null) {
+            phase.textContent = index === rows.length - 1 ? donePhase : doneLabel;
+          }
+        })
+        .to(row, {
+          backgroundColor: "rgba(77, 169, 255, 0.05)",
+          borderColor: "rgba(77, 169, 255, 0.26)",
+          boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
+          duration: 0.3,
+          ease: "power2.inOut",
+          scale: 1,
+          y: 0,
+        });
+
+      if (status !== null) {
+        timeline.to(
+          status,
+          {
+            duration: 0.24,
+            ease: "power2.inOut",
+            scale: 1,
+          },
+          "<",
+        );
+      }
+    });
+
+    timeline.call(resetRows);
+
+    ScrollTrigger.create({
+      onEnter: () => timeline.play(),
+      onEnterBack: () => timeline.play(),
+      onLeave: () => timeline.pause(),
+      onLeaveBack: () => timeline.pause(),
+      start: "top 84%",
+      trigger: panel,
+    });
+
+    gsap.from(panel, {
+      duration: 0.74,
+      ease: "power3.out",
+      opacity: 0,
+      scrollTrigger: {
+        once: true,
+        start: "top 86%",
+        trigger: panel,
+      },
+      y: 28,
+    });
+  });
+
   document.fonts.ready.then(() => {
     ScrollTrigger.refresh();
   });

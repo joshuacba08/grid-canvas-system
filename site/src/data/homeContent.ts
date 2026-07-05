@@ -93,7 +93,9 @@ interface HomeContent {
   liveDemoSuffix: string;
   localeLinks: LocaleLink[];
   localeNavAria: string;
+  localeSelectLabel: string;
   metaDescription: string;
+  menuButtonLabel: string;
   nav: {
     capabilities: string;
     docs: string;
@@ -111,6 +113,22 @@ interface HomeContent {
   runtimeHint: string;
   sourceAriaPrefix: string;
   sourceTooltip: string;
+  terminal: {
+    headerSubtitle: string;
+    headerTitle: string;
+    phaseDone: string;
+    phaseIdle: string;
+    states: {
+      done: string;
+      pending: string;
+      working: string;
+    };
+    steps: Array<{
+      command: string;
+      note: string;
+    }>;
+  };
+  versionLabel: string;
 }
 
 const repoUrl = "https://github.com/joshuacba08/grid-canvas-system";
@@ -293,13 +311,15 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     liveBadge: "Live",
     liveDemoSuffix: "live demo",
     localeLinks: [
-      { href: "/", label: "EN" },
-      { href: "/es/", label: "ES" },
-      { href: "/ja/", label: "JA" },
+      { href: "/", label: "English" },
+      { href: "/es/", label: "Español" },
+      { href: "/ja/", label: "日本語" },
     ],
     localeNavAria: "Home language selector",
+    localeSelectLabel: "Language",
     metaDescription:
       "grid-canvas-system is a tiny Canvas engine for grids, pixel art, sprites, animation, input, collisions and playful interactive systems.",
+    menuButtonLabel: "Toggle navigation menu",
     nav: {
       capabilities: "Capabilities",
       docs: "Docs",
@@ -334,6 +354,36 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     runtimeHint: "Focus canvas + arrow keys",
     sourceAriaPrefix: "Open source for",
     sourceTooltip: "View source",
+    terminal: {
+      headerSubtitle: "release workflow",
+      headerTitle: "workspace.pipeline",
+      phaseDone: "Cycle complete",
+      phaseIdle: "Queued",
+      states: {
+        done: "Done",
+        pending: "Queued",
+        working: "Working",
+      },
+      steps: [
+        {
+          command: "pnpm add grid-canvas-system",
+          note: "Install the core package and resolve the published audio subpaths.",
+        },
+        {
+          command: "pnpm test",
+          note: "Run unit coverage against the runtime, drawing and audio addon APIs.",
+        },
+        {
+          command: "pnpm run test:visual",
+          note: "Verify visual snapshots before shipping rendering changes.",
+        },
+        {
+          command: "pnpm run build",
+          note: "Emit the package bundles and align the site with the current release.",
+        },
+      ],
+    },
+    versionLabel: "Current version",
   },
   es: {
     api: {
@@ -512,13 +562,15 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     liveBadge: "En vivo",
     liveDemoSuffix: "demo en vivo",
     localeLinks: [
-      { href: "/", label: "EN" },
-      { href: "/es/", label: "ES" },
-      { href: "/ja/", label: "JA" },
+      { href: "/", label: "English" },
+      { href: "/es/", label: "Español" },
+      { href: "/ja/", label: "日本語" },
     ],
     localeNavAria: "Selector de idioma de la home",
+    localeSelectLabel: "Idioma",
     metaDescription:
       "grid-canvas-system es un motor Canvas pequeno para grillas, pixel art, sprites, animacion, input, colisiones y sistemas interactivos.",
+    menuButtonLabel: "Abrir o cerrar navegacion",
     nav: {
       capabilities: "Capacidades",
       docs: "Docs",
@@ -553,6 +605,36 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     runtimeHint: "Enfoca el canvas y usa las flechas",
     sourceAriaPrefix: "Abrir codigo fuente de",
     sourceTooltip: "Ver fuente",
+    terminal: {
+      headerSubtitle: "flujo de release",
+      headerTitle: "workspace.pipeline",
+      phaseDone: "Ciclo completo",
+      phaseIdle: "En cola",
+      states: {
+        done: "Listo",
+        pending: "En cola",
+        working: "Activo",
+      },
+      steps: [
+        {
+          command: "pnpm add grid-canvas-system",
+          note: "Instala el paquete base y resuelve los subpaths publicados para audio.",
+        },
+        {
+          command: "pnpm test",
+          note: "Ejecuta la cobertura unitaria sobre runtime, dibujo y APIs de audio addons.",
+        },
+        {
+          command: "pnpm run test:visual",
+          note: "Verifica los snapshots visuales antes de publicar cambios de render.",
+        },
+        {
+          command: "pnpm run build",
+          note: "Emite los bundles del paquete y alinea el site con la release actual.",
+        },
+      ],
+    },
+    versionLabel: "Version actual",
   },
   ja: {
     api: {
@@ -731,13 +813,15 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     liveBadge: "ライブ",
     liveDemoSuffix: "ライブデモ",
     localeLinks: [
-      { href: "/", label: "EN" },
-      { href: "/es/", label: "ES" },
-      { href: "/ja/", label: "JA" },
+      { href: "/", label: "English" },
+      { href: "/es/", label: "Español" },
+      { href: "/ja/", label: "日本語" },
     ],
     localeNavAria: "ホーム言語切替",
+    localeSelectLabel: "言語",
     metaDescription:
       "grid-canvas-system は、グリッド、ピクセルアート、スプライト、アニメーション、入力、衝突判定に向いた小さなCanvasエンジンです。",
+    menuButtonLabel: "ナビゲーションメニューを切り替え",
     nav: {
       capabilities: "機能",
       docs: "Docs",
@@ -772,5 +856,35 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
     runtimeHint: "canvasを選んで矢印キー",
     sourceAriaPrefix: "ソースを開く",
     sourceTooltip: "ソースを見る",
+    terminal: {
+      headerSubtitle: "release workflow",
+      headerTitle: "workspace.pipeline",
+      phaseDone: "完了",
+      phaseIdle: "待機中",
+      states: {
+        done: "完了",
+        pending: "待機",
+        working: "実行中",
+      },
+      steps: [
+        {
+          command: "pnpm add grid-canvas-system",
+          note: "コアパッケージを導入し、公開されているaudio subpathを解決します。",
+        },
+        {
+          command: "pnpm test",
+          note: "runtime、drawing、audio addon API に対するユニットテストを実行します。",
+        },
+        {
+          command: "pnpm run test:visual",
+          note: "描画変更を出す前に visual snapshot を確認します。",
+        },
+        {
+          command: "pnpm run build",
+          note: "パッケージのbundleを出力し、siteを現在のreleaseに合わせます。",
+        },
+      ],
+    },
+    versionLabel: "現在のバージョン",
   },
 };
