@@ -1,4 +1,5 @@
 import GridCanvasSystem from "grid-canvas-system";
+import { createArcadeAudio } from "../../../src/audio-arcade";
 
 interface PlaygroundMessage {
   type?: string;
@@ -75,12 +76,13 @@ window.addEventListener("message", (event) => {
   try {
     const execute = new Function(
       "GridCanvasSystem",
+      "createArcadeAudio",
       "canvas",
       "root",
       `"use strict";\n${message.code}\n//# sourceURL=grid-canvas-playground.js`,
     );
 
-    execute(GridCanvasSystem, canvas, root);
+    execute(GridCanvasSystem, createArcadeAudio, canvas, root);
     send("playground-running", "Scene running.");
   } catch (error) {
     send("playground-error", error instanceof Error ? error.message : stringify(error));

@@ -1,0 +1,14 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="docs-callout">
+  <strong>{title}</strong>
+  <div class="docs-callout-copy">
+    <slot />
+  </div>
+</div>

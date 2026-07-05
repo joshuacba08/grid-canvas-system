@@ -1,0 +1,130 @@
+---
+import type { DocsLocale } from "../../data/docsContent";
+
+interface Props {
+  locale: DocsLocale;
+  variant: "adapters" | "arcade";
+}
+
+const { locale, variant } = Astro.props;
+
+const copy = {
+  en: {
+    adapters: {
+      actions: {
+        asset: "Play asset",
+        note: "Lead note",
+        stop: "Stop theme",
+        theme: "Play theme",
+      },
+      actionsLabel: "Audio adapter controls",
+      canvasLabel: "Howler and Tone inline demo",
+      initialStatus: "Site dependencies are ready. Click a control to start audio.",
+      note: "Howler assets + Tone sequences",
+      title: "Inline adapters demo",
+    },
+    arcade: {
+      actions: {
+        loop: "Patrol loop",
+        mute: "Mute",
+        pickup: "Pickup",
+        shoot: "Shoot",
+        stop: "Stop",
+      },
+      actionsLabel: "Audio Arcade controls",
+      canvasLabel: "Audio Arcade inline demo",
+      initialStatus: "Click a control to unlock Web Audio.",
+      note: "Zero-dependency browser cues",
+      title: "Inline Audio Arcade demo",
+    },
+  },
+  es: {
+    adapters: {
+      actions: {
+        asset: "Play asset",
+        note: "Nota lead",
+        stop: "Detener tema",
+        theme: "Play theme",
+      },
+      actionsLabel: "Controles del adapter de audio",
+      canvasLabel: "Demo inline de Howler y Tone",
+      initialStatus: "Las dependencias del site estan listas. Haz click en un control para iniciar audio.",
+      note: "Assets con Howler + secuencias con Tone",
+      title: "Demo inline de adapters",
+    },
+    arcade: {
+      actions: {
+        loop: "Bucle patrol",
+        mute: "Mute",
+        pickup: "Pickup",
+        shoot: "Shoot",
+        stop: "Detener",
+      },
+      actionsLabel: "Controles de Audio Arcade",
+      canvasLabel: "Demo inline de Audio Arcade",
+      initialStatus: "Haz click en un control para desbloquear Web Audio.",
+      note: "Cues nativos del navegador sin dependencias",
+      title: "Demo inline de Audio Arcade",
+    },
+  },
+}[locale][variant];
+---
+
+{variant === "arcade" ? (
+  <section class="docs-demo" data-docs-demo="audio-arcade" data-locale={locale}>
+    <div class="docs-demo-bar">
+      <strong>{copy.title}</strong>
+      <span class="docs-demo-note">{copy.note}</span>
+    </div>
+    <canvas
+      id="docs-audio-arcade-canvas"
+      class="docs-demo-canvas"
+      aria-label={copy.canvasLabel}
+    />
+    <div class="docs-demo-actions" aria-label={copy.actionsLabel}>
+      <button type="button" data-docs-audio-arcade-action="shoot">
+        {copy.actions.shoot}
+      </button>
+      <button type="button" data-docs-audio-arcade-action="pickup">
+        {copy.actions.pickup}
+      </button>
+      <button type="button" data-docs-audio-arcade-action="loop">
+        {copy.actions.loop}
+      </button>
+      <button type="button" data-docs-audio-arcade-action="stop">
+        {copy.actions.stop}
+      </button>
+      <button type="button" data-docs-audio-arcade-action="mute">
+        {copy.actions.mute}
+      </button>
+    </div>
+    <p class="docs-demo-status" data-docs-demo-status>{copy.initialStatus}</p>
+  </section>
+) : (
+  <section class="docs-demo" data-docs-demo="audio-adapters" data-locale={locale}>
+    <div class="docs-demo-bar">
+      <strong>{copy.title}</strong>
+      <span class="docs-demo-note">{copy.note}</span>
+    </div>
+    <canvas
+      id="docs-audio-adapters-canvas"
+      class="docs-demo-canvas"
+      aria-label={copy.canvasLabel}
+    />
+    <div class="docs-demo-actions" aria-label={copy.actionsLabel}>
+      <button type="button" data-docs-audio-adapter-action="asset">
+        {copy.actions.asset}
+      </button>
+      <button type="button" data-docs-audio-adapter-action="theme">
+        {copy.actions.theme}
+      </button>
+      <button type="button" data-docs-audio-adapter-action="note">
+        {copy.actions.note}
+      </button>
+      <button type="button" data-docs-audio-adapter-action="stop">
+        {copy.actions.stop}
+      </button>
+    </div>
+    <p class="docs-demo-status" data-docs-demo-status>{copy.initialStatus}</p>
+  </section>
+)}

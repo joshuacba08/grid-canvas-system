@@ -43,6 +43,15 @@ body {
   font-family: var(--font-body);
 }
 
+body:lang(ja) {
+  --font-body:
+    "Noto Sans JP", Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-pixel:
+    "Noto Sans JP", "Geist Pixel", "Cascadia Mono", "SFMono-Regular", Consolas,
+    monospace;
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -116,6 +125,29 @@ pre {
   gap: 6px;
 }
 
+.nav-locale-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid rgba(232, 247, 239, 0.12);
+}
+
+.nav-locale-link {
+  min-width: 34px;
+  text-align: center;
+  border: 1px solid transparent;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+}
+
+.nav-locale-link.is-active {
+  border-color: rgba(77, 169, 255, 0.36);
+  background: rgba(77, 169, 255, 0.1);
+  color: var(--blue);
+}
+
 .nav-links a {
   padding: 9px 10px;
   border-radius: 6px;
@@ -126,6 +158,29 @@ pre {
 .nav-links a:hover {
   background: rgba(232, 247, 239, 0.08);
   color: var(--text);
+}
+
+body:lang(ja) .brand,
+body:lang(ja) .button,
+body:lang(ja) .capability h3,
+body:lang(ja) .code-block h3,
+body:lang(ja) .doc-link strong,
+body:lang(ja) .example h3,
+body:lang(ja) .example-live,
+body:lang(ja) .eyebrow,
+body:lang(ja) .hero-panel footer,
+body:lang(ja) .hero-panel header,
+body:lang(ja) .nav-locale-link,
+body:lang(ja) .peek-strip span,
+body:lang(ja) .section h2,
+body:lang(ja) .section-kicker {
+  text-transform: none;
+}
+
+body:lang(ja) .hero h1,
+body:lang(ja) .section h2 {
+  letter-spacing: -0.03em;
+  line-height: 1.04;
 }
 
 .hero {
@@ -749,7 +804,8 @@ pre {
   transform: translateY(0);
 }
 
-.buddy-controls {
+.buddy-controls,
+.example-controls {
   position: relative;
   z-index: 2;
   display: flex;
@@ -758,7 +814,8 @@ pre {
   margin-top: 16px;
 }
 
-.buddy-controls button {
+.buddy-controls button,
+.example-controls button {
   display: inline-flex;
   min-height: 34px;
   align-items: center;
@@ -774,7 +831,8 @@ pre {
   cursor: pointer;
 }
 
-.buddy-controls button:hover {
+.buddy-controls button:hover,
+.example-controls button:hover {
   border-color: var(--line-bright);
   background: rgba(0, 212, 59, 0.1);
   color: var(--green);
@@ -853,8 +911,12 @@ pre {
 }
 
 @media (max-width: 920px) {
-  .nav-links a:not(.nav-keep) {
+  .nav-links a:not(.nav-keep):not(.nav-locale-link) {
     display: none;
+  }
+
+  .nav-locale-links {
+    margin-left: auto;
   }
 
   .hero-content,
@@ -890,6 +952,12 @@ pre {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .nav-locale-links {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
   }
 
   .hero {

@@ -1,0 +1,364 @@
+---
+locale: es
+slug: getting-started
+title: Construye tu primera escena en Canvas.
+summary: Setup base, dibujo, runtime, add-ons de audio y referencia en espanol.
+---
+
+import CodeBlock from "../../../components/CodeBlock.astro";
+import DocsAudioDemo from "../../../components/docs/DocsAudioDemo.astro";
+import DocsCallout from "../../../components/docs/DocsCallout.astro";
+import DocsSection from "../../../components/docs/DocsSection.astro";
+import {
+  docsApiGroupsByLocale,
+  docsErrorRowsByLocale,
+  docsMethodGroupsByLocale,
+  docsPerformanceNotesByLocale,
+  docsRecipesByLocale,
+  docsSnippetMap,
+  repoUrl,
+} from "../../../data/docsContent";
+
+<DocsSection id="installation" index="01" title="Instalacion">
+  <p>
+    Instala el paquete con tu package manager. El export default incluye la clase del
+    canvas y expone helpers opcionales en <code>GridCanvasSystem.runtime</code>. El
+    audio vive en subpaths separados para que las escenas visuales sigan ligeras hasta
+    que realmente lo necesites.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.install} />
+</DocsSection>
+
+<DocsSection id="first-scene" index="02" title="Tu primera escena">
+  <p>
+    Anade un elemento canvas y luego inicializalo por ID. Los tamanos usan pixeles CSS
+    logicos; el escalado HiDPI se resuelve internamente.
+  </p>
+  <div class="docs-markup-line">
+    <code>&lt;canvas id="canvas"&gt;&lt;/canvas&gt;</code>
+  </div>
+  <CodeBlock snippet={docsSnippetMap.firstScene} />
+  <p>
+    El constructor valida el elemento y las opciones al momento de crearlo, asi que
+    los errores de setup quedan cerca de su causa real.
+  </p>
+</DocsSection>
+
+<DocsSection id="canvas-options" index="03" title="Opciones del canvas">
+  <p>
+    Las opciones del constructor definen dimensiones logicas, ritmo de grilla y valores
+    de texto. Los valores resueltos siguen disponibles en <code>grid.options</code>.
+  </p>
+  <div class="docs-options-table" role="table" aria-label="Opciones del canvas">
+    <div role="row">
+      <code role="cell">width / height</code>
+      <span role="cell">Tamano logico del canvas</span>
+      <b role="cell">400 / 400</b>
+    </div>
+    <div role="row">
+      <code role="cell">cellSize</code>
+      <span role="cell">Espaciado menor de la grilla</span>
+      <b role="cell">10</b>
+    </div>
+    <div role="row">
+      <code role="cell">majorStep</code>
+      <span role="cell">Intervalo de linea enfatizada</span>
+      <b role="cell">50</b>
+    </div>
+    <div role="row">
+      <code role="cell">devicePixelRatio</code>
+      <span role="cell">Escala del backing store HiDPI</span>
+      <b role="cell">window DPR</b>
+    </div>
+  </div>
+</DocsSection>
+
+<DocsSection id="redraw-lifecycle" index="04" title="Ciclo de redibujado">
+  <p>
+    Las escenas animadas siguen un ciclo pequeno y explicito. El render se mantiene
+    determinista y cada helper se protege del estado del contexto que pudo dejar otra
+    llamada de dibujo.
+  </p>
+  <ol class="docs-steps">
+    <li>
+      <span>01</span><strong>Update</strong>
+      <p>Avanza el estado con segundos transcurridos.</p>
+    </li>
+    <li>
+      <span>02</span><strong>Clear</strong>
+      <p>Reinicia el frame y redibuja la grilla.</p>
+    </li>
+    <li>
+      <span>03</span><strong>Draw</strong>
+      <p>Renderiza sprites, formas y overlays.</p>
+    </li>
+  </ol>
+</DocsSection>
+
+<DocsSection id="pixel-sprites" index="05" title="Sprites pixel">
+  <p>
+    Un sprite es un array readonly de strings con igual longitud. Cada caracter mapea a
+    un color de paleta; las entradas transparentes reservan espacio sin dibujar.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.sprite} />
+  <div class="docs-rule-grid">
+    <div><strong>x / y</strong><span>Coordenadas absolutas en canvas</span></div>
+    <div><strong>pixelSize</strong><span>Tamano logico positivo del pixel</span></div>
+    <div><strong>palette</strong><span>Cada caracter debe existir en la paleta</span></div>
+  </div>
+</DocsSection>
+
+<DocsSection id="arcade-primitives" index="06" title="Primitivas arcade">
+  <p>
+    Compone escenas con <code>drawPacman()</code>, <code>drawGhost()</code>,
+    <code>drawProjectile()</code>, <code>drawShip()</code> y formas persistentes de
+    asteroides. Cada metodo aisla el estado del contexto.
+  </p>
+</DocsSection>
+
+<DocsSection id="hud-overlays" index="07" title="HUD y overlays">
+  <p>
+    Usa labels de valor, barras de estado y mensajes centrados para representar estado
+    de juego de forma compacta. Comparten las mismas opciones de texto y color de la
+    capa de dibujo.
+  </p>
+</DocsSection>
+
+<DocsSection id="audio-addons" index="08" title="Add-ons de audio">
+  <p>
+    La version 0.4.0 suma dos rutas opcionales de audio. Usa
+    <code>grid-canvas-system/audio-arcade</code> cuando quieras cues retro nativos del
+    navegador sin paquetes extra, o <code>grid-canvas-system/audio</code> cuando
+    necesites reproduccion de assets y adapters para musica generativa.
+  </p>
+  <div class="docs-api-table" role="table" aria-label="Mapa de add-ons de audio">
+    <div role="row">
+      <strong role="cell">audio-arcade</strong>
+      <span role="cell">SFX sin dependencias, loops preset, mute y control de ciclo de vida.</span>
+    </div>
+    <div role="row">
+      <strong role="cell">audio</strong>
+      <span role="cell">Adapters async de Howler y Tone para sprites de audio, notas sintetizadas y secuencias registradas.</span>
+    </div>
+  </div>
+</DocsSection>
+
+<DocsSection id="audio-arcade" index="09" title="Audio Arcade rapido">
+  <p>
+    <code>createArcadeAudio()</code> sigue la misma filosofia que el resto de la
+    libreria: crea el controller una sola vez, desbloquea el playback con un gesto del
+    usuario y luego dispara presets o loops cuando cambie el estado de tu escena.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.audioArcade} />
+  <DocsAudioDemo locale="es" variant="arcade" />
+  <DocsCallout title="Nota de navegador">
+    Web Audio permanece suspendido hasta recibir click, tap o teclado. Trata la
+    primera interaccion como el gesto que desbloquea el addon.
+  </DocsCallout>
+  <a class="docs-playground-cta" href="/playground/?example=audio-arcade">
+    <span>
+      <strong>Abre el Playground de Audio Arcade</strong>
+      <small>Dispara SFX, deja corriendo un patrol loop e inspecciona el mismo addon usado por el ejemplo de la libreria.</small>
+    </span>
+  </a>
+</DocsSection>
+
+<DocsSection id="audio-adapters" index="10" title="Adapters de Howler y Tone">
+  <p>
+    El subpath <code>grid-canvas-system/audio</code> es asincrono porque carga peers
+    opcionales solo cuando los pides. Usalo para assets, fades, disparo de notas y
+    musica secuenciada manteniendo el runtime de dibujo separado.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.audioAdapters} />
+  <DocsAudioDemo locale="es" variant="adapters" />
+  <div class="docs-rule-grid">
+    <div>
+      <strong>Howler</strong>
+      <span>Reproduccion de assets, audio sprites, fades, volumen y mute.</span>
+    </div>
+    <div>
+      <strong>Tone</strong>
+      <span>Instrumentos sintetizados, disparo de notas y secuencias reutilizables.</span>
+    </div>
+    <div>
+      <strong>Peers optativos</strong>
+      <span>Instala <code>howler</code> y <code>tone</code> solo en apps que usen este subpath.</span>
+    </div>
+  </div>
+  <nav class="docs-game-examples" aria-label="Fuentes de audio">
+    <a href={`${repoUrl}/tree/main/examples/vanilla/audio-arcade`}>
+      <span>
+        <strong>Codigo fuente de Audio Arcade</strong>
+        <small>Preset SFX, patrol loop y flujo de mute sin paquetes externos de audio.</small>
+      </span>
+    </a>
+    <a href={`${repoUrl}/tree/main/examples/vanilla/audio`}>
+      <span>
+        <strong>Codigo fuente de audio adapters</strong>
+        <small>Reproduccion de assets con Howler mas notas y secuencias con Tone.</small>
+      </span>
+    </a>
+  </nav>
+</DocsSection>
+
+<DocsSection id="animation-loop" index="11" title="Loop de animacion">
+  <p>
+    El loop de runtime reporta tiempo transcurrido en segundos. Manten los cambios de
+    estado dentro de <code>update</code> y el trabajo sobre canvas dentro de
+    <code>draw</code>; llama a <code>clearCanvas()</code> antes de renderizar el siguiente frame.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.runtime} />
+</DocsSection>
+
+<DocsSection id="input-motion" index="12" title="Input y movimiento">
+  <p>
+    Los trackers de teclado y puntero se enlazan a un target explicito.
+    <code>MassBody</code>, las utilidades de angulo, las pruebas de colision, las
+    particulas y la conversion entre grilla y canvas permanecen desacopladas del render.
+  </p>
+</DocsSection>
+
+<DocsSection id="state-sprites" index="13" title="Estados y sprites">
+  <p>
+    El sprite animator selecciona IDs de frame; la state machine valida transiciones.
+    Ninguno de los dos dibuja por si mismo, asi que ambos son faciles de testear y de
+    reutilizar.
+  </p>
+</DocsSection>
+
+<DocsSection id="game-architecture" index="14" title="Construye un juego pequeno">
+  <p>
+    Una escena jugable sigue el mismo ciclo explicito de redibujado con cuatro
+    responsabilidades conectadas. Lee input, avanza la simulacion con elapsed,
+    resuelve colisiones y luego dibuja el estado resultante.
+  </p>
+  <div class="docs-game-cycle" aria-label="Arquitectura de juego pequeno">
+    <div>
+      <span>01</span><strong>Input</strong><small>Lee teclado, puntero o touch.</small>
+    </div>
+    <div>
+      <span>02</span><strong>Update</strong><small>Mueve actores usando tiempo transcurrido.</small>
+    </div>
+    <div>
+      <span>03</span><strong>Resolve</strong><small>Aplica colisiones, score y reglas.</small>
+    </div>
+    <div>
+      <span>04</span><strong>Render</strong><small>Limpia una vez y dibuja mundo mas HUD.</small>
+    </div>
+  </div>
+  <CodeBlock snippet={docsSnippetMap.gameLoop} />
+  <p>
+    Manten el modelo del juego en objetos y arrays normales. Los helpers de runtime
+    coordinan tiempo e input; los helpers de dibujo visualizan el modelo actual. Asi los
+    estados de pausa, reinicio y victoria siguen legibles.
+  </p>
+  <nav class="docs-game-examples" aria-label="Ejemplos jugables">
+    <a href="/playground/?example=grid-pong">
+      <span>
+        <strong>Grid Pong</strong>
+        <small>Pala por puntero, rival CPU y score al mejor de cinco.</small>
+      </span>
+    </a>
+    <a href="/playground/?example=asteroid-dodge">
+      <span>
+        <strong>Asteroid Dodge</strong>
+        <small>Teclado, touch, disparos, vidas y particulas.</small>
+      </span>
+    </a>
+  </nav>
+</DocsSection>
+
+<DocsSection id="playground" index="15" title="Playground">
+  <p>
+    Edita escenas ejecutables con Monaco Editor y correlas contra el build local actual
+    de la libreria. Cada ejecucion comienza en un frame de preview limpio, de modo que
+    loops, listeners de input y contextos de audio no se filtran entre escenas.
+  </p>
+  <a class="docs-playground-cta" href="/playground/">
+    <span>
+      <strong>Abre el Playground</strong>
+      <small>Estudios de dibujo, sistemas de runtime, cues de audio arcade y juegos jugables.</small>
+    </span>
+  </a>
+</DocsSection>
+
+<DocsSection id="api-reference" index="16" title="Mapa de API">
+  <div class="docs-api-table" role="table" aria-label="Grupos de API">
+    {docsApiGroupsByLocale.es.map(([name, text]) => (
+      <div role="row">
+        <strong role="cell">{name}</strong>
+        <span role="cell">{text}</span>
+      </div>
+    ))}
+  </div>
+</DocsSection>
+
+<DocsSection id="method-reference" index="17" title="Referencia de metodos">
+  <p>
+    Los metodos publicos se agrupan por responsabilidad. Los de dibujo mutan solo el
+    canvas; los helpers de runtime siguen siendo reutilizables sin renderer.
+  </p>
+  <div class="docs-method-groups">
+    {docsMethodGroupsByLocale.es.map((group) => (
+      <section>
+        <h3>{group.name}</h3>
+        <div>
+          {group.methods.map(([signature, text]) => (
+            <div class="docs-method-row">
+              <code>{signature}</code>
+              <span>{text}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</DocsSection>
+
+<DocsSection id="recipes" index="18" title="Recetas">
+  <p>
+    Abre una escena funcional directo en el Playground, inspecciona ambos archivos y
+    cambia la pieza mas pequena posible.
+  </p>
+  <nav class="docs-recipes" aria-label="Recetas del Playground">
+    {docsRecipesByLocale.es.map(([title, text, example]) => (
+      <a href={`/playground/?example=${example}`}>
+        <span>
+          <strong>{title}</strong>
+          <small>{text}</small>
+        </span>
+      </a>
+    ))}
+  </nav>
+</DocsSection>
+
+<DocsSection id="errors" index="19" title="Errores y validacion">
+  <p>
+    Las configuraciones y los inputs de dibujo fallan cerca del call site. Las
+    transiciones booleanas de estado son la excepcion: una transicion invalida es flujo
+    esperado y no lanza errores.
+  </p>
+  <div class="docs-error-table" role="table" aria-label="Errores comunes">
+    {docsErrorRowsByLocale.es.map(([name, resolution]) => (
+      <div role="row">
+        <strong role="cell">{name}</strong>
+        <span role="cell">{resolution}</span>
+      </div>
+    ))}
+  </div>
+</DocsSection>
+
+<DocsSection id="performance" index="20" title="Notas de performance">
+  <p>
+    La libreria favorece codigo Canvas legible. Estos habitos mantienen escenas pequenas
+    responsivas sin introducir un scene graph ni una abstraccion de renderer.
+  </p>
+  <ul class="docs-performance-list">
+    {docsPerformanceNotesByLocale.es.map(([name, text]) => (
+      <li>
+        <strong>{name}</strong>
+        <span>{text}</span>
+      </li>
+    ))}
+  </ul>
+</DocsSection>

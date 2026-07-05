@@ -235,6 +235,8 @@ if (editorHost !== null) {
       "GridCanvasSystem.runtime.createPointerTracker(grid.canvas)",
     ],
     ["canvasToGrid", "GridCanvasSystem.runtime.canvasToGrid(point, { cellSize })"],
+    ["createArcadeAudio", 'createArcadeAudio({ masterVolume: 0.72 })'],
+    ["playLoop", 'await audio.playLoop("patrol")'],
   ] as const;
 
   monaco.languages.registerCompletionItemProvider("javascript", {

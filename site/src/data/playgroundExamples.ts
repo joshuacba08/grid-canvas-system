@@ -1,7 +1,7 @@
 export interface PlaygroundExample {
   id: string;
   title: string;
-  group: "Drawing" | "Runtime" | "Input" | "Systems" | "Games";
+  group: "Drawing" | "Runtime" | "Input" | "Systems" | "Games" | "Audio";
   description: string;
   html: string;
   javascript: string;
@@ -100,6 +100,148 @@ GridCanvasSystem.runtime.createAnimationLoop({
       }
     );
   }
+});`,
+  },
+  {
+    id: "audio-arcade",
+    title: "Audio Arcade",
+    group: "Audio",
+    description:
+      "Unlock browser audio and trigger retro SFX plus a looping patrol cue.",
+    html: `<section class="demo-shell">
+  <p id="audio-status" class="demo-status">Click a button to unlock browser audio.</p>
+  <canvas id="canvas" aria-label="Audio Arcade preview"></canvas>
+  <div class="demo-actions" aria-label="Audio controls">
+    <button id="audio-shoot" type="button">Shoot</button>
+    <button id="audio-pickup" type="button">Pickup</button>
+    <button id="audio-loop" type="button">Patrol Loop</button>
+    <button id="audio-stop" type="button">Stop</button>
+    <button id="audio-mute" type="button">Mute</button>
+  </div>
+</section>`,
+    javascript: `const grid = new GridCanvasSystem("canvas", {
+  width: 640,
+  height: 360,
+  cellSize: 20,
+  majorStep: 40,
+  backgroundColor: "#050607",
+  gridColor: "rgba(77, 169, 255, 0.14)"
+});
+
+const audio = createArcadeAudio({ masterVolume: 0.72 });
+const statusNode = document.querySelector("#audio-status");
+
+let activeLoopId;
+let activePreset = "none";
+let muted = false;
+let time = 0;
+let flash = 0;
+
+function setStatus(message) {
+  statusNode.textContent = message;
+}
+
+GridCanvasSystem.runtime.createAnimationLoop({
+  autoStart: true,
+  maxElapsed: 0.05,
+  update(elapsed) {
+    time += elapsed;
+    flash = Math.max(0, flash - elapsed * 2.4);
+  },
+  draw() {
+    const pulse = GridCanvasSystem.runtime.oscillate01(time, 2.2);
+
+    grid.clearCanvas();
+    grid.drawBarIndicator("VOL", 18, 18, 88, 10, muted ? 0 : 72, 100, {
+      fillColor: muted ? "#ff5c7a" : "#4da9ff",
+      strokeColor: "#e8f7ef",
+      textColor: "#e8f7ef",
+      font: "11px monospace"
+    });
+    grid.drawBarIndicator("LOOP", 18, 40, 88, 10, activePreset === "none" ? 0 : 100, 100, {
+      fillColor: "#00d43b",
+      strokeColor: "#e8f7ef",
+      textColor: "#e8f7ef",
+      font: "11px monospace"
+    });
+    grid.drawShip({ x: 320, y: 176 }, 46, {
+      rotation: -Math.PI / 2,
+      curve1: 0.42,
+      curve2: 0.8,
+      thruster: activePreset !== "none",
+      fillColor: "#101722",
+      strokeColor: "#e8f7ef",
+      lineWidth: 2
+    });
+    grid.drawGhost({ x: 154, y: 176 + Math.sin(time * 2) * 5 }, 28 + pulse * 2, {
+      feet: 5,
+      fillColor: muted ? "#ff5c7a" : "#00d43b",
+      strokeColor: "#e8f7ef",
+      lineWidth: 1
+    });
+    grid.drawProjectile({ x: 320 + flash * 180, y: 98 }, 8 + flash * 6, 0.74, {
+      fillColor: "#4da9ff",
+      strokeColor: "#e8f7ef",
+      lineWidth: 1
+    });
+    grid.drawMessage("AUDIO ARCADE", activePreset === "none" ? "retro SFX ready" : "patrol loop running", {
+      x: 320,
+      y: 48
+    });
+  }
+});
+
+document.querySelector("#audio-shoot").addEventListener("click", async () => {
+  try {
+    await audio.playShoot();
+    flash = 1;
+    setStatus("Played shoot SFX.");
+  } catch (error) {
+    setStatus(error instanceof Error ? error.message : String(error));
+  }
+});
+
+document.querySelector("#audio-pickup").addEventListener("click", async () => {
+  try {
+    await audio.playPickup();
+    flash = 0.7;
+    setStatus("Played pickup SFX.");
+  } catch (error) {
+    setStatus(error instanceof Error ? error.message : String(error));
+  }
+});
+
+document.querySelector("#audio-loop").addEventListener("click", async () => {
+  try {
+    if (activeLoopId !== undefined) {
+      audio.stopLoop(activeLoopId);
+    }
+
+    activeLoopId = await audio.playLoop("patrol");
+    activePreset = "patrol";
+    setStatus("Patrol loop running.");
+  } catch (error) {
+    setStatus(error instanceof Error ? error.message : String(error));
+  }
+});
+
+document.querySelector("#audio-stop").addEventListener("click", () => {
+  if (activeLoopId !== undefined) {
+    audio.stopLoop(activeLoopId);
+    activeLoopId = undefined;
+  }
+
+  activePreset = "none";
+  setStatus("Stopped the active loop.");
+});
+
+document.querySelector("#audio-mute").addEventListener("click", () => {
+  muted = audio.mute();
+  setStatus(muted ? "Muted arcade audio." : "Audio unmuted.");
+});
+
+window.addEventListener("beforeunload", () => {
+  void audio.dispose();
 });`,
   },
   {

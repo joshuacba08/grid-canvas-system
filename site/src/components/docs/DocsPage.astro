@@ -1,0 +1,184 @@
+---
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Copy,
+  GitFork,
+  Menu,
+  Play,
+  Search,
+  X,
+} from "@lucide/astro";
+import { getEntry, render } from "astro:content";
+
+import {
+  docsShellByLocale,
+  type DocsLocale,
+} from "../../data/docsContent";
+import { libraryVersion } from "../../data/siteRelease";
+import "../../styles/global.css";
+import "../../styles/docs.css";
+
+interface Props {
+  locale: DocsLocale;
+}
+
+const { locale } = Astro.props;
+const shell = docsShellByLocale[locale];
+const entryId = `${locale}/getting-started`;
+const entry = await getEntry("docs", entryId);
+const fallbackModules = import.meta.glob("../../content/docs/**/*.mdx");
+const fallbackPath = `../../content/docs/${locale}/getting-started.mdx`;
+let Content: any;
+
+if (entry !== undefined) {
+  ({ Content } = await render(entry));
+} else {
+  const fallbackLoader = fallbackModules[fallbackPath];
+
+  if (fallbackLoader === undefined) {
+    throw new Error(`Missing docs content entry for locale "${locale}"`);
+  }
+
+  const fallbackModule = (await fallbackLoader()) as {
+    default: any;
+  };
+
+  Content = fallbackModule.default;
+}
+---
+
+<!doctype html>
+<html lang={shell.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={shell.metaDescription} />
+    <title>{shell.pageTitle}</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap"
+    />
+  </head>
+  <body class="docs-page">
+    <header class="docs-topbar">
+      <div class="docs-topbar-inner">
+        <button
+          class="docs-menu-button"
+          type="button"
+          aria-label="Open documentation navigation"
+          aria-expanded="false"
+          data-docs-menu
+        >
+          <Menu class="menu-open-icon" size={18} aria-hidden="true" />
+          <X class="menu-close-icon" size={18} aria-hidden="true" />
+        </button>
+        <a class="brand docs-brand" href="/" aria-label="Grid Canvas System home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Grid Canvas System</span>
+          <b>{shell.docsBadge}</b>
+        </a>
+        <div class="docs-top-actions">
+          <a class="docs-locale-switch" href={shell.alternatePath}>{shell.alternateLabel}</a>
+          <a class="docs-playground-link" href="/playground/">
+            <Play size={13} fill="currentColor" aria-hidden="true" />
+            <span>{shell.playgroundLabel}</span>
+          </a>
+          <span class="docs-version">v{libraryVersion}</span>
+          <a class="docs-icon-link" href="https://github.com/joshuacba08/grid-canvas-system" aria-label={shell.repoAria}>
+            <GitFork size={17} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar" data-docs-sidebar>
+        <label class="docs-search">
+          <Search size={15} aria-hidden="true" />
+          <span class="sr-only">Filter documentation</span>
+          <input type="search" placeholder={shell.searchPlaceholder} data-docs-search />
+          <kbd>/</kbd>
+        </label>
+        <nav aria-label="Documentation sections">
+          {
+            shell.navigation.map((group) => (
+              <section class="docs-nav-group" data-docs-group>
+                <h2>{group.label}</h2>
+                {group.links.map(([label, href]) => (
+                  <a class="docs-nav-link" href={href} data-docs-link>
+                    {label}
+                  </a>
+                ))}
+              </section>
+            ))
+          }
+          <p class="docs-search-empty" data-docs-empty hidden>{shell.searchEmpty}</p>
+        </nav>
+      </aside>
+
+      <main class="docs-content">
+        <article id="docs-article" class="docs-article">
+          <div class="docs-breadcrumbs">
+            <a href={shell.currentPath}>{shell.breadcrumbs.root}</a>
+            <span>/</span>
+            <span>{shell.breadcrumbs.current}</span>
+          </div>
+
+          <header class="docs-article-header" id="overview">
+            <div>
+              <p class="docs-kicker">{shell.introKicker}</p>
+              <h1>{shell.introTitle}</h1>
+              <p class="docs-intro">{shell.introText}</p>
+            </div>
+            <button
+              class="docs-copy-page copy-button"
+              type="button"
+              data-copy-target="docs-article"
+              data-tooltip="Copy page"
+              aria-label={shell.copyPageLabel}
+            >
+              <Copy class="copy-icon" size={15} aria-hidden="true" />
+              <Check class="check-icon" size={15} aria-hidden="true" />
+            </button>
+          </header>
+
+          <div class="docs-callout">
+            <strong>{shell.callout.title}</strong>
+            <p>{shell.callout.text}</p>
+          </div>
+
+          <Content />
+
+          <nav class="docs-pagination" aria-label="Documentation pagination">
+            <a href="/">
+              <ArrowLeft size={16} aria-hidden="true" />
+              <span><small>{shell.pagination.backLabel}</small>{shell.pagination.backText}</span>
+            </a>
+            <a href="/playground/">
+              <span><small>{shell.pagination.nextLabel}</small>{shell.pagination.nextText}</span>
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </nav>
+        </article>
+      </main>
+
+      <aside class="docs-toc" aria-label={shell.tocLabel}>
+        <h2>{shell.tocLabel}</h2>
+        <nav>
+          {shell.toc.map(([label, href]) => <a href={href}>{label}</a>)}
+        </nav>
+      </aside>
+    </div>
+
+    <script>
+      import "../../scripts/copy";
+      import "../../scripts/docs";
+      import "../../scripts/docs-live-examples";
+    </script>
+  </body>
+</html>
