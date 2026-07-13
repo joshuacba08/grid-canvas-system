@@ -225,16 +225,16 @@ function mountAudioArcadeDemo(): void {
 
         try {
           if (action === "shoot") {
-            await audio.playShoot();
             flash = 1;
             setStatus(root, messages.shoot);
+            await audio.playShoot();
             return;
           }
 
           if (action === "pickup") {
-            await audio.playPickup();
             flash = 0.7;
             setStatus(root, messages.pickup);
+            await audio.playPickup();
             return;
           }
 
@@ -243,9 +243,9 @@ function mountAudioArcadeDemo(): void {
               audio.stopLoop(activeLoopId);
             }
 
-            activeLoopId = await audio.playLoop("patrol");
             activePreset = "patrol";
             setStatus(root, messages.loop);
+            activeLoopId = await audio.playLoop("patrol");
             return;
           }
 
@@ -263,6 +263,11 @@ function mountAudioArcadeDemo(): void {
           muted = audio.mute();
           setStatus(root, muted ? messages.muteOn : messages.muteOff);
         } catch (error) {
+          if (action === "loop") {
+            activeLoopId = undefined;
+            activePreset = "none";
+          }
+
           setStatus(root, error instanceof Error ? error.message : String(error));
         }
       });
@@ -409,38 +414,40 @@ function mountAudioAdaptersDemo(): void {
 
         try {
           if (action === "asset") {
+            assetFlash = 1;
+            setStatus(root, messages.asset);
             const audio = await ensureAssetAudio();
 
             audio.play("beep");
-            assetFlash = 1;
-            setStatus(root, messages.asset);
             return;
           }
 
           if (action === "theme") {
+            themeRunning = true;
+            setStatus(root, messages.theme);
             const music = await ensureToneAudio();
 
             await music.playSequence("theme");
-            themeRunning = true;
-            setStatus(root, messages.theme);
             return;
           }
 
           if (action === "note") {
+            noteFlash = 1;
+            setStatus(root, messages.note);
             const music = await ensureToneAudio();
 
             await music.trigger("lead", "A4", "8n");
-            noteFlash = 1;
-            setStatus(root, messages.note);
             return;
           }
 
-          const music = await ensureToneAudio();
-
-          music.stopSequence("theme");
+          toneAudio?.stopSequence("theme");
           themeRunning = false;
           setStatus(root, messages.stop);
         } catch (error) {
+          if (action === "theme") {
+            themeRunning = false;
+          }
+
           setStatus(root, error instanceof Error ? error.message : String(error));
         }
       });

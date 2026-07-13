@@ -1,0 +1,264 @@
+---
+import { ArrowRight, GitFork, Play } from "@lucide/astro";
+
+import {
+  getTutorialAlternateLocale,
+  getTutorialBasePath,
+  getTutorialTrackPath,
+  getTrackOrder,
+  tutorialsContentByLocale,
+  type TutorialLocale,
+} from "../../data/tutorialsContent";
+import { libraryVersion } from "../../data/siteRelease";
+import { pacmanTutorialByLocale } from "../../data/pacmanTutorial";
+import "../../styles/global.css";
+import "../../styles/docs.css";
+import "../../styles/tutorials.css";
+
+interface Props {
+  locale: TutorialLocale;
+}
+
+const { locale } = Astro.props;
+const content = tutorialsContentByLocale[locale];
+const pacman = pacmanTutorialByLocale[locale];
+const pacmanHref = locale === "es" ? "/es/tutorials/pacman/" : "/tutorials/pacman/";
+const pacmanProjectPill = locale === "es" ? "Proyecto" : "Project";
+const pacmanBuildLabel = locale === "es" ? "Vas a construir" : "You will build";
+const alternateLocale = getTutorialAlternateLocale(locale);
+const alternatePath = getTutorialBasePath(alternateLocale);
+const alternateLabel = alternateLocale === "en" ? "EN" : "ES";
+const levels = getTrackOrder().map((level) => content.tracks[level]);
+const learningLoop =
+  locale === "es"
+    ? [
+        ["01", "Entiende", "Primero ves que problema resuelve cada pieza."],
+        ["02", "Construye", "Despues escribes codigo pequeno y comprobable."],
+        ["03", "Transforma", "Al final lo conviertes en una escena tuya."],
+      ]
+    : [
+        ["01", "Understand", "First see the problem each piece solves."],
+        ["02", "Build", "Then write small, verifiable code."],
+        ["03", "Transform", "Finally turn it into a scene of your own."],
+      ];
+---
+
+<!doctype html>
+<html lang={content.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content={`${content.hub.heroTitle} ${content.hub.scopeText}`}
+    />
+    <title>{content.pageTitle}</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap"
+    />
+  </head>
+  <body class="docs-page tutorials-page">
+    <header class="docs-topbar tutorials-topbar">
+      <div class="docs-topbar-inner">
+        <a class="brand docs-brand" href="/" aria-label="Grid Canvas System home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>{content.topbarTitle}</span>
+          <b>{content.siteBadge}</b>
+        </a>
+        <div class="docs-top-actions">
+          <a class="docs-locale-switch" href={alternatePath}>{alternateLabel}</a>
+          <a class="docs-playground-link" href="/playground/">
+            <Play size={13} fill="currentColor" aria-hidden="true" />
+            <span>{content.playgroundLabel}</span>
+          </a>
+          <span class="docs-version">v{libraryVersion}</span>
+          <a
+            class="docs-icon-link"
+            href="https://github.com/joshuacba08/grid-canvas-system"
+            aria-label={content.repoAria}
+          >
+            <GitFork size={17} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="tutorials-hub">
+      <section class="tutorials-hero-panel">
+        <div class="tutorials-hero-copy">
+          <p class="tutorials-eyebrow">{content.hub.heroKicker}</p>
+          <h1>{content.hub.heroTitle}</h1>
+          <p>{content.hub.heroText}</p>
+          <a class="tutorial-hero-cta" href={getTutorialTrackPath(locale, "basic")}>
+            <Play size={15} fill="currentColor" aria-hidden="true" />
+            <span
+              >{
+                locale === "es" ? "Crear mi primera escena" : "Build my first scene"
+              }</span
+            >
+          </a>
+        </div>
+        <ol class="tutorial-learning-loop">
+          {
+            learningLoop.map(([number, title, description]) => (
+              <li>
+                <span>{number}</span>
+                <div>
+                  <strong>{title}</strong>
+                  <small>{description}</small>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </section>
+
+      <div class="tutorials-hero-meta">
+        <div>
+          <strong>{content.versionLabel}</strong>
+          <span>v{libraryVersion}</span>
+        </div>
+        <div>
+          <strong>{content.hub.scopeTitle}</strong>
+          <span>{content.hub.scopeText}</span>
+        </div>
+        <div>
+          <strong>{content.hub.orderTitle}</strong>
+          <span>{content.hub.orderText}</span>
+        </div>
+      </div>
+
+      <section class="tutorials-section">
+        <div class="tutorials-section-heading">
+          <p class="tutorials-eyebrow">{pacman.project.label}</p>
+          <h2>{pacman.tagline}</h2>
+        </div>
+        <div class="tutorial-card-grid">
+          <article class="tutorial-card is-advanced is-featured">
+            <div class="tutorial-card-top">
+              <span class="tutorial-level-pill is-advanced">{pacmanProjectPill}</span>
+              <span class="tutorial-card-duration">
+                {content.stepLabels.duration}: {pacman.duration}
+              </span>
+            </div>
+            <h3>{pacman.title}</h3>
+            <p>{pacman.summary}</p>
+            <div class="tutorial-card-build">
+              <strong>{pacmanBuildLabel}</strong>
+              <span>{pacman.project.title}</span>
+            </div>
+            <div class="tutorial-card-meta">
+              <strong>{content.stepLabels.audience}</strong>
+              <span>{pacman.audience}</span>
+            </div>
+            <div class="tutorial-card-coverage">
+              {pacman.coverage.map((item) => <span>{item}</span>)}
+            </div>
+            <a class="tutorial-start-link" href={pacmanHref}>
+              <span>{content.ctaLabel}</span>
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </article>
+        </div>
+      </section>
+
+      <section class="tutorials-section">
+        <div class="tutorials-section-heading">
+          <p class="tutorials-eyebrow">{content.siteBadge}</p>
+          <h2>{content.summaryLabel}</h2>
+        </div>
+        <div class="tutorial-card-grid">
+          {
+            levels.map((track) => (
+              <article
+                class:list={[
+                  "tutorial-card",
+                  `is-${track.level}`,
+                  track.level === "basic" && "is-featured",
+                ]}
+              >
+                <div class="tutorial-card-top">
+                  <span class:list={["tutorial-level-pill", `is-${track.level}`]}>
+                    {content.levelLabels[track.level]}
+                  </span>
+                  <span class="tutorial-card-duration">
+                    {content.stepLabels.duration}: {track.duration}
+                  </span>
+                </div>
+                <h3>{track.title}</h3>
+                <p>{track.summary}</p>
+                <div class="tutorial-card-build">
+                  <strong>
+                    {locale === "es" ? "Vas a construir" : "You will build"}
+                  </strong>
+                  <span>
+                    {track.project?.title ??
+                      (locale === "es"
+                        ? "Una parte funcional de tu propio proyecto"
+                        : "A working slice of your own project")}
+                  </span>
+                </div>
+                <div class="tutorial-card-meta">
+                  <strong>{content.stepLabels.audience}</strong>
+                  <span>{track.audience}</span>
+                </div>
+                <div class="tutorial-card-coverage">
+                  {track.coverage.map((item) => (
+                    <span>{item}</span>
+                  ))}
+                </div>
+                <a
+                  class="tutorial-start-link"
+                  href={getTutorialTrackPath(locale, track.level)}
+                >
+                  <span>{content.ctaLabel}</span>
+                  <ArrowRight size={16} aria-hidden="true" />
+                </a>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="tutorials-section">
+        <div class="tutorials-section-heading">
+          <p class="tutorials-eyebrow">{content.coverageTitle}</p>
+          <h2>{content.hub.scopeTitle}</h2>
+        </div>
+        <div
+          class="tutorial-coverage-table"
+          role="table"
+          aria-label={content.coverageTitle}
+        >
+          <div class="tutorial-coverage-head" role="row">
+            <strong role="cell">{content.coverageTableHeaders.feature}</strong>
+            <strong role="cell">{content.coverageTableHeaders.level}</strong>
+            <strong role="cell">{content.coverageTableHeaders.note}</strong>
+          </div>
+          {
+            content.coverageRows.map((row) => (
+              <div class="tutorial-coverage-row" role="row">
+                <span role="cell">{row.feature}</span>
+                <span role="cell">
+                  <b class:list={["tutorial-level-pill", `is-${row.level}`]}>
+                    {content.levelLabels[row.level]}
+                  </b>
+                </span>
+                <small role="cell">{row.note}</small>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <nav class="tutorials-hub-footer" aria-label="Tutorial navigation">
+        <a href="/">{content.backHomeLabel}</a>
+        <a href={content.docsPath}>{content.siteBadge}</a>
+      </nav>
+    </main>
+  </body>
+</html>

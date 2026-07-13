@@ -57,6 +57,8 @@ interface DocsShellConfig {
   repoAria: string;
   searchEmpty: string;
   searchPlaceholder: string;
+  tutorialsLabel: string;
+  tutorialsPath: string;
   toc: Array<[string, string]>;
   tocLabel: string;
 }
@@ -294,6 +296,7 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
           ["Recipes", "#recipes"],
           ["Errors", "#errors"],
           ["Performance", "#performance"],
+          ["Tutorials", "/tutorials/"],
           ["Playground", "/playground/"],
           ["Live examples", "/#examples"],
           ["Release notes", `${repoUrl}/blob/main/CHANGELOG.md`],
@@ -311,6 +314,8 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
     repoAria: "Open GitHub repository",
     searchEmpty: "No matching pages.",
     searchPlaceholder: "Filter docs",
+    tutorialsLabel: "Tutorials",
+    tutorialsPath: "/tutorials/",
     toc: [
       ["Overview", "#overview"],
       ["Installation", "#installation"],
@@ -402,6 +407,7 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
           ["Recetas", "#recipes"],
           ["Errores", "#errors"],
           ["Performance", "#performance"],
+          ["Tutoriales", "/es/tutorials/"],
           ["Playground", "/playground/"],
           ["Ejemplos en vivo", "/#examples"],
           ["Notas de version", `${repoUrl}/blob/main/CHANGELOG.md`],
@@ -419,6 +425,8 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
     repoAria: "Abrir repositorio en GitHub",
     searchEmpty: "No hay coincidencias.",
     searchPlaceholder: "Filtrar docs",
+    tutorialsLabel: "Tutoriales",
+    tutorialsPath: "/es/tutorials/",
     toc: [
       ["Resumen", "#overview"],
       ["Instalacion", "#installation"],

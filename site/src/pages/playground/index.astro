@@ -1,5 +1,5 @@
 ---
-import { BookOpen, Check, Copy, Play, RotateCcw } from "@lucide/astro";
+import { BookOpen, Check, Copy, FileBraces, Play, RotateCcw } from "@lucide/astro";
 
 import { playgroundExamples } from "../../data/playgroundExamples";
 import "../../styles/global.css";
@@ -41,6 +41,9 @@ import "../../styles/playground.css";
                 <option value={example.id}>{example.title}</option>
               ))
             }
+            <option value="page-example" data-page-example-option hidden>
+              Page example
+            </option>
           </select>
         </label>
         <button
@@ -82,9 +85,23 @@ import "../../styles/playground.css";
       <aside class="playground-explorer" aria-label="Playground examples">
         <header>
           <span>Examples</span>
-          <b>{String(playgroundExamples.length).padStart(2, "0")}</b>
+          <b data-example-count>{String(playgroundExamples.length).padStart(2, "0")}</b>
         </header>
         <nav>
+          <button
+            type="button"
+            class="example-nav-item page-example-nav-item"
+            data-example-id="page-example"
+            data-page-example-button
+            aria-pressed="false"
+            hidden
+          >
+            <FileBraces size={17} aria-hidden="true" />
+            <span>
+              <strong data-page-example-title>Page example</strong>
+              <small>Loaded from page</small>
+            </span>
+          </button>
           {
             playgroundExamples.map((example, index) => (
               <button

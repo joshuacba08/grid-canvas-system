@@ -12,6 +12,9 @@ export default defineConfig({
       // Monaco is intentionally isolated to the Playground route.
       chunkSizeWarningLimit: 4000,
     },
+    optimizeDeps: {
+      include: ["howler", "tone"],
+    },
     resolve: {
       alias: {
         "grid-canvas-system": fileURLToPath(

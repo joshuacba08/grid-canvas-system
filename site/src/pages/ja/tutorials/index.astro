@@ -1,0 +1,226 @@
+---
+import { ArrowRight, GitFork, Play } from "@lucide/astro";
+
+import {
+  getTutorialTrackPath,
+  getTrackOrder,
+  tutorialsContentByLocale,
+} from "../../../data/tutorialsContent";
+import { pacmanTutorialByLocale } from "../../../data/pacmanTutorial";
+import { libraryVersion } from "../../../data/siteRelease";
+import "../../../styles/global.css";
+import "../../../styles/docs.css";
+import "../../../styles/tutorials.css";
+
+const english = tutorialsContentByLocale.en;
+const levels = getTrackOrder().map((level) => ({
+  level,
+  track: english.tracks[level],
+}));
+const pacman = pacmanTutorialByLocale.ja;
+const coverageRows = [
+  [
+    "Core canvas と grid setup",
+    "Basic",
+    "セットアップ、HiDPI、label、clear の基本を順番に確認します。",
+  ],
+  [
+    "Pixel Sprite v2 と drawing",
+    "Basic",
+    "compiled sprite、HUD、shape helper を実際に描きながら覚えます。",
+  ],
+  [
+    "Fixed-step runtime と tilemaps",
+    "Intermediate",
+    "deterministic update、collision、tilemap の組み合わせを学びます。",
+  ],
+  [
+    "Scene manager と audio",
+    "Advanced",
+    "scene flow、Audio Arcade、Howler/Tone adapter の入口を整理します。",
+  ],
+  [
+    "Migration と package verification",
+    "Advanced",
+    "stable contract、migration、release 前チェックまで含めます。",
+  ],
+];
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content={`Grid Canvas System v${libraryVersion} の全体像を、basic / intermediate / advanced の学習ハブとして案内します。`}
+    />
+    <title>チュートリアル / Grid Canvas System</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Pixel&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+    />
+  </head>
+  <body class="docs-page tutorials-page">
+    <header class="docs-topbar tutorials-topbar">
+      <div class="docs-topbar-inner">
+        <a class="brand docs-brand" href="/ja/" aria-label="Grid Canvas System home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>Grid Canvas System</span>
+          <b>チュートリアル</b>
+        </a>
+        <div class="docs-top-actions">
+          <a class="docs-locale-switch" href="/tutorials/">EN</a>
+          <a class="docs-tutorials-link" href="/es/tutorials/">
+            <span>ES</span>
+          </a>
+          <a class="docs-playground-link" href="/playground/">
+            <Play size={13} fill="currentColor" aria-hidden="true" />
+            <span>Playground</span>
+          </a>
+          <span class="docs-version">v{libraryVersion}</span>
+          <a
+            class="docs-icon-link"
+            href="https://github.com/joshuacba08/grid-canvas-system"
+            aria-label="Open GitHub repository"
+          >
+            <GitFork size={17} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="tutorials-hub">
+      <section class="tutorials-hero-panel">
+        <p class="tutorials-eyebrow">Tutorial hub for v{libraryVersion}</p>
+        <h1>学びたい深さから始めて、順番に進められる入口です。</h1>
+        <p>
+          このハブでは 3 つのレベルに分けて Grid Canvas System の主要機能を学べます。
+          basic は最初の scene まで、intermediate は deterministic runtime と
+          tilemap、advanced は scene flow と audio、 そして release
+          前の確認までを案内します。
+        </p>
+        <div class="tutorials-hero-meta">
+          <div>
+            <strong>対象バージョン</strong>
+            <span>v{libraryVersion}</span>
+          </div>
+          <div>
+            <strong>学べる範囲</strong>
+            <span>
+              core canvas、Pixel Sprite v2、runtime helper、tilemap、scene
+              manager、audio lane までを順番に辿れます。
+            </span>
+          </div>
+          <div>
+            <strong>言語メモ</strong>
+            <span>
+              下のパックマン・プロジェクトは日本語で完全に提供しています。3
+              つの学習トラックの step ページは現在 English と Español です。
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section class="tutorials-section">
+        <div class="tutorials-section-heading">
+          <p class="tutorials-eyebrow">{pacman.project.label}</p>
+          <h2>{pacman.tagline}</h2>
+        </div>
+        <div class="tutorial-card-grid">
+          <article class="tutorial-card is-advanced is-featured">
+            <div class="tutorial-card-top">
+              <span class="tutorial-level-pill is-advanced">プロジェクト</span>
+              <span class="tutorial-card-duration">所要時間: {pacman.duration}</span>
+            </div>
+            <h3>{pacman.title}</h3>
+            <p>{pacman.summary}</p>
+            <div class="tutorial-card-build">
+              <strong>作るもの</strong>
+              <span>{pacman.project.title}</span>
+            </div>
+            <div class="tutorial-card-meta">
+              <strong>こんな人に</strong>
+              <span>{pacman.audience}</span>
+            </div>
+            <div class="tutorial-card-coverage">
+              {pacman.coverage.map((item) => <span>{item}</span>)}
+            </div>
+            <a class="tutorial-start-link" href="/ja/tutorials/pacman/">
+              <span>チュートリアルを開く</span>
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </article>
+        </div>
+      </section>
+
+      <section class="tutorials-section">
+        <div class="tutorials-section-heading">
+          <p class="tutorials-eyebrow">学習トラック</p>
+          <h2>レベル別に進める</h2>
+        </div>
+        <div class="tutorial-card-grid">
+          {
+            levels.map(({ level, track }) => (
+              <article class:list={["tutorial-card", `is-${level}`]}>
+                <div class="tutorial-card-top">
+                  <span class:list={["tutorial-level-pill", `is-${level}`]}>
+                    {level}
+                  </span>
+                  <span class="tutorial-card-duration">{track.duration}</span>
+                </div>
+                <h3>{track.title}</h3>
+                <p>{track.summary}</p>
+                <div class="tutorial-card-meta">
+                  <strong>こんな時に向いています</strong>
+                  <span>{track.audience}</span>
+                </div>
+                <div class="tutorial-card-coverage">
+                  {track.coverage.map((item) => (
+                    <span>{item}</span>
+                  ))}
+                </div>
+                <a class="tutorial-start-link" href={getTutorialTrackPath("en", level)}>
+                  <span>English track を開く</span>
+                  <ArrowRight size={16} aria-hidden="true" />
+                </a>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="tutorials-section">
+        <div class="tutorials-section-heading">
+          <p class="tutorials-eyebrow">カバレッジ</p>
+          <h2>このハブで何をカバーするか</h2>
+        </div>
+        <div class="tutorial-coverage-table" role="table" aria-label="Coverage map">
+          <div class="tutorial-coverage-head" role="row">
+            <strong role="cell">機能</strong>
+            <strong role="cell">レベル</strong>
+            <strong role="cell">内容</strong>
+          </div>
+          {
+            coverageRows.map(([feature, level, note]) => (
+              <div class="tutorial-coverage-row" role="row">
+                <span role="cell">{feature}</span>
+                <span role="cell">{level}</span>
+                <small role="cell">{note}</small>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <nav class="tutorials-hub-footer" aria-label="Tutorial navigation">
+        <a href="/ja/">ホームへ戻る</a>
+        <a href="/docs/">Docs</a>
+      </nav>
+    </main>
+  </body>
+</html>

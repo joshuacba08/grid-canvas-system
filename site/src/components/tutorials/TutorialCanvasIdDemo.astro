@@ -1,0 +1,205 @@
+---
+import {
+  ArrowRight,
+  CircleCheck,
+  CircleQuestionMark,
+  CircleX,
+  MousePointerClick,
+} from "@lucide/astro";
+
+interface Props {
+  description: string;
+  title: string;
+}
+
+const { description, title } = Astro.props;
+---
+
+<section class="tutorial-id-demo" data-canvas-id-demo data-state="idle">
+  <header class="tutorial-id-demo-heading">
+    <span class="tutorial-challenge-number">Reto</span>
+    <div>
+      <span>Comprueba la conexion</span>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
+  </header>
+
+  <div class="tutorial-id-challenge">
+    <div class="tutorial-id-source" aria-label="HTML de la demostracion">
+      <span class="tutorial-challenge-number">1</span>
+      <div>
+        <strong>Lee el HTML</strong>
+        <code>&lt;canvas id="<b>mi-escena</b>"&gt;&lt;/canvas&gt;</code>
+        <small>La respuesta esta en el valor del atributo <code>id</code>.</small>
+      </div>
+    </div>
+
+    <ArrowRight class="tutorial-challenge-arrow" size={20} aria-hidden="true" />
+
+    <div class="tutorial-id-choices">
+      <span class="tutorial-challenge-number">2</span>
+      <div>
+        <strong>Selecciona una opcion</strong>
+        <p>¿Que texto debe recibir <code>new GridCanvasSystem(...)</code>?</p>
+        <div class="tutorial-id-options" aria-label="Opciones de ID">
+          <button type="button" data-canvas-id-choice="canvas" aria-pressed="false"
+            >"canvas"</button
+          >
+          <button type="button" data-canvas-id-choice="mi-escena" aria-pressed="false"
+            >"mi-escena"</button
+          >
+          <button type="button" data-canvas-id-choice="game" aria-pressed="false"
+            >"game"</button
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tutorial-id-feedback" role="status" aria-live="polite">
+    <CircleQuestionMark class="feedback-idle-icon" size={21} aria-hidden="true" />
+    <CircleX class="feedback-error-icon" size={21} aria-hidden="true" />
+    <CircleCheck class="feedback-success-icon" size={21} aria-hidden="true" />
+    <div>
+      <strong data-id-demo-feedback-title>Tu turno</strong>
+      <p data-id-demo-feedback>
+        Selecciona una opcion. Veras el resultado del lookup y una pista si no coincide.
+      </p>
+    </div>
+  </div>
+
+  <div class="tutorial-id-result">
+    <header>
+      <span>Resultado de tu eleccion</span>
+      <strong data-id-demo-status>Esperando respuesta</strong>
+    </header>
+    <div class="tutorial-id-lookup" aria-live="polite">
+      <code>document.getElementById("<b data-id-demo-selected>?</b>")</code>
+      <ArrowRight size={18} aria-hidden="true" />
+      <strong data-id-demo-lookup>?</strong>
+    </div>
+    <div class="tutorial-id-preview-placeholder" data-id-demo-placeholder>
+      <MousePointerClick size={22} aria-hidden="true" />
+      <span>La escena aparecera cuando conectes el ID correcto.</span>
+    </div>
+    <canvas
+      id="tutorial-id-demo-canvas"
+      data-id-demo-canvas
+      aria-label="Resultado de conectar el canvas"
+      hidden></canvas>
+  </div>
+</section>
+
+<script>
+  import GridCanvasSystem from "grid-canvas-system";
+
+  const root = document.querySelector<HTMLElement>("[data-canvas-id-demo]");
+
+  if (root !== null) {
+    const feedback = root.querySelector<HTMLElement>("[data-id-demo-feedback]");
+    const feedbackTitle = root.querySelector<HTMLElement>(
+      "[data-id-demo-feedback-title]",
+    );
+    const status = root.querySelector<HTMLElement>("[data-id-demo-status]");
+    const selectedValue = root.querySelector<HTMLElement>("[data-id-demo-selected]");
+    const lookupResult = root.querySelector<HTMLElement>("[data-id-demo-lookup]");
+    const placeholder = root.querySelector<HTMLElement>("[data-id-demo-placeholder]");
+    const canvas = root.querySelector<HTMLCanvasElement>("[data-id-demo-canvas]");
+    const milestone = root
+      .closest<HTMLElement>(".tutorial-step")
+      ?.querySelector<HTMLElement>("[data-challenge-milestone]");
+    const buttons = root.querySelectorAll<HTMLButtonElement>("[data-canvas-id-choice]");
+    let connected = false;
+
+    const setText = (
+      title: string,
+      message: string,
+      statusText: string,
+      lookupText: string,
+    ): void => {
+      if (feedbackTitle !== null) feedbackTitle.textContent = title;
+      if (feedback !== null) feedback.textContent = message;
+      if (status !== null) status.textContent = statusText;
+      if (lookupResult !== null) lookupResult.textContent = lookupText;
+    };
+
+    const setResult = (selectedId: string): void => {
+      buttons.forEach((button) => {
+        const selected = button.dataset.canvasIdChoice === selectedId;
+        button.dataset.selected = String(selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+
+      if (selectedValue !== null) {
+        selectedValue.textContent = selectedId;
+      }
+
+      if (selectedId !== "mi-escena") {
+        root.dataset.state = "error";
+        canvas?.setAttribute("hidden", "");
+        placeholder?.removeAttribute("hidden");
+
+        if (selectedId === "canvas") {
+          setText(
+            "Casi: elegiste la etiqueta",
+            '"canvas" dice que tipo de elemento es, pero no lo identifica. Pista: mira el texto verde despues de id=. Intenta otra vez.',
+            "El selector no encuentra ese ID",
+            "null",
+          );
+        } else {
+          setText(
+            "Buen intento: ese ID no existe",
+            `El HTML no contiene id="${selectedId}". Pista: copia exactamente el valor que aparece entre las comillas de id=.`,
+            "El selector no encuentra ese ID",
+            "null",
+          );
+        }
+
+        return;
+      }
+
+      root.dataset.state = "success";
+      placeholder?.setAttribute("hidden", "");
+      canvas?.removeAttribute("hidden");
+
+      if (!connected && canvas !== null) {
+        canvas.id = "mi-escena";
+        const grid = new GridCanvasSystem("mi-escena", {
+          width: 640,
+          height: 300,
+          cellSize: 20,
+          majorStep: 40,
+          backgroundColor: "#050607",
+          gridColor: "rgba(0, 212, 59, 0.28)",
+          gridLabelColor: "#4da9ff",
+        });
+
+        grid.drawShip({ x: 320, y: 165 }, 48, {
+          fillColor: "#101722",
+          strokeColor: "#e8f7ef",
+          thruster: true,
+          thrusterFillColor: "#ffb14a",
+        });
+        connected = true;
+      }
+
+      setText(
+        "Exacto: conectaste ambas partes",
+        "El constructor encontro el HTMLCanvasElement, preparo su contexto 2D y ya puede dibujar. Esa coincidencia exacta es todo el puente.",
+        "Canvas conectado",
+        "HTMLCanvasElement",
+      );
+
+      if (milestone !== undefined && milestone !== null) {
+        milestone.hidden = false;
+      }
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        setResult(button.dataset.canvasIdChoice ?? "");
+      });
+    });
+  }
+</script>

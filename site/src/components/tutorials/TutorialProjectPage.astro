@@ -1,0 +1,336 @@
+---
+import {
+  ArrowLeft,
+  ArrowRight,
+  CircleCheck,
+  GitFork,
+  Play,
+  Rocket,
+} from "@lucide/astro";
+
+import TutorialStep from "./TutorialStep.astro";
+import {
+  pacmanTutorialByLocale,
+  type PacmanTutorialLocale,
+} from "../../data/pacmanTutorial";
+import { libraryVersion } from "../../data/siteRelease";
+import "../../styles/global.css";
+import "../../styles/docs.css";
+import "../../styles/tutorials.css";
+
+interface Props {
+  locale: PacmanTutorialLocale;
+}
+
+const { locale } = Astro.props;
+const tutorial = pacmanTutorialByLocale[locale];
+
+const UI: Record<
+  PacmanTutorialLocale,
+  {
+    audience: string;
+    backHome: string;
+    backToTutorials: string;
+    docsLabel: string;
+    docsPath: string;
+    duration: string;
+    interactive: string;
+    openInPlayground: string;
+    outcomes: string;
+    pageTitle: string;
+    playground: string;
+    prerequisites: string;
+    progressAria: string;
+    progressText: string;
+    progressTitle: string;
+    repoAria: string;
+    resources: string;
+    siteBadge: string;
+    steps: string;
+    topbarTitle: string;
+    tutorialsPath: string;
+    versionLabel: string;
+  }
+> = {
+  en: {
+    audience: "Best for",
+    backHome: "Back home",
+    backToTutorials: "Back to tracks",
+    docsLabel: "Docs",
+    docsPath: "/docs/",
+    duration: "Duration",
+    interactive: "Try it live",
+    openInPlayground: "Open in Playground",
+    outcomes: "Outcomes",
+    pageTitle: "Tutorials / Grid Canvas System",
+    playground: "Playground",
+    prerequisites: "Prerequisites",
+    progressAria: "Tutorial progress",
+    progressText: "0 tasks completed",
+    progressTitle: "Your progress",
+    repoAria: "Open GitHub repository",
+    resources: "Resources",
+    siteBadge: "Tutorials",
+    steps: "Steps",
+    topbarTitle: "Grid Canvas System",
+    tutorialsPath: "/tutorials/",
+    versionLabel: `Designed for v${libraryVersion}`,
+  },
+  es: {
+    audience: "Ideal si quieres",
+    backHome: "Volver al inicio",
+    backToTutorials: "Volver a las rutas",
+    docsLabel: "Docs",
+    docsPath: "/es/docs/",
+    duration: "Duracion",
+    interactive: "Pruebalo en vivo",
+    openInPlayground: "Abrir en Playground",
+    outcomes: "Resultados",
+    pageTitle: "Tutoriales / Grid Canvas System",
+    playground: "Playground",
+    prerequisites: "Prerequisitos",
+    progressAria: "Progreso del tutorial",
+    progressText: "0 tareas completadas",
+    progressTitle: "Tu avance",
+    repoAria: "Abrir repositorio en GitHub",
+    resources: "Recursos",
+    siteBadge: "Tutoriales",
+    steps: "Pasos",
+    topbarTitle: "Grid Canvas System",
+    tutorialsPath: "/es/tutorials/",
+    versionLabel: `Disenado para v${libraryVersion}`,
+  },
+  ja: {
+    audience: "こんな人に",
+    backHome: "ホームへ戻る",
+    backToTutorials: "チュートリアル一覧へ",
+    docsLabel: "ドキュメント",
+    docsPath: "/docs/",
+    duration: "所要時間",
+    interactive: "その場で試す",
+    openInPlayground: "Playground で開く",
+    outcomes: "学べること",
+    pageTitle: "チュートリアル / Grid Canvas System",
+    playground: "Playground",
+    prerequisites: "前提",
+    progressAria: "チュートリアルの進捗",
+    progressText: "0 個のタスクが完了",
+    progressTitle: "進捗",
+    repoAria: "GitHub リポジトリを開く",
+    resources: "リソース",
+    siteBadge: "チュートリアル",
+    steps: "ステップ",
+    topbarTitle: "Grid Canvas System",
+    tutorialsPath: "/ja/tutorials/",
+    versionLabel: `v${libraryVersion} 向け`,
+  },
+};
+
+const ui = UI[locale];
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={tutorial.summary} />
+    <title>{tutorial.title} / {ui.pageTitle}</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap"
+    />
+  </head>
+  <body class="docs-page tutorials-page">
+    <header class="docs-topbar tutorials-topbar">
+      <div class="docs-topbar-inner">
+        <a class="brand docs-brand" href={ui.tutorialsPath} aria-label={ui.siteBadge}>
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>{ui.topbarTitle}</span>
+          <b>{ui.siteBadge}</b>
+        </a>
+        <div class="docs-top-actions">
+          <a class="docs-playground-link" href="/playground/">
+            <Play size={13} fill="currentColor" aria-hidden="true" />
+            <span>{ui.playground}</span>
+          </a>
+          <span class="docs-version">v{libraryVersion}</span>
+          <a
+            class="docs-icon-link"
+            href="https://github.com/joshuacba08/grid-canvas-system"
+            aria-label={ui.repoAria}
+          >
+            <GitFork size={17} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="tutorials-layout">
+      <aside class="docs-sidebar tutorials-sidebar" data-docs-sidebar>
+        <nav aria-label={ui.steps}>
+          <section class="docs-nav-group" data-docs-group>
+            <h2>{ui.steps}</h2>
+            {
+              tutorial.steps.map((step, index) => (
+                <a class="docs-nav-link" href={`#${step.id}`} data-docs-link>
+                  <span>
+                    {String(index + 1).padStart(2, "0")}. {step.title}
+                  </span>
+                  <small>{step.minutes}</small>
+                </a>
+              ))
+            }
+          </section>
+          <section class="docs-nav-group" data-docs-group>
+            <h2>{ui.siteBadge}</h2>
+            <a class="docs-nav-link" href={ui.tutorialsPath} data-docs-link>
+              {ui.backToTutorials}
+            </a>
+            <a class="docs-nav-link" href={ui.docsPath} data-docs-link>
+              {ui.docsLabel}
+            </a>
+          </section>
+        </nav>
+      </aside>
+
+      <main class="tutorials-content">
+        <article class="tutorial-track">
+          <div class="docs-breadcrumbs">
+            <a href={ui.tutorialsPath}>{ui.siteBadge}</a>
+            <span>/</span>
+            <span>{tutorial.title}</span>
+          </div>
+
+          <header class="tutorial-track-header" id="overview">
+            <div class="tutorial-track-headline">
+              <span class="tutorial-level-pill is-advanced">{tutorial.tagline}</span>
+              <h1>{tutorial.title}</h1>
+              <p>{tutorial.summary}</p>
+            </div>
+            <div class="tutorial-track-progress">
+              <div>
+                <strong>{ui.progressTitle}</strong>
+                <span data-tutorial-progress>{ui.progressText}</span>
+              </div>
+              <div
+                class="tutorial-progress-bar"
+                data-tutorial-progress-bar
+                role="progressbar"
+                aria-label={ui.progressAria}
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+              </div>
+            </div>
+            <div class="tutorial-track-meta">
+              <div>
+                <strong>{ui.duration}</strong>
+                <span>{tutorial.duration}</span>
+              </div>
+              <div>
+                <strong>{ui.audience}</strong>
+                <span>{tutorial.audience}</span>
+              </div>
+              <div>
+                <strong>{ui.versionLabel}</strong>
+                <span>v{libraryVersion}</span>
+              </div>
+            </div>
+          </header>
+
+          <section class="tutorial-project-brief">
+            <div class="tutorial-project-icon">
+              <Rocket size={23} aria-hidden="true" />
+            </div>
+            <div>
+              <span>{tutorial.project.label}</span>
+              <h2>{tutorial.project.title}</h2>
+              <p>{tutorial.project.description}</p>
+            </div>
+            <ul>
+              {
+                tutorial.project.deliverables.map((item) => (
+                  <li>
+                    <CircleCheck size={15} aria-hidden="true" />
+                    {item}
+                  </li>
+                ))
+              }
+            </ul>
+          </section>
+
+          <section class="tutorial-summary-block">
+            <div>
+              <h2>{ui.outcomes}</h2>
+              <ul class="tutorial-summary-list is-outcomes">
+                {
+                  tutorial.outcomes.map((item) => (
+                    <li>
+                      <CircleCheck size={17} aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+            <div>
+              <h2>{ui.prerequisites}</h2>
+              <ul class="tutorial-summary-list is-prerequisites">
+                {
+                  tutorial.prerequisites.map((item) => (
+                    <li>
+                      <ArrowRight size={17} aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </section>
+
+          {
+            tutorial.steps.map((step, index) => (
+              <TutorialStep
+                index={index}
+                interactiveLabel={ui.interactive}
+                locale={locale}
+                openInPlaygroundLabel={ui.openInPlayground}
+                resourcesLabel={ui.resources}
+                step={step}
+                totalSteps={tutorial.steps.length}
+              />
+            ))
+          }
+
+          <nav class="tutorial-pagination" aria-label="Tutorial pagination">
+            <a href={ui.tutorialsPath}>
+              <ArrowLeft size={16} aria-hidden="true" />
+              <span>
+                <small>{ui.backToTutorials}</small>
+                {ui.siteBadge}
+              </span>
+            </a>
+            <a href={ui.docsPath}>
+              <span>
+                <small>{ui.docsLabel}</small>
+                {ui.backHome}
+              </span>
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </nav>
+        </article>
+      </main>
+    </div>
+
+    <script>
+      import "../../scripts/docs";
+      import "../../scripts/docs-live-examples";
+      import "../../scripts/tutorials";
+    </script>
+  </body>
+</html>

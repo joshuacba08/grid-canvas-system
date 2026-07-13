@@ -1,0 +1,261 @@
+---
+import { CircleCheck, ExternalLink, Eye, Lightbulb, ListChecks } from "@lucide/astro";
+
+import DocsAudioDemo from "../docs/DocsAudioDemo.astro";
+import DocsCallout from "../docs/DocsCallout.astro";
+import CodeBlock from "../CodeBlock.astro";
+import TutorialCanvasIdDemo from "./TutorialCanvasIdDemo.astro";
+import TutorialMermaid from "./TutorialMermaid.astro";
+import { createPlaygroundLaunchUrl } from "../../data/playgroundLaunch";
+import type { TutorialStep as TutorialStepData } from "../../data/tutorialsContent";
+import { codeToHtml } from "shiki";
+
+interface Props {
+  index: number;
+  interactiveLabel: string;
+  locale: "en" | "es" | "ja";
+  openInPlaygroundLabel: string;
+  resourcesLabel: string;
+  step: TutorialStepData;
+  totalSteps: number;
+}
+
+const {
+  index,
+  interactiveLabel,
+  locale,
+  openInPlaygroundLabel,
+  resourcesLabel,
+  step,
+  totalSteps,
+} = Astro.props;
+const labels =
+  locale === "es"
+    ? {
+        action: "Hazlo ahora",
+        expected: "Lo que deberias ver",
+        milestone: "Meta de este paso",
+        newTab: "abre en una pestaña nueva",
+        step: "Paso",
+        why: "Por que importa",
+      }
+    : locale === "ja"
+      ? {
+          action: "今すぐ作る",
+          expected: "見えるはず",
+          milestone: "このステップの目標",
+          newTab: "新しいタブで開く",
+          step: "ステップ",
+          why: "なぜ重要か",
+        }
+      : {
+          action: "Build it now",
+          expected: "What you should see",
+          milestone: "Step goal",
+          newTab: "opens in a new tab",
+          step: "Step",
+          why: "Why it matters",
+        };
+const codeBlocks =
+  step.codeBlocks ??
+  (step.code === undefined
+    ? []
+    : [
+        {
+          code: step.code,
+          language: "typescript" as const,
+          title: step.codeTitle ?? step.title,
+        },
+      ]);
+const snippets = await Promise.all(
+  codeBlocks.map(async (block, blockIndex) => ({
+    highlighted: await codeToHtml(block.code, {
+      lang: block.language,
+      theme: "vitesse-black",
+    }),
+    id: `${step.id}-code-${blockIndex}`,
+    title: block.title,
+  })),
+);
+const playgroundHref =
+  step.interactive?.kind === "playground"
+    ? step.interactive.files !== undefined
+      ? createPlaygroundLaunchUrl({
+          description: step.interactive.description,
+          html: step.interactive.files.html,
+          javascript: step.interactive.files.javascript,
+          title: step.interactive.title,
+        })
+      : `/playground/?example=${step.interactive.example}`
+    : undefined;
+const challengeMilestone = step.interactive?.kind === "canvas-id";
+---
+
+<section class="tutorial-step" id={step.id}>
+  <div class="tutorial-step-header">
+    <span class="tutorial-step-index">{String(index + 1).padStart(2, "0")}</span>
+    <div>
+      <div class="tutorial-step-meta">
+        {`${labels.step} ${index + 1} / ${totalSteps} · ${step.minutes}`}
+      </div>
+      <h2>{step.title}</h2>
+      {
+        step.question !== undefined && (
+          <p class="tutorial-step-question">{step.question}</p>
+        )
+      }
+    </div>
+  </div>
+  <div class="tutorial-step-body">
+    {step.body.map((paragraph) => <p>{paragraph}</p>)}
+    {
+      step.why !== undefined && (
+        <aside class="tutorial-explanation">
+          <Lightbulb size={18} aria-hidden="true" />
+          <div>
+            <strong>{step.why.title ?? labels.why}</strong>
+            <p>{step.why.text}</p>
+          </div>
+        </aside>
+      )
+    }
+    {
+      step.diagram !== undefined && (
+        <TutorialMermaid
+          caption={step.diagram.caption}
+          source={step.diagram.source}
+          title={step.diagram.title}
+        />
+      )
+    }
+    {
+      step.checklist !== undefined && (
+        <div class="tutorial-action-list">
+          <h3>
+            <ListChecks size={17} aria-hidden="true" />
+            {labels.action}
+          </h3>
+          <div>
+            {step.checklist.map((item, itemIndex) => (
+              <label>
+                <input
+                  id={`${step.id}-task-${itemIndex}`}
+                  type="checkbox"
+                  data-tutorial-check
+                />
+                <span>{item}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )
+    }
+    {snippets.map((snippet) => <CodeBlock snippet={snippet} />)}
+    {
+      step.expected !== undefined && (
+        <aside class="tutorial-expected">
+          <Eye size={18} aria-hidden="true" />
+          <div>
+            <strong>{step.expected.title ?? labels.expected}</strong>
+            <p>{step.expected.text}</p>
+          </div>
+        </aside>
+      )
+    }
+    {
+      step.callout !== undefined && (
+        <DocsCallout title={step.callout.title}>{step.callout.text}</DocsCallout>
+      )
+    }
+    {
+      step.resources !== undefined && (
+        <div class="tutorial-resources">
+          <h3>{resourcesLabel}</h3>
+          <div>
+            {step.resources.map((resource) => (
+              <a
+                href={resource.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${resource.label}, ${labels.newTab}`}
+              >
+                <span>{resource.label}</span>
+                <ExternalLink size={14} aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+        </div>
+      )
+    }
+    {
+      step.interactive?.kind === "canvas-id" && (
+        <TutorialCanvasIdDemo
+          description={step.interactive.description}
+          title={step.interactive.title}
+        />
+      )
+    }
+    {
+      step.interactive !== undefined && step.interactive.kind !== "canvas-id" && (
+        <section class="tutorial-interactive-block">
+          <div class="tutorial-interactive-header">
+            <h3>{interactiveLabel}</h3>
+            <strong>{step.interactive.title}</strong>
+          </div>
+          <p>{step.interactive.description}</p>
+          {step.interactive.kind === "playground" ? (
+            <>
+              <iframe
+                class="tutorial-playground-frame"
+                src={playgroundHref}
+                title={step.interactive.title}
+                loading="lazy"
+              />
+              <a
+                class="tutorial-open-playground"
+                href={playgroundHref}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {openInPlaygroundLabel}
+                <ExternalLink size={14} aria-hidden="true" />
+              </a>
+            </>
+          ) : step.interactive.kind === "audio-demo" ? (
+            <DocsAudioDemo
+              locale={locale === "es" ? "es" : "en"}
+              variant={step.interactive.variant}
+            />
+          ) : null}
+        </section>
+      )
+    }
+    {
+      step.milestone !== undefined && (
+        <footer
+          class:list={[
+            "tutorial-milestone",
+            { "is-challenge-success": challengeMilestone },
+          ]}
+          data-challenge-milestone={challengeMilestone ? true : undefined}
+          hidden={challengeMilestone}
+          aria-live={challengeMilestone ? "polite" : undefined}
+        >
+          <CircleCheck size={19} aria-hidden="true" />
+          <div>
+            <strong>
+              {challengeMilestone
+                ? locale === "es"
+                  ? "Logro desbloqueado"
+                  : locale === "ja"
+                    ? "実績解除"
+                    : "Milestone reached"
+                : labels.milestone}
+            </strong>
+            <span>{step.milestone}</span>
+          </div>
+        </footer>
+      )
+    }
+  </div>
+</section>

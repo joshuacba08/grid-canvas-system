@@ -1,0 +1,218 @@
+---
+import { Maximize2, RotateCcw, X, ZoomIn, ZoomOut } from "@lucide/astro";
+
+interface Props {
+  caption?: string;
+  source: string;
+  title: string;
+}
+
+const { caption, source, title } = Astro.props;
+const diagramId = `tutorial-diagram-${title
+  .toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/(^-|-$)/g, "")}`;
+---
+
+<figure class="tutorial-diagram" data-tutorial-diagram>
+  <figcaption>
+    <div>
+      <span>Mapa visual</span>
+      <strong>{title}</strong>
+    </div>
+    <button
+      type="button"
+      class="tutorial-diagram-expand"
+      data-diagram-open
+      aria-label={`Ampliar diagrama: ${title}`}
+      title="Ampliar diagrama"
+    >
+      <Maximize2 size={17} aria-hidden="true" />
+    </button>
+  </figcaption>
+  <div
+    class="tutorial-diagram-canvas"
+    data-diagram-open-surface
+    role="button"
+    tabindex="0"
+    aria-label={`Ampliar diagrama: ${title}`}
+  >
+    <pre class="mermaid">{source}</pre>
+  </div>
+  {caption !== undefined && <p>{caption}</p>}
+
+  <dialog
+    class="tutorial-diagram-dialog"
+    data-diagram-dialog
+    aria-labelledby={diagramId}
+  >
+    <div class="tutorial-diagram-dialog-shell">
+      <header>
+        <div>
+          <span>Diagrama ampliado</span>
+          <h3 id={diagramId}>{title}</h3>
+        </div>
+        <div class="tutorial-diagram-tools" aria-label="Controles de zoom">
+          <button
+            type="button"
+            data-diagram-action="out"
+            aria-label="Alejar diagrama"
+            title="Alejar"
+          >
+            <ZoomOut size={18} aria-hidden="true" />
+          </button>
+          <output data-diagram-scale>100%</output>
+          <button
+            type="button"
+            data-diagram-action="in"
+            aria-label="Acercar diagrama"
+            title="Acercar"
+          >
+            <ZoomIn size={18} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            data-diagram-action="reset"
+            aria-label="Restablecer zoom"
+            title="Restablecer zoom"
+          >
+            <RotateCcw size={18} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            data-diagram-action="close"
+            aria-label="Cerrar diagrama ampliado"
+            title="Cerrar"
+          >
+            <X size={19} aria-hidden="true" />
+          </button>
+        </div>
+      </header>
+      <div class="tutorial-diagram-stage" data-diagram-stage></div>
+      {caption !== undefined && <p>{caption}</p>}
+    </div>
+  </dialog>
+</figure>
+
+<script>
+  import mermaid from "mermaid";
+
+  mermaid.initialize({
+    startOnLoad: false,
+    securityLevel: "strict",
+    theme: "base",
+    themeVariables: {
+      background: "#07090d",
+      primaryColor: "#101722",
+      primaryTextColor: "#e8f7ef",
+      primaryBorderColor: "#00d43b",
+      lineColor: "#4da9ff",
+      secondaryColor: "#0b1710",
+      tertiaryColor: "#15120b",
+      fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif",
+      fontSize: "14px",
+    },
+  });
+
+  await mermaid.run({
+    nodes: document.querySelectorAll<HTMLElement>(
+      ".tutorial-diagram .mermaid:not([data-processed])",
+    ),
+    suppressErrors: false,
+  });
+
+  document
+    .querySelectorAll<HTMLElement>("[data-tutorial-diagram]")
+    .forEach((diagram) => {
+      if (diagram.dataset.zoomReady === "true") {
+        return;
+      }
+
+      diagram.dataset.zoomReady = "true";
+      const sourceSvg = diagram.querySelector<SVGElement>(
+        ".tutorial-diagram-canvas svg",
+      );
+      const dialog = diagram.querySelector<HTMLDialogElement>("[data-diagram-dialog]");
+      const stage = diagram.querySelector<HTMLElement>("[data-diagram-stage]");
+      const scaleOutput =
+        diagram.querySelector<HTMLOutputElement>("[data-diagram-scale]");
+      const openButton =
+        diagram.querySelector<HTMLButtonElement>("[data-diagram-open]");
+      const openSurface = diagram.querySelector<HTMLElement>(
+        "[data-diagram-open-surface]",
+      );
+      let scale = 1;
+
+      if (
+        sourceSvg === null ||
+        dialog === null ||
+        stage === null ||
+        scaleOutput === null
+      ) {
+        return;
+      }
+
+      const renderScale = (): void => {
+        const expandedSvg = stage.querySelector<SVGElement>("svg");
+
+        if (expandedSvg !== null) {
+          expandedSvg.style.maxWidth = "none";
+          expandedSvg.style.width = `${scale * 100}%`;
+        }
+
+        scaleOutput.value = `${Math.round(scale * 100)}%`;
+      };
+
+      const open = (): void => {
+        const expandedSvg = sourceSvg.cloneNode(true) as SVGElement;
+        expandedSvg.removeAttribute("height");
+        expandedSvg.removeAttribute("width");
+        expandedSvg.setAttribute("aria-hidden", "true");
+        stage.replaceChildren(expandedSvg);
+        scale = 1;
+        renderScale();
+        dialog.showModal();
+      };
+
+      openButton?.addEventListener("click", open);
+      openSurface?.addEventListener("click", open);
+      openSurface?.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          open();
+        }
+      });
+
+      diagram
+        .querySelectorAll<HTMLButtonElement>("[data-diagram-action]")
+        .forEach((button) => {
+          button.addEventListener("click", () => {
+            switch (button.dataset.diagramAction) {
+              case "in":
+                scale = Math.min(2, scale + 0.25);
+                renderScale();
+                break;
+              case "out":
+                scale = Math.max(0.5, scale - 0.25);
+                renderScale();
+                break;
+              case "reset":
+                scale = 1;
+                renderScale();
+                break;
+              case "close":
+                dialog.close();
+                break;
+            }
+          });
+        });
+
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) {
+          dialog.close();
+        }
+      });
+    });
+</script>

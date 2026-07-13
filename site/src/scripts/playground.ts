@@ -12,6 +12,12 @@ import {
   playgroundExamples,
   type PlaygroundExampleId,
 } from "../data/playgroundExamples";
+import {
+  createPlaygroundLaunchUrl,
+  PAGE_PLAYGROUND_EXAMPLE_ID,
+  readPlaygroundLaunch,
+  type PlaygroundLaunch,
+} from "../data/playgroundLaunch";
 
 type FileName = "javascript" | "html";
 
@@ -55,6 +61,16 @@ const consoleOutput = document.querySelector<HTMLOutputElement>(
 );
 const languageLabel = document.querySelector<HTMLElement>("[data-language-label]");
 const description = document.querySelector<HTMLElement>("[data-example-description]");
+const exampleCount = document.querySelector<HTMLElement>("[data-example-count]");
+const pageExampleOption = document.querySelector<HTMLOptionElement>(
+  "[data-page-example-option]",
+);
+const pageExampleButton = document.querySelector<HTMLButtonElement>(
+  "[data-page-example-button]",
+);
+const pageExampleTitle = document.querySelector<HTMLElement>(
+  "[data-page-example-title]",
+);
 const exampleButtons = Array.from(
   document.querySelectorAll<HTMLButtonElement>("[data-example-id]"),
 );
@@ -71,9 +87,10 @@ const filesByExample = Object.fromEntries(
     example.id,
     { javascript: example.javascript, html: example.html },
   ]),
-) as Record<PlaygroundExampleId, ExampleFiles>;
+) as Record<string, ExampleFiles>;
 
-let selectedExample: PlaygroundExampleId = playgroundExamples[0].id;
+let pageLaunch: PlaygroundLaunch | null = null;
+let selectedExample: string = playgroundExamples[0].id;
 let activeFile: FileName = "javascript";
 let pendingFiles: ExampleFiles = { ...filesByExample[selectedExample] };
 let runId = 0;
@@ -81,6 +98,12 @@ let saveTimer = 0;
 
 function isExampleId(value: string): value is PlaygroundExampleId {
   return playgroundExamples.some((example) => example.id === value);
+}
+
+function isAvailableExample(value: string): boolean {
+  return (
+    isExampleId(value) || (value === PAGE_PLAYGROUND_EXAMPLE_ID && pageLaunch !== null)
+  );
 }
 
 function loadSavedState(): SavedPlaygroundState | null {
@@ -126,6 +149,36 @@ function hydrateSavedState(): void {
 }
 
 function applyRequestedExample(): void {
+  pageLaunch = readPlaygroundLaunch(window.location.search);
+
+  if (pageLaunch !== null) {
+    filesByExample[PAGE_PLAYGROUND_EXAMPLE_ID] = {
+      html: pageLaunch.html,
+      javascript: pageLaunch.javascript,
+    };
+    selectedExample = PAGE_PLAYGROUND_EXAMPLE_ID;
+    pendingFiles = { ...filesByExample[selectedExample] };
+
+    if (pageExampleOption !== null) {
+      pageExampleOption.hidden = false;
+      pageExampleOption.textContent = pageLaunch.title;
+    }
+
+    if (pageExampleButton !== null) {
+      pageExampleButton.hidden = false;
+    }
+
+    if (pageExampleTitle !== null) {
+      pageExampleTitle.textContent = pageLaunch.title;
+    }
+
+    if (exampleCount !== null) {
+      exampleCount.textContent = String(playgroundExamples.length + 1).padStart(2, "0");
+    }
+
+    return;
+  }
+
   const requested = new URLSearchParams(window.location.search).get("example");
 
   if (requested !== null && isExampleId(requested)) {
@@ -336,11 +389,18 @@ if (editorHost !== null) {
     }
 
     if (description !== null) {
-      description.textContent = getPlaygroundExample(selectedExample).description;
+      description.textContent =
+        selectedExample === PAGE_PLAYGROUND_EXAMPLE_ID && pageLaunch !== null
+          ? pageLaunch.description
+          : getPlaygroundExample(selectedExample).description;
     }
   }
 
-  function selectExample(id: PlaygroundExampleId): void {
+  function selectExample(id: string): void {
+    if (!isAvailableExample(id)) {
+      return;
+    }
+
     filesByExample[selectedExample] = currentFiles();
     selectedExample = id;
     models.javascript.setValue(filesByExample[id].javascript);
@@ -348,9 +408,11 @@ if (editorHost !== null) {
     editor.setScrollPosition({ scrollTop: 0 });
     updateExampleNavigation();
     showFile("javascript");
-    const url = new URL(window.location.href);
-    url.searchParams.set("example", id);
-    window.history.replaceState(null, "", url);
+    const href =
+      id === PAGE_PLAYGROUND_EXAMPLE_ID && pageLaunch !== null
+        ? createPlaygroundLaunchUrl(pageLaunch)
+        : `/playground/?example=${id}`;
+    window.history.replaceState(null, "", href);
     scheduleSave();
     runCode(currentFiles());
   }
@@ -375,14 +437,14 @@ if (editorHost !== null) {
     button.addEventListener("click", () => {
       const id = button.dataset.exampleId;
 
-      if (id !== undefined && isExampleId(id)) {
+      if (id !== undefined && isAvailableExample(id)) {
         selectExample(id);
       }
     });
   });
 
   templateSelect?.addEventListener("change", () => {
-    if (isExampleId(templateSelect.value)) {
+    if (isAvailableExample(templateSelect.value)) {
       selectExample(templateSelect.value);
     }
   });
@@ -399,9 +461,12 @@ if (editorHost !== null) {
 
   runButton?.addEventListener("click", () => runCode(currentFiles()));
   resetButton?.addEventListener("click", () => {
-    const example = getPlaygroundExample(selectedExample);
-    models.javascript.setValue(example.javascript);
-    models.html.setValue(example.html);
+    const originalFiles =
+      selectedExample === PAGE_PLAYGROUND_EXAMPLE_ID && pageLaunch !== null
+        ? { html: pageLaunch.html, javascript: pageLaunch.javascript }
+        : getPlaygroundExample(selectedExample);
+    models.javascript.setValue(originalFiles.javascript);
+    models.html.setValue(originalFiles.html);
     filesByExample[selectedExample] = currentFiles();
     editor.setScrollPosition({ scrollTop: 0 });
     editor.focus();

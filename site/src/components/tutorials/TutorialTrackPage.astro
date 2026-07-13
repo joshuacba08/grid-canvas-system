@@ -1,0 +1,302 @@
+---
+import {
+  ArrowLeft,
+  ArrowRight,
+  CircleCheck,
+  GitFork,
+  Menu,
+  Play,
+  Rocket,
+  X,
+} from "@lucide/astro";
+
+import TutorialStep from "./TutorialStep.astro";
+import {
+  getTrackOrder,
+  getTutorialAlternateLocale,
+  getTutorialBasePath,
+  getTutorialTrackPath,
+  tutorialsContentByLocale,
+  type TutorialLevel,
+  type TutorialLocale,
+} from "../../data/tutorialsContent";
+import { libraryVersion } from "../../data/siteRelease";
+import "../../styles/global.css";
+import "../../styles/docs.css";
+import "../../styles/tutorials.css";
+
+interface Props {
+  level: TutorialLevel;
+  locale: TutorialLocale;
+}
+
+const { level, locale } = Astro.props;
+const content = tutorialsContentByLocale[locale];
+const track = content.tracks[level];
+const alternateLocale = getTutorialAlternateLocale(locale);
+const alternateLabel = alternateLocale === "en" ? "EN" : "ES";
+const alternateBase = getTutorialBasePath(alternateLocale);
+const currentIndex = getTrackOrder().indexOf(level);
+const previousLevel = currentIndex > 0 ? getTrackOrder()[currentIndex - 1] : undefined;
+const nextLevel =
+  currentIndex < getTrackOrder().length - 1
+    ? getTrackOrder()[currentIndex + 1]
+    : undefined;
+const alternatePath =
+  locale === "en"
+    ? `/es/tutorials/${level}/`
+    : level === "basic" || level === "intermediate" || level === "advanced"
+      ? `/tutorials/${level}/`
+      : alternateBase;
+---
+
+<!doctype html>
+<html lang={content.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={track.summary} />
+    <title>{track.title} / {content.pageTitle}</title>
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap"
+    />
+  </head>
+  <body class="docs-page tutorials-page">
+    <header class="docs-topbar tutorials-topbar">
+      <div class="docs-topbar-inner">
+        <button
+          class="docs-menu-button"
+          type="button"
+          aria-label={content.mobileMenuLabel}
+          aria-expanded="false"
+          data-docs-menu
+        >
+          <Menu class="menu-open-icon" size={18} aria-hidden="true" />
+          <X class="menu-close-icon" size={18} aria-hidden="true" />
+        </button>
+        <a
+          class="brand docs-brand"
+          href={content.tutorialsPath}
+          aria-label={content.siteBadge}
+        >
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>{content.topbarTitle}</span>
+          <b>{content.siteBadge}</b>
+        </a>
+        <div class="docs-top-actions">
+          <a class="docs-locale-switch" href={alternatePath}>{alternateLabel}</a>
+          <a class="docs-playground-link" href="/playground/">
+            <Play size={13} fill="currentColor" aria-hidden="true" />
+            <span>{content.playgroundLabel}</span>
+          </a>
+          <span class="docs-version">v{libraryVersion}</span>
+          <a
+            class="docs-icon-link"
+            href="https://github.com/joshuacba08/grid-canvas-system"
+            aria-label={content.repoAria}
+          >
+            <GitFork size={17} aria-hidden="true" />
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="tutorials-layout">
+      <aside class="docs-sidebar tutorials-sidebar" data-docs-sidebar>
+        <nav aria-label={content.stepLabels.steps}>
+          <section class="docs-nav-group" data-docs-group>
+            <h2>{content.stepLabels.steps}</h2>
+            {
+              track.steps.map((step, index) => (
+                <a class="docs-nav-link" href={`#${step.id}`} data-docs-link>
+                  <span>
+                    {String(index + 1).padStart(2, "0")}. {step.title}
+                  </span>
+                  <small>{step.minutes}</small>
+                </a>
+              ))
+            }
+          </section>
+          <section class="docs-nav-group" data-docs-group>
+            <h2>{content.siteBadge}</h2>
+            <a class="docs-nav-link" href={content.tutorialsPath} data-docs-link>
+              {content.backToTutorialsLabel}
+            </a>
+            <a class="docs-nav-link" href={content.docsPath} data-docs-link> Docs </a>
+          </section>
+        </nav>
+      </aside>
+
+      <main class="tutorials-content">
+        <article class="tutorial-track">
+          <div class="docs-breadcrumbs">
+            <a href={content.tutorialsPath}>{content.siteBadge}</a>
+            <span>/</span>
+            <span>{content.levelLabels[level]}</span>
+          </div>
+
+          <header class="tutorial-track-header" id="overview">
+            <div class="tutorial-track-headline">
+              <span class:list={["tutorial-level-pill", `is-${track.level}`]}>
+                {content.levelLabels[track.level]}
+              </span>
+              <h1>{track.title}</h1>
+              <p>{track.summary}</p>
+            </div>
+            <div class="tutorial-track-progress">
+              <div>
+                <strong>{locale === "es" ? "Tu avance" : "Your progress"}</strong>
+                <span data-tutorial-progress>0 tareas completadas</span>
+              </div>
+              <div
+                class="tutorial-progress-bar"
+                data-tutorial-progress-bar
+                role="progressbar"
+                aria-label={locale === "es"
+                  ? "Progreso del tutorial"
+                  : "Tutorial progress"}
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+              >
+              </div>
+            </div>
+            <div class="tutorial-track-meta">
+              <div>
+                <strong>{content.stepLabels.duration}</strong>
+                <span>{track.duration}</span>
+              </div>
+              <div>
+                <strong>{content.stepLabels.audience}</strong>
+                <span>{track.audience}</span>
+              </div>
+              <div>
+                <strong>{content.versionLabel}</strong>
+                <span>v{libraryVersion}</span>
+              </div>
+            </div>
+          </header>
+
+          {
+            track.project !== undefined && (
+              <section class="tutorial-project-brief">
+                <div class="tutorial-project-icon">
+                  <Rocket size={23} aria-hidden="true" />
+                </div>
+                <div>
+                  <span>{track.project.label}</span>
+                  <h2>{track.project.title}</h2>
+                  <p>{track.project.description}</p>
+                </div>
+                <ul>
+                  {track.project.deliverables.map((item) => (
+                    <li>
+                      <CircleCheck size={15} aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }
+
+          <section class="tutorial-summary-block">
+            <div>
+              <h2>{content.stepLabels.outcomes}</h2>
+              <ul class="tutorial-summary-list is-outcomes">
+                {
+                  track.outcomes.map((item) => (
+                    <li>
+                      <CircleCheck size={17} aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+            <div>
+              <h2>{content.stepLabels.prerequisites}</h2>
+              <ul class="tutorial-summary-list is-prerequisites">
+                {
+                  track.prerequisites.map((item) => (
+                    <li>
+                      <ArrowRight size={17} aria-hidden="true" />
+                      <span>{item}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
+          </section>
+
+          {
+            track.steps.map((step, index) => (
+              <TutorialStep
+                index={index}
+                interactiveLabel={content.stepLabels.interactive}
+                locale={locale}
+                openInPlaygroundLabel={content.stepLabels.openInPlayground}
+                resourcesLabel={content.stepLabels.resources}
+                step={step}
+                totalSteps={track.steps.length}
+              />
+            ))
+          }
+
+          <nav class="tutorial-pagination" aria-label="Tutorial pagination">
+            <a
+              href={previousLevel === undefined
+                ? content.tutorialsPath
+                : getTutorialTrackPath(locale, previousLevel)}
+            >
+              <ArrowLeft size={16} aria-hidden="true" />
+              <span>
+                <small
+                  >{
+                    previousLevel === undefined
+                      ? content.backToTutorialsLabel
+                      : content.levelLabels[previousLevel]
+                  }</small
+                >
+                {
+                  previousLevel === undefined
+                    ? content.siteBadge
+                    : content.tracks[previousLevel].title
+                }
+              </span>
+            </a>
+            <a
+              href={nextLevel === undefined
+                ? content.docsPath
+                : getTutorialTrackPath(locale, nextLevel)}
+            >
+              <span>
+                <small
+                  >{
+                    nextLevel === undefined ? "Docs" : content.levelLabels[nextLevel]
+                  }</small
+                >
+                {
+                  nextLevel === undefined
+                    ? content.backHomeLabel
+                    : content.tracks[nextLevel].title
+                }
+              </span>
+              <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </nav>
+        </article>
+      </main>
+    </div>
+
+    <script>
+      import "../../scripts/docs";
+      import "../../scripts/docs-live-examples";
+      import "../../scripts/tutorials";
+    </script>
+  </body>
+</html>

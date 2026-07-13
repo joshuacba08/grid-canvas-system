@@ -62,6 +62,7 @@ interface HomeContent {
   };
   docs: HomeDocLink[];
   docsPath: string;
+  tutorialsPath: string;
   docsSection: {
     kicker: string;
     title: string;
@@ -105,6 +106,7 @@ interface HomeContent {
     docs: string;
     examples: string;
     playground: string;
+    tutorials: string;
   };
   pageTitle: string;
   peekStrip: string[];
@@ -214,6 +216,11 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Go from install to first scene fast, with setup, runtime and audio paths explained clearly.",
       },
       {
+        href: "/tutorials/",
+        label: "Tutorials",
+        text: `Follow basic, intermediate and advanced tracks that cover the full ${libraryVersion} capability line.`,
+      },
+      {
         href: "/playground/",
         label: "Playground",
         text: "Try the API in the browser and tweak sprites, loops, HUD overlays and arcade cues live.",
@@ -255,6 +262,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       },
     ],
     docsPath: "/docs/",
+    tutorialsPath: "/tutorials/",
     docsSection: {
       kicker: "Learn & Evaluate",
       title: "Docs, playground and source all stay close to the product.",
@@ -340,6 +348,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       docs: "Docs",
       examples: "Examples",
       playground: "Playground",
+      tutorials: "Tutorials",
     },
     pageTitle: "Grid Canvas System",
     peekStrip: ["Grid-first API", "Pixel sprites", "Light runtime", "Audio add-ons"],
@@ -486,6 +495,11 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Pasa de la instalacion a la primera escena rapido, con setup, runtime y audio explicados con claridad.",
       },
       {
+        href: "/es/tutorials/",
+        label: "Tutoriales",
+        text: `Recorre rutas basicas, intermedias y avanzadas para cubrir toda la capacidad disponible en ${libraryVersion}.`,
+      },
+      {
         href: "/playground/",
         label: "Playground",
         text: "Prueba la API en el navegador y ajusta sprites, loops, HUD y cues arcade en vivo.",
@@ -527,6 +541,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       },
     ],
     docsPath: "/es/docs/",
+    tutorialsPath: "/es/tutorials/",
     docsSection: {
       kicker: "Aprende y valida",
       title: "Docs, playground y codigo fuente quedan cerca del producto.",
@@ -613,6 +628,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       docs: "Docs",
       examples: "Ejemplos",
       playground: "Playground",
+      tutorials: "Tutoriales",
     },
     pageTitle: "Grid Canvas System / Inicio",
     peekStrip: [
@@ -764,6 +780,11 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "導入から最初のシーンまでを素早く進められるように、setup、runtime、audio の道筋を整理しています。",
       },
       {
+        href: "/tutorials/",
+        label: "Tutorials",
+        text: `basic / intermediate / advanced の学習トラックで ${libraryVersion} の能力全体を順番に辿れます。`,
+      },
+      {
         href: "/playground/",
         label: "Playground",
         text: "ブラウザ上で API を試し、sprite、loop、HUD、arcade cue をその場で調整できます。",
@@ -805,6 +826,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       },
     ],
     docsPath: "/docs/",
+    tutorialsPath: "/ja/tutorials/",
     docsSection: {
       kicker: "学ぶ / 試す",
       title: "Docs、Playground、source がプロダクトのすぐ隣にあります。",
@@ -890,6 +912,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       docs: "Docs",
       examples: "例",
       playground: "Playground",
+      tutorials: "Tutorials",
     },
     pageTitle: "Grid Canvas System / ホーム",
     peekStrip: ["グリッドAPI", "ピクセルスプライト", "軽量runtime", "音声アドオン"],

@@ -1,0 +1,12 @@
+---
+import TutorialTrackPage from "../../../components/tutorials/TutorialTrackPage.astro";
+import { getTrackOrder, type TutorialLevel } from "../../../data/tutorialsContent";
+
+export function getStaticPaths() {
+  return getTrackOrder().map((level) => ({ params: { level } }));
+}
+
+const { level } = Astro.params as { level: TutorialLevel };
+---
+
+<TutorialTrackPage level={level} locale="es" />

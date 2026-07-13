@@ -204,6 +204,23 @@
   cursor: pointer;
 }
 
+.example-nav-item[hidden] {
+  display: none;
+}
+
+.page-example-nav-item {
+  border-bottom: 1px solid var(--line);
+}
+
+.page-example-nav-item > svg {
+  margin-top: 1px;
+  color: var(--blue);
+}
+
+.page-example-nav-item.is-active > svg {
+  color: var(--green);
+}
+
 .example-nav-item:hover {
   background: rgba(232, 247, 239, 0.035);
   color: var(--text);

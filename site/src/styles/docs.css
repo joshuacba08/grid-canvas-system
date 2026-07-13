@@ -65,9 +65,28 @@
   font-size: 10px;
 }
 
+.docs-tutorials-link {
+  display: inline-flex;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  border: 1px solid rgba(77, 169, 255, 0.38);
+  border-radius: 6px;
+  background: rgba(77, 169, 255, 0.08);
+  color: var(--blue);
+  font-family: var(--font-pixel);
+  font-size: 10px;
+}
+
 .docs-playground-link:hover {
   border-color: var(--green);
   background: rgba(0, 212, 59, 0.12);
+}
+
+.docs-tutorials-link:hover {
+  border-color: var(--blue);
+  background: rgba(77, 169, 255, 0.14);
 }
 
 .docs-locale-switch {
@@ -1072,6 +1091,10 @@
 
   .docs-playground-link span {
     display: none;
+  }
+
+  .docs-tutorials-link {
+    padding: 0 8px;
   }
 }
 

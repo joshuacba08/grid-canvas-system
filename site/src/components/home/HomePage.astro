@@ -148,6 +148,7 @@ const highlightedCodeBlocks = await Promise.all(
 );
 const footerLinks = [
   { href: content.docsPath, label: content.nav.docs },
+  { href: content.tutorialsPath, label: content.nav.tutorials },
   { href: "/playground/", label: content.nav.playground },
   { href: `${repoUrl}/tree/main/examples/vanilla`, label: content.nav.examples },
   { href: npmUrl, label: "npm" },
@@ -350,6 +351,7 @@ const latestRelease = content.release.timeline[0];
         >
           <a href="#capabilities" data-home-nav-link>{content.nav.capabilities}</a>
           <a href={content.docsPath} data-home-nav-link>{content.nav.docs}</a>
+          <a href={content.tutorialsPath} data-home-nav-link>{content.nav.tutorials}</a>
           <a href="/playground/" data-home-nav-link>{content.nav.playground}</a>
           <a href="#examples" data-home-nav-link>{content.nav.examples}</a>
           <a class="nav-keep" href={npmUrl} data-home-nav-link>npm</a>

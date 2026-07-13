@@ -18,6 +18,7 @@
     "@lucide/astro": "^1.23.0",
     "gsap": "^3.15.0",
     "howler": "^2.2.4",
+    "mermaid": "^11.16.0",
     "monaco-editor": "^0.55.1",
     "shiki": "^4.3.0",
     "tone": "^15.1.22"
