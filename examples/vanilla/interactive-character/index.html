@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Character Runtime</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, sans-serif;
+        background: #101418;
+        color: #eef2ff;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+      }
+
+      main {
+        width: min(100% - 32px, 420px);
+      }
+
+      .stage {
+        width: 100%;
+        aspect-ratio: 1;
+        border: 1px solid #334155;
+        background: #111827;
+      }
+
+      canvas {
+        display: block;
+        image-rendering: pixelated;
+      }
+
+      .controls {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      button {
+        min-height: 40px;
+        padding: 0 14px;
+        border: 1px solid #38bdf8;
+        border-radius: 6px;
+        background: #17202b;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Interactive character</h1>
+      <div class="stage" id="stage">
+        <canvas id="canvas" aria-label="Interactive animated canvas"></canvas>
+      </div>
+      <div class="controls">
+        <button id="react" type="button">React</button>
+        <button id="destroy" type="button">Destroy</button>
+      </div>
+    </main>
+
+    <script type="module">
+      import {
+        createCanvasRuntime,
+        createSpriteAnimator,
+        createStateMachine,
+      } from "../../../dist/runtime/index.js";
+
+      const stage = document.querySelector("#stage");
+      const canvas = document.querySelector("#canvas");
+      const reactButton = document.querySelector("#react");
+      const destroyButton = document.querySelector("#destroy");
+      const palette = {
+        ".": "transparent",
+        A: "#38bdf8",
+        B: "#f8fafc",
+        C: "#facc15",
+        D: "#0f172a",
+      };
+      const frames = {
+        idle1: ["..AAAA..", ".ABBBBA.", "ABDBBDBA", "ABBBBBBA", ".A.BB.A.", "..A..A.."],
+        idle2: ["..AAAA..", ".ABBBBA.", "ABDBBDBA", "ABBBBBBA", "...AA...", "..A..A.."],
+        react1: [
+          "..CCCC..",
+          ".CBBBBC.",
+          "CBDBBDBC",
+          "CBBBBBBC",
+          ".CCBBCC.",
+          "..C..C..",
+        ],
+        react2: [
+          ".CCCCCC.",
+          "CBBBBBBC",
+          "CBDCCDBC",
+          "CBBBBBBC",
+          ".CCBBCC.",
+          ".C....C.",
+        ],
+        react3: [
+          "..AAAA..",
+          ".ABBBBA.",
+          "ABDBBDBA",
+          "ABBBBBBA",
+          ".A.BB.A.",
+          "..A..A..",
+        ],
+      };
+      const animator = createSpriteAnimator({
+        initial: "idle",
+        animations: {
+          idle: {
+            frames: ["idle1", "idle2"],
+            fps: 4,
+            loop: true,
+          },
+          react: {
+            frames: ["react1", "react2", "react3"],
+            fps: 10,
+            loop: false,
+          },
+        },
+      });
+      const machine = createStateMachine({
+        initial: "idle",
+        transitions: {
+          idle: ["react"],
+          react: ["idle"],
+        },
+      });
+      let pointer = { x: 80, y: 80 };
+
+      const runtime = createCanvasRuntime({
+        canvas,
+        logicalWidth: 160,
+        logicalHeight: 160,
+        pixelRatio: "auto",
+        maxPixelRatio: 2,
+        imageSmoothing: false,
+        maxDeltaMs: 100,
+        pauseWhenHidden: true,
+        reducedMotion: "lower-fps",
+        update(deltaMs) {
+          animator.update(deltaMs / 1000);
+        },
+        render(context) {
+          const { logicalWidth, logicalHeight } = runtime.getSize();
+
+          context.clearRect(0, 0, logicalWidth, logicalHeight);
+          context.fillStyle = "#111827";
+          context.fillRect(0, 0, logicalWidth, logicalHeight);
+          context.strokeStyle = "rgba(148, 163, 184, 0.28)";
+          context.strokeRect(8, 8, logicalWidth - 16, logicalHeight - 16);
+
+          const sprite = frames[animator.getFrame()];
+          const pixelSize = Math.max(8, Math.floor(logicalWidth / 16));
+          const spriteWidth = sprite[0].length * pixelSize;
+          const spriteHeight = sprite.length * pixelSize;
+          const x = Math.round((logicalWidth - spriteWidth) / 2);
+          const y = Math.round((logicalHeight - spriteHeight) / 2);
+
+          for (let row = 0; row < sprite.length; row += 1) {
+            for (let column = 0; column < sprite[row].length; column += 1) {
+              const color = palette[sprite[row][column]];
+
+              if (color !== "transparent") {
+                context.fillStyle = color;
+                context.fillRect(
+                  x + column * pixelSize,
+                  y + row * pixelSize,
+                  pixelSize,
+                  pixelSize,
+                );
+              }
+            }
+          }
+
+          context.fillStyle = "#facc15";
+          context.fillRect(pointer.x - 2, pointer.y - 2, 4, 4);
+        },
+      });
+
+      const unsubscribeMachine = machine.subscribe(({ to }) => {
+        if (to === "react") {
+          animator.play("react", {
+            restart: true,
+            onComplete: () => {
+              machine.transition("idle", { metadata: { source: "animation" } });
+            },
+          });
+          return;
+        }
+
+        animator.play("idle", { restart: true });
+      });
+      const unsubscribePointerMove = runtime.onPointerMove(({ x, y }) => {
+        pointer = { x, y };
+      });
+      const unsubscribePointerDown = runtime.onPointerDown(({ x, y }) => {
+        pointer = { x, y };
+        machine.transition("react", { metadata: { source: "pointer" } });
+      });
+      const resizeObserver = new ResizeObserver(([entry]) => {
+        const size = Math.floor(entry.contentRect.width);
+
+        runtime.resize({ height: size, width: size });
+      });
+      const cleanup = () => {
+        resizeObserver.disconnect();
+        unsubscribePointerMove();
+        unsubscribePointerDown();
+        unsubscribeMachine();
+        runtime.destroy();
+      };
+
+      reactButton.addEventListener("click", () => {
+        machine.transition("react", { metadata: { source: "button" } });
+      });
+      destroyButton.addEventListener("click", cleanup, { once: true });
+      window.addEventListener("beforeunload", cleanup, { once: true });
+
+      resizeObserver.observe(stage);
+      runtime.renderOnce();
+      runtime.start();
+    </script>
+  </body>
+</html>

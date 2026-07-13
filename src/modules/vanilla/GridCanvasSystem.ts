@@ -7,6 +7,10 @@ import type {
   GridCanvasCompiledPixelSprite,
   GridCanvasCompiledPixelSpriteDrawOptions,
 } from "../../drawing/pixelSprite";
+import {
+  CanvasContextUnavailableError,
+  CanvasTargetNotFoundError,
+} from "../../runtime/errors";
 
 export interface GridCanvasSystemOptions {
   width?: number;
@@ -162,6 +166,8 @@ export interface GridCanvasSystemResolvedOptions {
   devicePixelRatio: number;
 }
 
+export type CanvasTarget = string | HTMLCanvasElement;
+
 const DEFAULT_OPTIONS: GridCanvasSystemResolvedOptions = {
   width: 400,
   height: 400,
@@ -226,25 +232,23 @@ class GridCanvasSystem {
 
   public readonly options: Readonly<GridCanvasSystemResolvedOptions>;
 
-  constructor(id: string, width?: number, height?: number);
-  constructor(id: string, options?: GridCanvasSystemOptions);
+  constructor(target: CanvasTarget, width?: number, height?: number);
+  constructor(target: CanvasTarget, options?: GridCanvasSystemOptions);
   constructor(
-    id: string,
+    target: CanvasTarget,
     widthOrOptions?: number | GridCanvasSystemOptions,
     height?: number,
   ) {
-    const element = document.getElementById(id);
-    if (element === null) {
-      throw new Error(`Canvas element with id "${id}" not found`);
-    }
-
-    if (!(element instanceof HTMLCanvasElement)) {
-      throw new Error(`Element with id "${id}" is not a canvas`);
-    }
+    const element = this.resolveCanvasTarget(target);
 
     const ctx = element.getContext("2d");
     if (ctx === null) {
-      throw new Error(`2D context is not available for canvas "${id}"`);
+      const targetLabel =
+        typeof target === "string" ? `"${target}"` : "provided canvas";
+
+      throw new CanvasContextUnavailableError(
+        `2D context is not available for canvas ${targetLabel}`,
+      );
     }
 
     this.canvas = element;
@@ -253,6 +257,49 @@ class GridCanvasSystem {
 
     this.configureCanvas();
     this.drawGridSystem();
+  }
+
+  private resolveCanvasTarget(target: CanvasTarget): HTMLCanvasElement {
+    if (typeof target === "string") {
+      if (typeof document === "undefined") {
+        throw new CanvasTargetNotFoundError(
+          `Canvas element with id "${target}" cannot be resolved because document is unavailable`,
+        );
+      }
+
+      const element = document.getElementById(target);
+
+      if (element === null) {
+        throw new CanvasTargetNotFoundError(
+          `Canvas element with id "${target}" not found`,
+        );
+      }
+
+      if (!this.isCanvasElement(element)) {
+        throw new CanvasTargetNotFoundError(
+          `Element with id "${target}" is not a canvas`,
+        );
+      }
+
+      return element;
+    }
+
+    if (!this.isCanvasElement(target)) {
+      throw new CanvasTargetNotFoundError("target must be a canvas element");
+    }
+
+    return target;
+  }
+
+  private isCanvasElement(element: unknown): element is HTMLCanvasElement {
+    return (
+      element !== null &&
+      typeof element === "object" &&
+      "getContext" in element &&
+      typeof element.getContext === "function" &&
+      "nodeName" in element &&
+      String(element.nodeName).toLowerCase() === "canvas"
+    );
   }
 
   private resolveOptions(

@@ -34,8 +34,19 @@ describe("runtime and utility exports", () => {
     vi.restoreAllMocks();
   });
 
+  function createRuntimeContext(): CanvasRenderingContext2D {
+    return {
+      clearRect: vi.fn(),
+      imageSmoothingEnabled: true,
+      restore: vi.fn(),
+      save: vi.fn(),
+      setTransform: vi.fn(),
+    } as unknown as CanvasRenderingContext2D;
+  }
+
   it("groups the optional runtime layer under GridCanvasSystem.runtime without breaking direct aliases", () => {
     expect(runtime.createAnimationLoop).toBe(createAnimationLoop);
+    expect(runtime.createCanvasRuntime).toBeTypeOf("function");
     expect(runtime.createKeyTracker).toBe(createKeyTracker);
     expect(runtime.createPointerTracker).toBe(createPointerTracker);
     expect(runtime.appendTrailPoint).toBe(appendTrailPoint);
@@ -57,6 +68,9 @@ describe("runtime and utility exports", () => {
     expect(runtime.drawTileMap).toBeTypeOf("function");
     expect(
       Object.prototype.hasOwnProperty.call(GridCanvasSystem, "createFixedStepLoop"),
+    ).toBe(false);
+    expect(
+      Object.prototype.hasOwnProperty.call(GridCanvasSystem, "createCanvasRuntime"),
     ).toBe(false);
     expect(
       Object.prototype.hasOwnProperty.call(GridCanvasSystem, "createSceneManager"),
@@ -166,6 +180,57 @@ describe("runtime and utility exports", () => {
     ).toThrow("initial must reference an existing animation");
   });
 
+  it("createSpriteAnimator supports per-animation config, completion callbacks and subscriptions", () => {
+    const complete = vi.fn();
+    const events: string[] = [];
+    const animator = createSpriteAnimator<"idle" | "burst", string>({
+      animations: {
+        idle: {
+          frames: ["idle-1", "idle-2"],
+          fps: 2,
+          loop: true,
+        },
+        burst: {
+          frames: ["burst-1", "burst-2", "burst-3"],
+          fps: 10,
+          loop: false,
+        },
+      },
+      initial: "idle",
+    });
+    const unsubscribe = animator.subscribe((event) => {
+      events.push(event.type);
+    });
+    const unsubscribeComplete = animator.onComplete(complete);
+
+    expect(animator.play("burst", { onComplete: complete, restart: true })).toBe(true);
+
+    animator.update(0.1);
+    animator.pause();
+    animator.update(10);
+
+    expect(animator.getFrame()).toBe("burst-2");
+
+    animator.resume();
+    animator.update(0.2);
+
+    expect(animator.getFrame()).toBe("burst-3");
+    expect(animator.isComplete()).toBe(true);
+    expect(complete).toHaveBeenCalledTimes(2);
+    expect(events).toEqual(["play", "frame", "pause", "resume", "frame", "complete"]);
+
+    unsubscribe();
+    unsubscribeComplete();
+    animator.play("idle");
+
+    expect(events).toHaveLength(6);
+
+    animator.destroy();
+    animator.destroy();
+
+    expect(animator.isDestroyed()).toBe(true);
+  });
+
   it("createStateMachine exposes simple transition checks, transitions and reset", () => {
     const machine = createStateMachine({
       initial: "idle",
@@ -195,6 +260,73 @@ describe("runtime and utility exports", () => {
         },
       }),
     ).toThrow("initial must reference an existing state");
+  });
+
+  it("createStateMachine emits transition events, lifecycle hooks and bounded history", () => {
+    const order: string[] = [];
+    const transitions: Array<string> = [];
+    const machine = createStateMachine<"idle" | "active" | "done">({
+      historyLimit: 2,
+      initial: "idle",
+      now: () => 123,
+      states: {
+        active: {
+          onEnter: ({ from, to }) => order.push(`enter:${from}->${to}`),
+          onExit: ({ from, to }) => order.push(`exit:${from}->${to}`),
+        },
+      },
+      transitions: {
+        active: ["done"],
+        done: ["idle"],
+        idle: ["active"],
+      },
+    });
+    const unsubscribe = machine.subscribe(({ from, to, metadata }) => {
+      transitions.push(
+        `${from}->${to}:${String((metadata as { source: string }).source)}`,
+      );
+      order.push(`event:${from}->${to}`);
+    });
+
+    expect(machine.transition("done")).toBe(false);
+    expect(machine.getState()).toBe("idle");
+    expect(machine.transition("active", { metadata: { source: "pointer" } })).toBe(
+      true,
+    );
+    expect(machine.transition("done", { metadata: { source: "timer" } })).toBe(true);
+    expect(order).toEqual([
+      "enter:idle->active",
+      "event:idle->active",
+      "exit:active->done",
+      "event:active->done",
+    ]);
+    expect(transitions).toEqual(["idle->active:pointer", "active->done:timer"]);
+    expect(machine.getHistory()).toEqual([
+      {
+        from: "idle",
+        metadata: { source: "pointer" },
+        timestamp: 123,
+        to: "active",
+      },
+      {
+        from: "active",
+        metadata: { source: "timer" },
+        timestamp: 123,
+        to: "done",
+      },
+    ]);
+
+    unsubscribe();
+    machine.transition("idle", { metadata: { source: "reset" } });
+
+    expect(transitions).toHaveLength(2);
+    expect(machine.getHistory()).toHaveLength(2);
+
+    machine.destroy();
+    machine.destroy();
+
+    expect(machine.isDestroyed()).toBe(true);
+    expect(machine.canTransition("active")).toBe(false);
   });
 
   it("provides minimal point, rectangle, and circle-rectangle collision helpers", () => {
@@ -386,6 +518,124 @@ describe("runtime and utility exports", () => {
     loop.frame(5000);
 
     expect(update).toHaveBeenNthCalledWith(2, 0.1, 5000);
+  });
+
+  it("createAnimationLoop exposes pause, resume, destroy and prevents duplicate RAF", () => {
+    const updateMs = vi.fn();
+    const callbacks: FrameRequestCallback[] = [];
+    const cancelled: number[] = [];
+    let nextHandle = 1;
+    const loop = createAnimationLoop({
+      maxDeltaMs: 100,
+      updateMs,
+      requestFrame: (callback) => {
+        callbacks.push(callback);
+
+        return nextHandle++;
+      },
+      cancelFrame: (handle) => {
+        cancelled.push(handle);
+      },
+    });
+
+    loop.start();
+    loop.start();
+
+    expect(callbacks).toHaveLength(1);
+
+    callbacks.shift()?.(1000);
+    callbacks.shift()?.(1200);
+
+    expect(updateMs).toHaveBeenNthCalledWith(1, 0, 1000);
+    expect(updateMs).toHaveBeenNthCalledWith(2, 100, 1200);
+
+    loop.pause();
+
+    expect(loop.isPaused()).toBe(true);
+    expect(cancelled).toEqual([3]);
+
+    callbacks.length = 0;
+    loop.resume();
+
+    expect(loop.isPaused()).toBe(false);
+    expect(callbacks).toHaveLength(1);
+
+    callbacks.shift()?.(5000);
+
+    expect(updateMs).toHaveBeenLastCalledWith(0, 5000);
+
+    loop.destroy();
+    loop.destroy();
+
+    expect(loop.isDestroyed()).toBe(true);
+    expect(loop.isRunning()).toBe(false);
+  });
+
+  it("createAnimationLoop pauses on document visibility without resuming stopped loops", () => {
+    const callbacks: FrameRequestCallback[] = [];
+    const loop = createAnimationLoop({
+      pauseWhenHidden: true,
+      requestFrame: (callback) => {
+        callbacks.push(callback);
+
+        return callbacks.length;
+      },
+      cancelFrame: vi.fn(),
+    });
+
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: false,
+    });
+
+    loop.start();
+
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: true,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+
+    expect(loop.isPaused()).toBe(true);
+
+    loop.stop();
+
+    Object.defineProperty(document, "hidden", {
+      configurable: true,
+      value: false,
+    });
+    document.dispatchEvent(new Event("visibilitychange"));
+
+    expect(loop.isRunning()).toBe(false);
+
+    loop.destroy();
+  });
+
+  it("createAnimationLoop supports reduced motion pause behavior", () => {
+    const callbacks: FrameRequestCallback[] = [];
+    const loop = createAnimationLoop({
+      reducedMotion: "pause",
+      requestFrame: (callback) => {
+        callbacks.push(callback);
+
+        return callbacks.length;
+      },
+      cancelFrame: vi.fn(),
+      windowRef: {
+        matchMedia: () =>
+          ({
+            matches: true,
+          }) as MediaQueryList,
+      },
+    });
+
+    loop.start();
+
+    expect(loop.isRunning()).toBe(true);
+    expect(loop.isPaused()).toBe(true);
+    expect(callbacks).toHaveLength(0);
+
+    loop.destroy();
   });
 
   it("createFixedStepLoop runs deterministic updates and exposes interpolation alpha", () => {
@@ -684,5 +934,102 @@ describe("runtime and utility exports", () => {
 
     expect(tracker.isDown()).toBe(false);
     expect(tracker.position()).toBeNull();
+  });
+
+  it("createCanvasRuntime manages DPR, resize, renderOnce and logical pointer events", () => {
+    document.body.innerHTML = '<canvas id="canvas"></canvas>';
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const context = createRuntimeContext();
+    const render = vi.fn();
+    const update = vi.fn();
+    const pointerMove = vi.fn();
+    const originalPixelRatio = window.devicePixelRatio;
+
+    Object.defineProperty(window, "devicePixelRatio", {
+      configurable: true,
+      value: 3,
+    });
+    vi.spyOn(canvas, "getContext").mockReturnValue(
+      context as unknown as RenderingContext,
+    );
+    vi.spyOn(canvas, "getBoundingClientRect").mockReturnValue({
+      bottom: 100,
+      height: 80,
+      left: 10,
+      right: 210,
+      top: 20,
+      width: 200,
+      x: 10,
+      y: 20,
+      toJSON: () => ({}),
+    } as DOMRect);
+
+    const runtimeInstance = runtime.createCanvasRuntime({
+      canvas,
+      imageSmoothing: false,
+      logicalHeight: 40,
+      logicalWidth: 100,
+      maxDeltaMs: 100,
+      pixelRatio: "auto",
+      render,
+      update,
+    });
+
+    expect(canvas.width).toBe(200);
+    expect(canvas.height).toBe(80);
+    expect(canvas.style.width).toBe("100px");
+    expect(canvas.style.height).toBe("40px");
+    expect(context.setTransform).toHaveBeenCalledWith(2, 0, 0, 2, 0, 0);
+    expect(context.imageSmoothingEnabled).toBe(false);
+
+    runtimeInstance.renderOnce();
+
+    expect(render).toHaveBeenCalledWith(context);
+
+    const unsubscribe = runtimeInstance.onPointerMove(pointerMove);
+
+    canvas.dispatchEvent(
+      new MouseEvent("pointermove", {
+        clientX: 110,
+        clientY: 60,
+      }),
+    );
+
+    expect(pointerMove).toHaveBeenCalledWith(
+      expect.objectContaining({
+        x: 50,
+        y: 20,
+      }),
+    );
+
+    unsubscribe();
+    canvas.dispatchEvent(
+      new MouseEvent("pointermove", {
+        clientX: 130,
+        clientY: 60,
+      }),
+    );
+
+    expect(pointerMove).toHaveBeenCalledTimes(1);
+
+    expect(runtimeInstance.resizeToDisplaySize()).toBe(true);
+    expect(runtimeInstance.getSize()).toMatchObject({
+      bufferHeight: 160,
+      bufferWidth: 400,
+      logicalHeight: 80,
+      logicalWidth: 200,
+      pixelRatio: 2,
+    });
+    expect(runtimeInstance.resizeToDisplaySize()).toBe(false);
+
+    runtimeInstance.destroy();
+    runtimeInstance.destroy();
+
+    expect(runtimeInstance.isDestroyed()).toBe(true);
+
+    Object.defineProperty(window, "devicePixelRatio", {
+      configurable: true,
+      value: originalPixelRatio,
+    });
   });
 });

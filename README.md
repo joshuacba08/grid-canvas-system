@@ -29,14 +29,15 @@ It is built for small interactive products, education demos, toy engines, game p
 
 ## Current release
 
-The package is currently at **1.0.0**.
+The package is currently at **1.1.0**.
 
-`1.0.0` freezes the small grid-first canvas runtime as stable:
+`1.1.0` adds a reactive, framework-friendly runtime for long-lived Canvas components:
 
-- Adds Pixel Sprite v2 with compiled sprites, pure transforms, tinting, bounds and hit testing.
-- Adds fixed-step loops, scene management and simple tilemaps under `GridCanvasSystem.runtime`.
-- Publishes `PUBLIC_API.md` and `MIGRATION.md` so Stable, Experimental and Legacy surfaces are explicit.
-- Keeps audio available through subpaths, but classifies it as Experimental until a later post-1.0 hardening pass.
+- Accepts either a canvas id or an `HTMLCanvasElement`.
+- Adds `createCanvasRuntime()` with DPR-aware resize, `renderOnce`, pointer events and cleanup.
+- Extends animation loops, sprite animators and state machines with lifecycle and observable events.
+- Publishes the tree-shakeable `grid-canvas-system/runtime` subpath.
+- Keeps audio available through subpaths and legacy runtime aliases compatible.
 
 ## Installation
 
@@ -450,6 +451,47 @@ const fixedLoop = GridCanvasSystem.runtime.createFixedStepLoop({
 
 fixedLoop.stop();
 fixedLoop.start();
+```
+
+### Canvas runtime example
+
+```js
+import { createCanvasRuntime, createSpriteAnimator } from "grid-canvas-system/runtime";
+
+const canvas = document.querySelector("canvas");
+const animator = createSpriteAnimator({
+  initial: "idle",
+  animations: {
+    idle: { frames: ["idle-1", "idle-2"], fps: 6, loop: true },
+    flash: { frames: ["flash-1", "flash-2"], fps: 12, loop: false },
+  },
+});
+
+const runtime = createCanvasRuntime({
+  canvas,
+  logicalWidth: 160,
+  logicalHeight: 160,
+  pixelRatio: "auto",
+  imageSmoothing: false,
+  pauseWhenHidden: true,
+  update(deltaMs) {
+    animator.update(deltaMs / 1000);
+  },
+  render(context) {
+    context.clearRect(0, 0, 160, 160);
+    drawFrame(context, animator.getFrame());
+  },
+});
+
+runtime.onPointerDown(() => {
+  animator.play("flash", {
+    restart: true,
+    onComplete: () => animator.play("idle"),
+  });
+});
+
+runtime.renderOnce();
+runtime.start();
 ```
 
 ### Sprite animation and state example
@@ -920,6 +962,7 @@ See also:
 - [Collision course example](./examples/vanilla/collisions/index.html)
 - [Ghost example](./examples/vanilla/ghost/index.html)
 - [Grid Buddy example](./examples/vanilla/grid-buddy/index.html)
+- [Interactive character runtime example](./examples/vanilla/interactive-character/index.html)
 - [HUD example](./examples/vanilla/hud/index.html)
 - [Pac-Man example](./examples/vanilla/pacman/index.html)
 - [Projectile example](./examples/vanilla/projectile/index.html)

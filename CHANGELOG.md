@@ -2,6 +2,25 @@
 
 All notable changes to `grid-canvas-system` are documented here.
 
+## 1.1.0
+
+### Added
+
+- Added `GridCanvasSystem.runtime.createCanvasRuntime()` and the `grid-canvas-system/runtime` subpath.
+- Added direct `HTMLCanvasElement` support for `new GridCanvasSystem(canvas, options)` while keeping id-based constructors.
+- Added domain errors for canvas target, canvas context, destroyed runtime, invalid transitions and unknown animations.
+- Added DPR-aware runtime resizing, `resizeToDisplaySize()`, `renderOnce()`, image smoothing control and logical pointer events.
+- Added animation loop lifecycle controls: `pause`, `resume`, `destroy`, visibility pause, `maxDeltaMs` and reduced-motion behavior.
+- Added Sprite Animator v2 events, per-animation FPS/loop config, one-shot completion callbacks and cleanup.
+- Added State Machine v2 subscriptions, metadata, lifecycle hooks and bounded history.
+- Added runtime, sprite animator, state machine and framework integration documentation plus an interactive vanilla example.
+
+### Changed
+
+- Extended runtime helpers without removing legacy APIs or direct aliases that existed before `1.0.0`.
+- Kept the package SSR-safe at import time; browser APIs are resolved during instance/runtime creation.
+- Updated package exports, type smoke tests and package export verification for the new runtime subpath.
+
 ## 1.0.0
 
 ### Added

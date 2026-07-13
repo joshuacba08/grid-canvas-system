@@ -1,5 +1,94 @@
 # Migration Guide
 
+## From 1.0.0 to 1.1.0
+
+`1.1.0` is backward-compatible. The update adds a reactive runtime layer for long-lived canvas components while keeping the grid-first drawing API intact.
+
+### Canvas creation
+
+Constructor by ID still works:
+
+```js
+const grid = new GridCanvasSystem("canvas");
+```
+
+You can now pass an element directly:
+
+```js
+const canvas = document.querySelector("canvas");
+const grid = new GridCanvasSystem(canvas, { width: 160, height: 160 });
+```
+
+When integrating with SSR frameworks, import the package at module scope but create instances only after the browser canvas exists.
+
+### Runtime subpath
+
+New runtime-first code can import from the subpath:
+
+```js
+import {
+  createCanvasRuntime,
+  createSpriteAnimator,
+  createStateMachine,
+} from "grid-canvas-system/runtime";
+```
+
+The same helpers remain available through `GridCanvasSystem.runtime`.
+
+### Animation loop
+
+Existing second-based callbacks remain valid:
+
+```js
+GridCanvasSystem.runtime.createAnimationLoop({
+  update(elapsed) {},
+  draw(elapsed) {},
+});
+```
+
+For component runtimes, prefer millisecond callbacks and lifecycle controls:
+
+```js
+const loop = GridCanvasSystem.runtime.createAnimationLoop({
+  maxDeltaMs: 100,
+  pauseWhenHidden: true,
+  updateMs(deltaMs) {},
+});
+
+loop.start();
+loop.pause();
+loop.resume();
+loop.destroy();
+```
+
+### Sprite animator
+
+Legacy animation maps still work. Use the new per-animation shape when a sequence needs a different FPS or one-shot behavior:
+
+```js
+const animator = GridCanvasSystem.runtime.createSpriteAnimator({
+  initial: "idle",
+  animations: {
+    idle: { frames: ["idle-1", "idle-2"], fps: 6, loop: true },
+    burst: { frames: ["burst-1", "burst-2"], fps: 12, loop: false },
+  },
+});
+```
+
+### State machine
+
+Boolean transitions remain. Add `subscribe`, hooks and `historyLimit` when you need observable state changes:
+
+```js
+const unsubscribe = machine.subscribe(({ from, to }) => {
+  animator.play(to);
+});
+```
+
+### Cleanup
+
+For framework components, keep every unsubscribe function, disconnect observers, and call `runtime.destroy()` during unmount.
+
 ## From 0.x to 1.0.0
 
 `1.0.0` is designed as a stable contract release. Existing `0.4.x` code should keep working unless it depended on unpublished internals.

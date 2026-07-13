@@ -1,6 +1,6 @@
 # Public API Contract
 
-This document defines the public surface for `grid-canvas-system@1.0.0`.
+This document defines the public surface for `grid-canvas-system@1.1.0`.
 
 ## Stable
 
@@ -14,6 +14,8 @@ Stable APIs are expected to remain source-compatible through the `1.x` line.
   - `new GridCanvasSystem(id)`
   - `new GridCanvasSystem(id, options)`
   - `new GridCanvasSystem(id, width, height)`
+  - `new GridCanvasSystem(canvasElement, options)`
+  - `new GridCanvasSystem(canvasElement, width, height)`
 - Instance drawing methods:
   - `clearCanvas`
   - `drawAsteroid`
@@ -49,6 +51,7 @@ Stable APIs are expected to remain source-compatible through the `1.x` line.
 Use new runtime helpers through `GridCanvasSystem.runtime`.
 
 - `createAnimationLoop(options)`
+- `createCanvasRuntime(options)`
 - `createFixedStepLoop(options)`
 - `createKeyTracker(target, options?)`
 - `createPointerTracker(target, options?)`
@@ -78,6 +81,33 @@ Use new runtime helpers through `GridCanvasSystem.runtime`.
 - `oscillate01(time, frequency?)`
 - `wrapPoint(point, bounds, radius?)`
 - `normalizeKeyIdentifier(key)`
+- `getMotionPreference(targetWindow?)`
+
+### Runtime subpath
+
+`grid-canvas-system/runtime` is a public tree-shakeable subpath for runtime primitives:
+
+- `createCanvasRuntime`
+- `createAnimationLoop`
+- `createSpriteAnimator`
+- `createStateMachine`
+- `createPointerTracker`
+- `getMotionPreference`
+- Runtime errors: `CanvasTargetNotFoundError`, `CanvasContextUnavailableError`, `RuntimeDestroyedError`, `InvalidStateTransitionError`, `UnknownAnimationError`
+- Public runtime types: `CanvasRuntime`, `CanvasRuntimeOptions`, `CanvasRuntimeSize`, `CanvasPointerEvent`, `Unsubscribe`, `SpriteAnimation`, `SpriteAnimatorEvent`, `StateTransitionEvent`, `StateHistoryEntry`
+
+### Runtime 1.1 audit
+
+| API actual                      | Estado        | Acción                                               |
+| ------------------------------- | ------------- | ---------------------------------------------------- |
+| Constructor por ID              | Soportado     | Mantener durante `1.x`                               |
+| Constructor por elemento canvas | Nuevo estable | Añadir sin reemplazar ID                             |
+| Animation loop actual           | Soportado     | Extender con pause/resume/destroy                    |
+| Sprite animator actual          | Soportado     | Normalizar con formato por animación                 |
+| State machine actual            | Soportado     | Añadir eventos, hooks e historial                    |
+| Pointer helpers                 | Soportado     | Mantener tracker y añadir eventos lógicos en runtime |
+| Destroy actual                  | Parcial       | Unificar en runtime, loop, animator y machine        |
+| Runtime exports                 | Estable       | Añadir subpath `grid-canvas-system/runtime`          |
 
 ## Experimental
 
@@ -90,7 +120,7 @@ Audio is intentionally kept out of the root bundle. Browser autoplay behavior, a
 
 ## Legacy
 
-Legacy APIs remain supported through `1.0.0` to protect existing projects.
+Legacy APIs remain supported through `1.x` to protect existing projects.
 
 - Direct root aliases for runtime helpers shipped before `1.0.0`, such as `GridCanvasSystem.createAnimationLoop`, `GridCanvasSystem.createKeyTracker`, `GridCanvasSystem.canvasToGrid`, `GridCanvasSystem.MassBody`, collision helpers and motion helpers.
 - Constructor aliases `labelColor` and `font`.

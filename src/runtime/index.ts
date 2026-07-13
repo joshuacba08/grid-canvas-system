@@ -1,11 +1,13 @@
 import { hitTestCircleRectangle, hitTestPoint, hitTestRectangle } from "./collision";
 import { createAnimationLoop } from "./createAnimationLoop";
+import { createCanvasRuntime } from "./createCanvasRuntime";
 import { createFixedStepLoop } from "./createFixedStepLoop";
 import { createKeyTracker, normalizeKeyIdentifier } from "./createKeyTracker";
 import { createPointerTracker } from "./createPointerTracker";
 import { createSceneManager } from "./createSceneManager";
 import { createSpriteAnimator } from "./createSpriteAnimator";
 import { createStateMachine } from "./createStateMachine";
+import { getMotionPreference } from "./motionPreference";
 import { canvasToGrid, gridToCanvas, snapPointToGrid } from "./grid";
 import { MassBody } from "./MassBody";
 import {
@@ -36,6 +38,7 @@ export const GridCanvasRuntime = Object.freeze({
   circlesIntersect,
   canvasToGrid,
   createAnimationLoop,
+  createCanvasRuntime,
   createFixedStepLoop,
   createKeyTracker,
   createParticleBurst,
@@ -43,6 +46,7 @@ export const GridCanvasRuntime = Object.freeze({
   createSceneManager,
   createSpriteAnimator,
   createStateMachine,
+  getMotionPreference,
   distanceBetweenPoints,
   gridToCanvas,
   hitTestCircleRectangle,
@@ -72,7 +76,27 @@ export {
 } from "./scene";
 export { canvasToGrid, gridToCanvas, snapPointToGrid } from "./grid";
 export type { GridCanvasGridCell, GridCanvasGridOptions } from "./grid";
+export { createAnimationLoop } from "./createAnimationLoop";
 export { createFixedStepLoop } from "./createFixedStepLoop";
+export { createCanvasRuntime } from "./createCanvasRuntime";
+export type {
+  CanvasPointerEvent,
+  CanvasResizeOptions,
+  CanvasRuntime,
+  CanvasRuntimeOptions,
+  CanvasRuntimeSize,
+  PixelRatioOption,
+  Unsubscribe,
+} from "./createCanvasRuntime";
+export {
+  CanvasContextUnavailableError,
+  CanvasTargetNotFoundError,
+  InvalidStateTransitionError,
+  RuntimeDestroyedError,
+  UnknownAnimationError,
+} from "./errors";
+export { getMotionPreference } from "./motionPreference";
+export type { MotionPreference, ReducedMotionBehavior } from "./motionPreference";
 export type {
   GridCanvasFixedStepLoop,
   GridCanvasFixedStepLoopOptions,
@@ -115,12 +139,22 @@ export type {
   GridCanvasPointerTrackerOptions,
 } from "./createPointerTracker";
 export type {
+  AnimationCompleteEvent,
   GridCanvasSpriteAnimator,
   GridCanvasSpriteAnimatorOptions,
+  PlayAnimationOptions,
+  SpriteAnimation,
+  SpriteAnimatorEvent,
+  SpriteAnimatorEventType,
 } from "./createSpriteAnimator";
 export type {
   GridCanvasStateMachine,
   GridCanvasStateMachineOptions,
+  StateDefinition,
+  StateHistoryEntry,
+  StateLifecycleContext,
+  StateTransitionEvent,
+  StateTransitionOptions,
 } from "./createStateMachine";
 export type { GridCanvasMassBodyOptions } from "./MassBody";
 export type {

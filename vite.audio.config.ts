@@ -8,6 +8,7 @@ const audioEntry = fileURLToPath(new URL("./src/audio/index.ts", import.meta.url
 const audioArcadeEntry = fileURLToPath(
   new URL("./src/audio-arcade/index.ts", import.meta.url),
 );
+const runtimeEntry = fileURLToPath(new URL("./src/runtime/index.ts", import.meta.url));
 
 export default defineConfig({
   build: {
@@ -17,6 +18,7 @@ export default defineConfig({
       entry: {
         "audio/index": audioEntry,
         "audio-arcade/index": audioArcadeEntry,
+        "runtime/index": runtimeEntry,
       },
       fileName: (_format, entryName) => `${entryName}.js`,
       formats: ["es"],

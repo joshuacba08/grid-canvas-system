@@ -15,6 +15,14 @@ import {
   createArcadeAudio,
   type ArcadeAudioController,
 } from "grid-canvas-system/audio-arcade";
+import {
+  createAnimationLoop as createRuntimeAnimationLoop,
+  createStateMachine,
+  getMotionPreference,
+  type CanvasRuntimeOptions,
+  type MotionPreference,
+  type StateTransitionEvent,
+} from "grid-canvas-system/runtime";
 
 const grid = new GridCanvasSystem("canvas");
 const palette = GridCanvasSystem.createPixelPalette({
@@ -51,6 +59,29 @@ const howlerAudio: Promise<HowlerAssetAudioController> = createHowlerAssetAudio(
   },
 });
 const toneAudio: Promise<ToneMusicAudioController> = createToneMusicAudio();
+const motionPreference: MotionPreference = getMotionPreference();
+const runtimeOptions: CanvasRuntimeOptions = {
+  canvas: grid.canvas,
+  logicalHeight: 16,
+  logicalWidth: 16,
+  render: () => {},
+};
+const reactiveLoop = createRuntimeAnimationLoop({
+  maxDeltaMs: 100,
+  updateMs: () => {},
+});
+const typedMachine = createStateMachine<"idle" | "active">({
+  initial: "idle",
+  transitions: {
+    active: ["idle"],
+    idle: ["active"],
+  },
+});
+const unsubscribeMachine = typedMachine.subscribe(
+  (event: StateTransitionEvent<"idle" | "active">) => {
+    event.to;
+  },
+);
 
 grid.drawCompiledPixelSprite(compiled, {
   pixelSize: 8,
@@ -69,3 +100,7 @@ fixedLoop.stop();
 arcadeAudio.stopAll();
 void howlerAudio;
 void toneAudio;
+void motionPreference;
+void runtimeOptions;
+reactiveLoop.destroy();
+unsubscribeMachine();

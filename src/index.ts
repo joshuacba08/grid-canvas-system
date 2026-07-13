@@ -50,6 +50,7 @@ const GridCanvasSystemLibrary = Object.assign(GridCanvasSystem, {
 
 export default GridCanvasSystemLibrary;
 export type {
+  CanvasTarget,
   GridCanvasClearOptions,
   GridCanvasSystemOptions,
   GridCanvasSystemResolvedOptions,
@@ -79,6 +80,12 @@ export type {
   GridCanvasValueLabelOptions,
 } from "./drawing";
 export type {
+  AnimationCompleteEvent,
+  CanvasPointerEvent,
+  CanvasResizeOptions,
+  CanvasRuntime,
+  CanvasRuntimeOptions,
+  CanvasRuntimeSize,
   GridCanvasAnimationLoop,
   GridCanvasAnimationLoopOptions,
   GridCanvasFixedStepLoop,
@@ -116,4 +123,24 @@ export type {
   GridCanvasTileObjectDefinition,
   GridCanvasTileSet,
   GridCanvasVelocity,
+  MotionPreference,
+  PixelRatioOption,
+  PlayAnimationOptions,
+  ReducedMotionBehavior,
+  SpriteAnimation,
+  SpriteAnimatorEvent,
+  SpriteAnimatorEventType,
+  StateDefinition,
+  StateHistoryEntry,
+  StateLifecycleContext,
+  StateTransitionEvent,
+  StateTransitionOptions,
+  Unsubscribe,
+} from "./runtime";
+export {
+  CanvasContextUnavailableError,
+  CanvasTargetNotFoundError,
+  InvalidStateTransitionError,
+  RuntimeDestroyedError,
+  UnknownAnimationError,
 } from "./runtime";

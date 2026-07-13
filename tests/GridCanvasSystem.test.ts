@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import GridCanvasSystem from "../src";
+import GridCanvasSystem, {
+  CanvasContextUnavailableError,
+  CanvasTargetNotFoundError,
+} from "../src";
 
 interface MockCanvasContext {
   strokeStyle: string | CanvasGradient | CanvasPattern;
@@ -81,20 +84,46 @@ describe("GridCanvasSystem", () => {
     expect(() => new GridCanvasSystem("missing-canvas")).toThrow(
       'Canvas element with id "missing-canvas" not found',
     );
+    expect(() => new GridCanvasSystem("missing-canvas")).toThrow(
+      CanvasTargetNotFoundError,
+    );
   });
 
   it("throws when the target element is not a canvas", () => {
     expect(() => new GridCanvasSystem("not-canvas")).toThrow(
       'Element with id "not-canvas" is not a canvas',
     );
+    expect(() => new GridCanvasSystem("not-canvas")).toThrow(CanvasTargetNotFoundError);
   });
 
   it("throws when the 2d context cannot be created", () => {
     vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValueOnce(null);
 
-    expect(() => new GridCanvasSystem("canvas")).toThrow(
+    let thrown: unknown;
+
+    try {
+      new GridCanvasSystem("canvas");
+    } catch (error) {
+      thrown = error;
+    }
+
+    expect(thrown).toBeInstanceOf(CanvasContextUnavailableError);
+    expect(thrown).toHaveProperty(
+      "message",
       '2D context is not available for canvas "canvas"',
     );
+  });
+
+  it("supports direct HTMLCanvasElement construction", () => {
+    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+    const grid = new GridCanvasSystem(canvas, {
+      height: 80,
+      width: 120,
+    });
+
+    expect(grid.canvas).toBe(canvas);
+    expect(grid.options.width).toBe(120);
+    expect(grid.options.height).toBe(80);
   });
 
   it("supports the legacy numeric constructor signature", () => {

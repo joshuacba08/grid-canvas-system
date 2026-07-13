@@ -25,6 +25,7 @@ http://localhost:5173/examples/vanilla/sprite-state/
 http://localhost:5173/examples/vanilla/sprite-v2/
 http://localhost:5173/examples/vanilla/collisions/
 http://localhost:5173/examples/vanilla/runtime/
+http://localhost:5173/examples/vanilla/interactive-character/
 http://localhost:5173/examples/vanilla/tilemap-scene/
 http://localhost:5173/examples/vanilla/grid-buddy/
 http://localhost:5173/examples/vanilla/audio-arcade/
@@ -42,6 +43,7 @@ it does not rebuild the package bundle used by them.
 | `sprite-v2`                    | Compiled sprites, transforms, tinting, bounds and hits   |
 | `collisions`                   | Keyboard/touch movement and collision response           |
 | `runtime`                      | Animation loop, keyboard input, and `MassBody` motion    |
+| `interactive-character`        | Canvas runtime, DPR, resize, pointer and cleanup flow    |
 | `tilemap-scene`                | Fixed-step loop, scene manager and tilemap collisions    |
 | `grid-buddy`                   | Advanced multi-state showcase with stats and persistence |
 | `audio-arcade`                 | Built-in retro SFX and lightweight 8-bit loop presets    |

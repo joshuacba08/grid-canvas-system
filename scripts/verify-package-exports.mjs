@@ -87,6 +87,7 @@ try {
 import GridCanvasSystem from "grid-canvas-system";
 import { createHowlerAssetAudio, createToneMusicAudio } from "grid-canvas-system/audio";
 import { createArcadeAudio } from "grid-canvas-system/audio-arcade";
+import { createCanvasRuntime, getMotionPreference } from "grid-canvas-system/runtime";
 
 const require = createRequire(import.meta.url);
 const packageJson = require("grid-canvas-system/package.json");
@@ -107,8 +108,20 @@ if (typeof GridCanvasSystem.runtime.createFixedStepLoop !== "function") {
   throw new Error("runtime.createFixedStepLoop is missing");
 }
 
+if (typeof GridCanvasSystem.runtime.createCanvasRuntime !== "function") {
+  throw new Error("runtime.createCanvasRuntime is missing");
+}
+
+if (typeof createCanvasRuntime !== "function" || typeof getMotionPreference !== "function") {
+  throw new Error("runtime subpath exports are missing");
+}
+
 if (Object.prototype.hasOwnProperty.call(GridCanvasSystem, "createFixedStepLoop")) {
   throw new Error("new runtime helpers must not be mirrored as root legacy aliases");
+}
+
+if (Object.prototype.hasOwnProperty.call(GridCanvasSystem, "createCanvasRuntime")) {
+  throw new Error("createCanvasRuntime must not be mirrored as a root legacy alias");
 }
 
 const palette = GridCanvasSystem.createPixelPalette({ 0: "transparent", 1: "#fff" });
