@@ -17,6 +17,7 @@ import {
 } from "grid-canvas-system/audio-arcade";
 import {
   createAnimationLoop as createRuntimeAnimationLoop,
+  createSpriteAnimator,
   createStateMachine,
   getMotionPreference,
   type CanvasRuntimeOptions,
@@ -77,6 +78,16 @@ const typedMachine = createStateMachine<"idle" | "active">({
     idle: ["active"],
   },
 });
+const inferredAnimator = createSpriteAnimator({
+  animations: {
+    happy: ["happy-a", "happy-b"],
+    idle: ["idle-a", "idle-b"],
+    sleeping: ["sleep-a", "sleep-b"],
+  },
+  fps: 3,
+  initial: "idle",
+});
+const inferredAnimation: "idle" | "happy" | "sleeping" = "happy";
 const unsubscribeMachine = typedMachine.subscribe(
   (event: StateTransitionEvent<"idle" | "active">) => {
     event.to;
@@ -103,4 +114,5 @@ void toneAudio;
 void motionPreference;
 void runtimeOptions;
 reactiveLoop.destroy();
+inferredAnimator.play(inferredAnimation);
 unsubscribeMachine();

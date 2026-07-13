@@ -65,6 +65,21 @@ export interface GridCanvasSpriteAnimator<
   update(elapsed: number): void;
 }
 
+type SpriteAnimationInput<TFrame> = readonly TFrame[] | SpriteAnimation<TFrame>;
+type SpriteAnimationMap<TFrame = unknown> = Record<
+  string,
+  SpriteAnimationInput<TFrame>
+>;
+type AnimationKey<TAnimations> = Extract<keyof TAnimations, string>;
+type FrameFromAnimation<TAnimation> = TAnimation extends readonly (infer TFrame)[]
+  ? TFrame
+  : TAnimation extends SpriteAnimation<infer TFrame>
+    ? TFrame
+    : never;
+type AnimationFrameFromMap<TAnimations extends SpriteAnimationMap> = FrameFromAnimation<
+  TAnimations[keyof TAnimations]
+>;
+
 interface ResolvedAnimation<TFrame> {
   frames: readonly TFrame[];
   fps: number;
@@ -152,11 +167,25 @@ function resolveAnimations<TAnimation extends string, TFrame>(
 }
 
 export function createSpriteAnimator<
+  const TAnimations extends SpriteAnimationMap,
+>(options: {
+  animations: TAnimations;
+  fps?: number;
+  initial: AnimationKey<TAnimations>;
+  loop?: boolean;
+}): GridCanvasSpriteAnimator<
+  AnimationKey<TAnimations>,
+  AnimationFrameFromMap<TAnimations>
+>;
+export function createSpriteAnimator<
   TAnimation extends string = string,
   TFrame = string,
 >(
   options: GridCanvasSpriteAnimatorOptions<TAnimation, TFrame>,
-): GridCanvasSpriteAnimator<TAnimation, TFrame> {
+): GridCanvasSpriteAnimator<TAnimation, TFrame>;
+export function createSpriteAnimator(
+  options: GridCanvasSpriteAnimatorOptions<string, unknown>,
+): GridCanvasSpriteAnimator<string, unknown> {
   const defaultFps = resolvePositive(options.fps ?? 1, "fps");
   const defaultLoop = options.loop ?? true;
   const animations = resolveAnimations(options.animations, defaultFps, defaultLoop);
@@ -169,11 +198,9 @@ export function createSpriteAnimator<
   let complete = false;
   let destroyed = false;
   let playCompleteCallback: (() => void) | undefined;
-  const subscribers = new Set<
-    (event: SpriteAnimatorEvent<TAnimation, TFrame>) => void
-  >();
+  const subscribers = new Set<(event: SpriteAnimatorEvent<string, unknown>) => void>();
   const completeSubscribers = new Set<
-    (event: AnimationCompleteEvent<TAnimation>) => void
+    (event: AnimationCompleteEvent<string>) => void
   >();
 
   if (!Object.prototype.hasOwnProperty.call(animations, currentAnimation)) {
@@ -186,17 +213,17 @@ export function createSpriteAnimator<
     }
   };
 
-  const getResolvedAnimation = (): ResolvedAnimation<TFrame> =>
+  const getResolvedAnimation = (): ResolvedAnimation<unknown> =>
     animations[currentAnimation];
 
-  const getCurrentFrame = (): TFrame => getResolvedAnimation().frames[frameIndex];
+  const getCurrentFrame = (): unknown => getResolvedAnimation().frames[frameIndex];
 
   const emit = (type: SpriteAnimatorEventType): void => {
     if (subscribers.size === 0) {
       return;
     }
 
-    const event: SpriteAnimatorEvent<TAnimation, TFrame> = {
+    const event: SpriteAnimatorEvent<string, unknown> = {
       type,
       animation: currentAnimation,
       frame: getCurrentFrame(),
@@ -239,7 +266,7 @@ export function createSpriteAnimator<
     emit("complete");
   };
 
-  const resetPlayback = (animation: TAnimation): void => {
+  const resetPlayback = (animation: string): void => {
     currentAnimation = animation;
     frameIndex = 0;
     elapsedInFrame = 0;
@@ -249,7 +276,7 @@ export function createSpriteAnimator<
     complete = false;
   };
 
-  const ensureKnownAnimation = (animation: TAnimation): boolean => {
+  const ensureKnownAnimation = (animation: string): boolean => {
     if (Object.prototype.hasOwnProperty.call(animations, animation)) {
       return true;
     }
@@ -270,13 +297,13 @@ export function createSpriteAnimator<
       subscribers.clear();
       completeSubscribers.clear();
     },
-    getAnimation(): TAnimation {
+    getAnimation(): string {
       return currentAnimation;
     },
-    getCurrentAnimation(): TAnimation {
+    getCurrentAnimation(): string {
       return currentAnimation;
     },
-    getFrame(): TFrame {
+    getFrame(): unknown {
       return getCurrentFrame();
     },
     getFrameIndex(): number {
@@ -312,7 +339,7 @@ export function createSpriteAnimator<
       paused = true;
       emit("pause");
     },
-    play(animation: TAnimation, playOptions: PlayAnimationOptions = {}): boolean {
+    play(animation: string, playOptions: PlayAnimationOptions = {}): boolean {
       assertActive();
 
       if (!ensureKnownAnimation(animation)) {
