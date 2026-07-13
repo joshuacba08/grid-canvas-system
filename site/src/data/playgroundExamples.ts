@@ -1,3 +1,5 @@
+import { PACMAN_GAME_HTML, PACMAN_GAME_JS_EN } from "./pacmanTutorial";
+
 export interface PlaygroundExample {
   id: string;
   title: string;
@@ -99,6 +101,264 @@ GridCanvasSystem.runtime.createAnimationLoop({
         strokeColor: "#e8f7ef"
       }
     );
+  }
+});`,
+  },
+  {
+    id: "canvas-runtime",
+    title: "Canvas runtime 1.1",
+    group: "Runtime",
+    description:
+      "Responsive logical canvas with DPR, pointer subscriptions and lifecycle cleanup.",
+    html: `<section class="demo-shell">
+  <canvas id="canvas" aria-label="Canvas runtime 1.1 preview"></canvas>
+  <div class="demo-actions" aria-label="Runtime controls">
+    <button id="runtime-resize" type="button">Resize</button>
+    <button id="runtime-render" type="button">Render once</button>
+    <button id="runtime-destroy" type="button">Destroy</button>
+  </div>
+  <p id="runtime-status" class="demo-status">Move the pointer over the canvas.</p>
+</section>`,
+    javascript: `const statusNode = document.querySelector("#runtime-status");
+const state = {
+  target: { x: 160, y: 90 },
+  actor: { x: 160, y: 90 },
+  destroyed: false,
+  phase: 0
+};
+
+function drawGrid(ctx, size) {
+  ctx.fillStyle = "#050607";
+  ctx.fillRect(0, 0, size.logicalWidth, size.logicalHeight);
+  ctx.strokeStyle = "rgba(0, 212, 59, 0.14)";
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= size.logicalWidth; x += 20) {
+    ctx.beginPath();
+    ctx.moveTo(x + 0.5, 0);
+    ctx.lineTo(x + 0.5, size.logicalHeight);
+    ctx.stroke();
+  }
+  for (let y = 0; y <= size.logicalHeight; y += 20) {
+    ctx.beginPath();
+    ctx.moveTo(0, y + 0.5);
+    ctx.lineTo(size.logicalWidth, y + 0.5);
+    ctx.stroke();
+  }
+}
+
+const runtime = GridCanvasSystem.runtime.createCanvasRuntime({
+  canvas,
+  logicalWidth: 320,
+  logicalHeight: 180,
+  pixelRatio: "auto",
+  maxPixelRatio: 2,
+  imageSmoothing: false,
+  pauseWhenHidden: true,
+  reducedMotion: "lower-fps",
+  update(deltaMs) {
+    state.phase += deltaMs * 0.006;
+    const blend = Math.min(1, deltaMs / 120);
+    state.actor.x += (state.target.x - state.actor.x) * blend;
+    state.actor.y += (state.target.y - state.actor.y) * blend;
+  },
+  render(ctx) {
+    const size = runtime.getSize();
+    drawGrid(ctx, size);
+    ctx.fillStyle = "#e8f7ef";
+    ctx.font = "10px monospace";
+    ctx.fillText("logical " + size.logicalWidth + "x" + size.logicalHeight + " / DPR " + size.pixelRatio, 12, 18);
+    ctx.strokeStyle = "#4da9ff";
+    ctx.beginPath();
+    ctx.moveTo(state.actor.x, state.actor.y);
+    ctx.lineTo(state.target.x, state.target.y);
+    ctx.stroke();
+    ctx.fillStyle = "#00d43b";
+    ctx.beginPath();
+    ctx.arc(state.actor.x, state.actor.y, 12 + Math.sin(state.phase) * 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "#e8f7ef";
+    ctx.stroke();
+  }
+});
+
+const offMove = runtime.onPointerMove(({ x, y }) => {
+  state.target = { x, y };
+  statusNode.textContent = "pointer " + Math.round(x) + ", " + Math.round(y);
+});
+
+document.querySelector("#runtime-resize").addEventListener("click", () => {
+  canvas.style.width = canvas.style.width === "520px" ? "100%" : "520px";
+  runtime.resizeToDisplaySize();
+});
+document.querySelector("#runtime-render").addEventListener("click", () => runtime.renderOnce());
+document.querySelector("#runtime-destroy").addEventListener("click", () => {
+  if (state.destroyed) return;
+  offMove();
+  runtime.destroy();
+  state.destroyed = true;
+  statusNode.textContent = "destroyed: RAF and pointer listener released";
+});
+
+runtime.resizeToDisplaySize();
+runtime.start();`,
+  },
+  {
+    id: "sprite-one-shot",
+    title: "Sprite one-shot",
+    group: "Systems",
+    description:
+      "Sprite Animator v2 plays an action once, fires completion and returns to idle.",
+    html: `<section class="demo-shell">
+  <canvas id="canvas" aria-label="Sprite one-shot preview"></canvas>
+  <div class="demo-actions" aria-label="Sprite controls">
+    <button id="wave" type="button">Wave</button>
+    <button id="blink" type="button">Blink</button>
+  </div>
+  <p id="sprite-status" class="demo-status">Idle loop is running.</p>
+</section>`,
+    javascript: `const grid = new GridCanvasSystem("canvas", {
+  width: 640,
+  height: 360,
+  cellSize: 20,
+  majorStep: 40,
+  backgroundColor: "#050607",
+  gridColor: "rgba(0, 212, 59, 0.14)"
+});
+
+const frames = {
+  idleA: ["0110", "1111", "1001", "0110"],
+  idleB: ["0110", "1111", "1111", "0100"],
+  waveA: ["0110", "1111", "1001", "0100"],
+  waveB: ["0111", "1111", "1001", "0100"],
+  waveC: ["1110", "1111", "1001", "0100"],
+  blinkA: ["0110", "1001", "1111", "0110"],
+  blinkB: ["0110", "1111", "1111", "0110"]
+};
+const palette = { 0: "transparent", 1: "#00d43b" };
+const statusNode = document.querySelector("#sprite-status");
+const animator = GridCanvasSystem.runtime.createSpriteAnimator({
+  initial: "idle",
+  animations: {
+    idle: { frames: ["idleA", "idleB"], fps: 3, loop: true },
+    wave: { frames: ["waveA", "waveB", "waveC", "waveB"], fps: 8, loop: false },
+    blink: { frames: ["blinkA", "blinkB", "blinkA"], fps: 10, loop: false }
+  }
+});
+
+animator.onComplete((event) => {
+  statusNode.textContent = event.animation + " complete -> idle";
+  animator.play("idle");
+});
+
+function playOnce(name) {
+  statusNode.textContent = "playing " + name;
+  animator.play(name, { restart: true });
+}
+
+document.querySelector("#wave").addEventListener("click", () => playOnce("wave"));
+document.querySelector("#blink").addEventListener("click", () => playOnce("blink"));
+
+GridCanvasSystem.runtime.createAnimationLoop({
+  autoStart: true,
+  update(elapsed) {
+    animator.update(elapsed);
+  },
+  draw() {
+    grid.clearCanvas();
+    const frame = frames[animator.getFrame()];
+    grid.drawPixelSprite(frame, {
+      x: 256,
+      y: 88,
+      pixelSize: 30,
+      palette
+    });
+    grid.drawText(animator.getAnimation(), 320, 300, {
+      color: "#e8f7ef",
+      font: "20px monospace",
+      textAlign: "center"
+    });
+  }
+});`,
+  },
+  {
+    id: "state-machine-sync",
+    title: "State machine sync",
+    group: "Systems",
+    description:
+      "Generic transitions with metadata drive animation without coupling to render.",
+    html: `<section class="demo-shell">
+  <canvas id="canvas" aria-label="State machine preview"></canvas>
+  <div class="demo-actions" aria-label="State controls">
+    <button data-state="tracking" type="button">Track</button>
+    <button data-state="acting" type="button">Act</button>
+    <button data-state="idle" type="button">Idle</button>
+  </div>
+  <p id="state-status" class="demo-status">State: idle</p>
+</section>`,
+    javascript: `const grid = new GridCanvasSystem("canvas", {
+  width: 640,
+  height: 360,
+  cellSize: 20,
+  majorStep: 40,
+  backgroundColor: "#050607",
+  gridColor: "rgba(77, 169, 255, 0.14)"
+});
+
+const statusNode = document.querySelector("#state-status");
+const machine = GridCanvasSystem.runtime.createStateMachine({
+  initial: "idle",
+  transitions: {
+    idle: ["tracking"],
+    tracking: ["idle", "acting"],
+    acting: ["idle"]
+  },
+  states: {
+    acting: {
+      onEnter() {
+        flash = 1;
+      }
+    }
+  },
+  historyLimit: 6
+});
+let flash = 0;
+let angle = 0;
+
+machine.subscribe((event) => {
+  statusNode.textContent =
+    "State: " + event.to + " / history " + machine.getHistory().length + " / source " + event.metadata.source;
+});
+
+document.querySelectorAll("[data-state]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const next = button.dataset.state;
+    if (!machine.transition(next, { metadata: { source: "button" } })) {
+      statusNode.textContent = "Cannot transition " + machine.getState() + " -> " + next;
+    }
+  });
+});
+
+GridCanvasSystem.runtime.createAnimationLoop({
+  autoStart: true,
+  update(elapsed) {
+    angle += elapsed * (machine.getState() === "tracking" ? 3 : 1);
+    flash = Math.max(0, flash - elapsed * 2);
+  },
+  draw() {
+    grid.clearCanvas();
+    const state = machine.getState();
+    const color = state === "acting" ? "#ffb14a" : state === "tracking" ? "#4da9ff" : "#00d43b";
+    grid.drawShip({ x: 320, y: 160 }, 54 + flash * 18, {
+      direction: angle,
+      fillColor: color,
+      strokeColor: "#e8f7ef",
+      thruster: state !== "idle"
+    });
+    grid.drawText(state.toUpperCase(), 320, 286, {
+      color: "#e8f7ef",
+      font: "22px monospace",
+      textAlign: "center"
+    });
   }
 });`,
   },
@@ -1040,6 +1300,15 @@ GridCanvasSystem.runtime.createAnimationLoop({
     });
   }
 });`,
+  },
+  {
+    id: "pacman-complete",
+    title: "Complete Pac-Man",
+    group: "Games",
+    description:
+      "Full tutorial game loaded by example ID so the iframe URL stays short and reliable.",
+    html: PACMAN_GAME_HTML,
+    javascript: PACMAN_GAME_JS_EN,
   },
 ] as const;
 

@@ -25,27 +25,30 @@ const currentHomeHref = locale === "en" ? "/" : `/${locale}/`;
 const version = libraryVersion;
 const repoUrl = "https://github.com/joshuacba08/grid-canvas-system";
 const npmUrl = "https://www.npmjs.com/package/grid-canvas-system";
-const heroCode = `const grid = new GridCanvasSystem("canvas", {
-  cellSize: 20,
-  backgroundColor: "#050607"
+const heroCode = `const canvas =
+  document.querySelector<HTMLCanvasElement>("#canvas")!;
+
+const runtime = GridCanvasSystem.runtime
+  .createCanvasRuntime({
+    canvas,
+    logicalWidth: 320,
+    logicalHeight: 180,
+    pixelRatio: "auto",
+    pauseWhenHidden: true,
+    reducedMotion: "lower-fps",
+    update(deltaMs) {
+      actor.step(deltaMs);
+    },
+    render(ctx) {
+      drawScene(ctx);
+    }
+  });
+
+runtime.onPointerMove(({ x, y }) => {
+  actor.lookAt(x, y);
 });
 
-const player = GridCanvasSystem.compilePixelSprite([
-  "0110",
-  "1111",
-  "1001"
-], {
-  "0": "transparent",
-  "1": "#00D43B"
-});
-
-const loop = GridCanvasSystem.runtime
-  .createFixedStepLoop({
-    autoStart: true,
-    step: 1 / 60,
-    update: tick,
-    draw: render
-  });`;
+runtime.start();`;
 
 const codeBlocks = [
   {
@@ -85,18 +88,30 @@ grid.drawCompiledPixelSprite(compiled, {
   {
     title: content.codeBlockTitles.runtime,
     lang: "typescript",
-    code: `const loop = GridCanvasSystem.runtime
-  .createFixedStepLoop({
-    autoStart: true,
-    step: 1 / 60,
-    update(step) {
-      scene.update(step);
-    },
-    draw() {
-      grid.clearCanvas();
-      scene.draw(grid);
-    }
-  });`,
+    code: `const canvas =
+  document.querySelector<HTMLCanvasElement>("#canvas")!;
+
+const runtime = GridCanvasSystem.runtime.createCanvasRuntime({
+  canvas,
+  logicalWidth: 320,
+  logicalHeight: 180,
+  pixelRatio: "auto",
+  maxDeltaMs: 100,
+  pauseWhenHidden: true,
+  reducedMotion: "lower-fps",
+  update(deltaMs) {
+    scene.update(deltaMs);
+  },
+  render(ctx) {
+    scene.draw(ctx);
+  }
+});
+
+const unsubscribe = runtime.onPointerDown((event) => {
+  scene.target = { x: event.x, y: event.y };
+});
+
+runtime.start();`,
   },
   {
     title: content.codeBlockTitles.audioArcade,

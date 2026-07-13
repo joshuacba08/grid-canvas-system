@@ -140,7 +140,7 @@ import {
 
 <DocsSection id="audio-addons" index="08" title="Add-ons de audio">
   <p>
-    El contrato 1.0.0 mantiene dos rutas opcionales de audio. Usa
+    El contrato 1.1.0 mantiene dos rutas opcionales de audio. Usa
     <code>grid-canvas-system/audio-arcade</code> cuando quieras cues retro nativos del
     navegador sin paquetes extra, o <code>grid-canvas-system/audio</code> cuando
     necesites reproduccion de assets y adapters para musica generativa. Audio es usable,
@@ -233,18 +233,44 @@ import {
   </nav>
 </DocsSection>
 
-<DocsSection id="animation-loop" index="11" title="Loop de animacion">
+<DocsSection id="canvas-runtime" index="11" title="Runtime canvas 1.1">
   <p>
-    El loop de runtime reporta tiempo transcurrido en segundos. Manten los cambios de
-    estado dentro de <code>update</code> y el trabajo sobre canvas dentro de
-    <code>draw</code>; llama a <code>clearCanvas()</code> antes de renderizar el
-    siguiente frame. Usa <code>createFixedStepLoop()</code> cuando colisiones o
-    movimiento por tiles necesiten pasos de simulacion iguales.
+    Usa <code>createCanvasRuntime()</code> cuando una escena necesita coordenadas
+    logicas, resize responsive, control de DPR, eventos de puntero normalizados y un
+    unico objeto de lifecycle para limpiar recursos. Compone el loop v2 y mantiene el
+    canvas en unidades logicas reaplicando el transform de pixel ratio tras cada resize.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.canvasRuntime} />
+  <nav class="docs-game-examples" aria-label="Ejemplos de runtime canvas">
+    <a href="/playground/?example=canvas-runtime">
+      <span>
+        <strong>Runtime canvas en Playground</strong>
+        <small>Escena responsive con DPR y coordenadas logicas de puntero.</small>
+      </span>
+    </a>
+    <a href={`${repoUrl}/tree/main/examples/vanilla/interactive-character`}>
+      <span>
+        <strong>Fuente de personaje interactivo</strong>
+        <small>
+          One-shot animation, reaccion al puntero, resize y cleanup explicito.
+        </small>
+      </span>
+    </a>
+  </nav>
+</DocsSection>
+
+<DocsSection id="animation-loop" index="12" title="Loop de animacion">
+  <p>
+    Los callbacks existentes de <code>createAnimationLoop()</code> siguen recibiendo
+    segundos. La version 1.1 agrega <code>updateMs</code>, <code>drawMs</code>,
+    <code>pause()</code>, <code>resume()</code>, <code>destroy()</code>, pausa por
+    visibilidad y modos de reduced motion. Usa <code>createFixedStepLoop()</code>
+    cuando colisiones o movimiento por tiles necesiten pasos de simulacion iguales.
   </p>
   <CodeBlock snippet={docsSnippetMap.runtime} />
 </DocsSection>
 
-<DocsSection id="input-motion" index="12" title="Input y movimiento">
+<DocsSection id="input-motion" index="13" title="Input y movimiento">
   <p>
     Los trackers de teclado y puntero se enlazan a un target explicito.
     <code>MassBody</code>, las utilidades de angulo, las pruebas de colision, las
@@ -252,15 +278,26 @@ import {
   </p>
 </DocsSection>
 
-<DocsSection id="state-sprites" index="13" title="Estados y sprites">
+<DocsSection id="state-sprites" index="14" title="Estados y sprites">
   <p>
-    El sprite animator selecciona IDs de frame; la state machine valida transiciones.
-    Ninguno de los dos dibuja por si mismo, asi que ambos son faciles de testear y de
-    reutilizar.
+    El sprite animator selecciona IDs de frame; la state machine valida transiciones. La
+    version 1.1 mantiene ambos genericos, suma suscripciones, historial limitado y
+    callbacks de one-shot, y deja todo el dibujo dentro de tu funcion de render.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.spriteAnimator} />
+  <CodeBlock snippet={docsSnippetMap.stateMachine} />
+</DocsSection>
+
+<DocsSection id="framework-cleanup" index="15" title="Cleanup en frameworks">
+  <p>
+    En React, Angular, Vue, Astro islands o cualquier sistema de componentes, crea el
+    runtime solo cuando el canvas exista y llama <code>destroy()</code> desde el hook de
+    cleanup del framework. Guarda cada unsubscribe de puntero, animator y machine junto
+    a esa ruta de limpieza.
   </p>
 </DocsSection>
 
-<DocsSection id="game-architecture" index="14" title="Construye un juego pequeno">
+<DocsSection id="game-architecture" index="16" title="Construye un juego pequeno">
   <p>
     Una escena jugable sigue el mismo ciclo explicito de redibujado con cuatro
     responsabilidades conectadas. Lee input, avanza la simulacion con elapsed, resuelve
@@ -312,7 +349,7 @@ import {
   </nav>
 </DocsSection>
 
-<DocsSection id="playground" index="15" title="Playground">
+<DocsSection id="playground" index="17" title="Playground">
   <p>
     Edita escenas ejecutables con Monaco Editor y correlas contra el build local actual
     de la libreria. Cada ejecucion comienza en un frame de preview limpio, de modo que
@@ -328,7 +365,7 @@ import {
   </a>
 </DocsSection>
 
-<DocsSection id="api-reference" index="16" title="Mapa de API">
+<DocsSection id="api-reference" index="18" title="Mapa de API">
   <div class="docs-api-table" role="table" aria-label="Grupos de API">
     {docsApiGroupsByLocale.es.map(([name, text]) => (
       <div role="row">
@@ -339,7 +376,7 @@ import {
   </div>
 </DocsSection>
 
-<DocsSection id="method-reference" index="17" title="Referencia de metodos">
+<DocsSection id="method-reference" index="19" title="Referencia de metodos">
   <p>
     Los metodos publicos se agrupan por responsabilidad. Los de dibujo mutan solo el
     canvas; los helpers de runtime siguen siendo reutilizables sin renderer.
@@ -361,7 +398,7 @@ import {
   </div>
 </DocsSection>
 
-<DocsSection id="recipes" index="18" title="Recetas">
+<DocsSection id="recipes" index="20" title="Recetas">
   <p>
     Abre una escena funcional directo en el Playground, inspecciona ambos archivos y
     cambia la pieza mas pequena posible.
@@ -378,7 +415,7 @@ import {
   </nav>
 </DocsSection>
 
-<DocsSection id="errors" index="19" title="Errores y validacion">
+<DocsSection id="errors" index="21" title="Errores y validacion">
   <p>
     Las configuraciones y los inputs de dibujo fallan cerca del call site. Las
     transiciones booleanas de estado son la excepcion: una transicion invalida es flujo
@@ -394,7 +431,7 @@ import {
   </div>
 </DocsSection>
 
-<DocsSection id="performance" index="20" title="Notas de performance">
+<DocsSection id="performance" index="22" title="Notas de performance">
   <p>
     La libreria favorece codigo Canvas legible. Estos habitos mantienen escenas pequenas
     responsivas sin introducir un scene graph ni una abstraccion de renderer.

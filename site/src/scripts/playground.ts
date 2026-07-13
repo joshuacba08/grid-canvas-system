@@ -280,9 +280,22 @@ if (editorHost !== null) {
       "GridCanvasSystem.runtime.createAnimationLoop({ update, draw })",
     ],
     [
+      "createCanvasRuntime",
+      "GridCanvasSystem.runtime.createCanvasRuntime({ canvas, logicalWidth, logicalHeight, update, render })",
+    ],
+    [
+      "createFixedStepLoop",
+      "GridCanvasSystem.runtime.createFixedStepLoop({ step, update, draw })",
+    ],
+    [
       "createStateMachine",
       "GridCanvasSystem.runtime.createStateMachine({ initial, transitions })",
     ],
+    ["getMotionPreference", "GridCanvasSystem.runtime.getMotionPreference(window)"],
+    ["renderOnce", "runtime.renderOnce()"],
+    ["resizeToDisplaySize", "runtime.resizeToDisplaySize()"],
+    ["onPointerMove", "runtime.onPointerMove(({ x, y }) => {})"],
+    ["onComplete", "animator.onComplete((event) => {})"],
     [
       "createPointerTracker",
       "GridCanvasSystem.runtime.createPointerTracker(grid.canvas)",

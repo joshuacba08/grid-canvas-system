@@ -250,7 +250,7 @@ export const tutorialsContentByLocale: Record<TutorialLocale, TutorialLocaleCont
         "Start with the basics, move into deterministic runtime patterns and finish with scenes, audio and release checks when your project needs them.",
       orderTitle: "Recommended order",
       scopeText:
-        "Across the three tracks you will touch the whole 1.0 surface: core canvas setup, Pixel Sprite v2, runtime helpers, tilemaps, scene flow and the optional audio lanes.",
+        "Across the three tracks you will touch the whole 1.1 surface: core canvas setup, Pixel Sprite v2, runtime helpers, tilemaps, scene flow and the optional audio lanes.",
       scopeTitle: "100% capability scope",
     },
     lang: "en",
@@ -304,7 +304,7 @@ export const tutorialsContentByLocale: Record<TutorialLocale, TutorialLocaleCont
         steps: [
           {
             body: [
-              "Start with the constructor and lock the grid rhythm before writing any scene logic. In the stable 1.0 line, the fastest win is still a canvas that exposes width, height, cellSize and majorStep clearly.",
+              "Start with the constructor and lock the grid rhythm before writing any scene logic. In the stable 1.1 line, the fastest win is still a canvas that exposes width, height, cellSize and majorStep clearly.",
               "Treat this step as your reusable bootstrap. Once the grid is stable, every later tutorial can layer motion, tiles or scenes on top without revisiting rendering setup.",
             ],
             checklist: [
@@ -366,7 +366,7 @@ grid.drawBarIndicator("HP", 18, 18, 100, 12, 72, 100, {
           },
           {
             body: [
-              "Pixel Sprite v2 is one of the big reasons to stay on the 1.0 stable line. Compile repeated sprites once, then use drawCompiledPixelSprite() everywhere a loop would otherwise keep re-reading strings.",
+              "Pixel Sprite v2 is one of the big reasons to stay on the 1.1 stable line. Compile repeated sprites once, then use drawCompiledPixelSprite() everywhere a loop would otherwise keep re-reading strings.",
               "This step also covers pure transforms and validation helpers. Bounds, tinting and hit testing stay available without introducing a scene graph.",
             ],
             checklist: [
@@ -782,7 +782,7 @@ arcadeAudio.stopLoop(loopId);`,
           },
           {
             body: [
-              "The richer audio lane stays experimental in 1.0.0. Use it only when your project really needs sampled assets, synth notes or transport-driven sequences.",
+              "The richer audio lane stays experimental in 1.1.0. Use it only when your project really needs sampled assets, synth notes or transport-driven sequences.",
               "Because these adapters load optional peers, keep the dependency boundary explicit and isolate the audio integration from the core canvas path.",
             ],
             checklist: [
@@ -827,7 +827,7 @@ const music = await createToneMusicAudio({
           },
           {
             body: [
-              "Once the app flow is stable, lock what is truly public. The 1.0 line ships a PUBLIC_API contract and a MIGRATION guide so stable, experimental and legacy names are not mixed together by accident.",
+              "Once the app flow is stable, lock what is truly public. The 1.1 line ships a PUBLIC_API contract and a MIGRATION guide so stable, experimental and legacy names are not mixed together by accident.",
               "Use these docs as part of code review. They are just as important as the runtime helpers because they define what you can promise to other teams.",
             ],
             checklist: [
@@ -971,7 +971,7 @@ const music = await createToneMusicAudio({
         "Empieza conectando el canvas, consigue una escena viva y avanza a runtime, tiles, estados y audio cuando ya tengas una razon para necesitarlos.",
       orderTitle: "Una progresion con sentido",
       scopeText:
-        "Tres proyectos guiados recorren la superficie 1.0 sin convertir el aprendizaje en una lista de metodos: canvas, sprites, input, runtime, tilemaps, escenas y audio.",
+        "Tres proyectos guiados recorren la superficie 1.1 sin convertir el aprendizaje en una lista de metodos: canvas, sprites, input, runtime, tilemaps, escenas y audio.",
       scopeTitle: "De cero a sistema jugable",
     },
     lang: "es",
@@ -1678,7 +1678,7 @@ arcadeAudio.stopLoop(loopId);`,
           },
           {
             body: [
-              "La via de audio mas rica sigue siendo experimental en 1.0.0. Usala solo cuando el proyecto realmente necesite assets sampleados, notas sintetizadas o secuencias gobernadas por transport.",
+              "La via de audio mas rica sigue siendo experimental en 1.1.0. Usala solo cuando el proyecto realmente necesite assets sampleados, notas sintetizadas o secuencias gobernadas por transport.",
               "Como estos adapters cargan peers opcionales, deja explicito el limite de dependencias y aisla la integracion de audio del camino base de canvas.",
             ],
             checklist: [
@@ -1723,7 +1723,7 @@ const music = await createToneMusicAudio({
           },
           {
             body: [
-              "Con el flujo estable, toca congelar lo que realmente es publico. La linea 1.0 trae PUBLIC_API y MIGRATION para que las superficies stable, experimental y legacy no se mezclen por accidente.",
+              "Con el flujo estable, toca congelar lo que realmente es publico. La linea 1.1 trae PUBLIC_API y MIGRATION para que las superficies stable, experimental y legacy no se mezclen por accidente.",
               "Usa esos documentos como parte del code review. Son tan importantes como el runtime porque definen lo que puedes prometer a otros equipos.",
             ],
             checklist: [

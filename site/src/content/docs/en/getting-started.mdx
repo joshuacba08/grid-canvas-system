@@ -138,7 +138,7 @@ import {
 
 <DocsSection id="audio-addons" index="08" title="Audio add-ons">
   <p>
-    The 1.0.0 contract keeps two optional audio paths. Reach for
+    The 1.1.0 contract keeps two optional audio paths. Reach for
     <code>grid-canvas-system/audio-arcade</code> when you want browser-native retro cues
     with no extra packages, or use <code>grid-canvas-system/audio</code> when you need
     asset playback and generative music adapters. Audio is usable, typed and documented,
@@ -227,18 +227,44 @@ import {
   </nav>
 </DocsSection>
 
-<DocsSection id="animation-loop" index="11" title="Animation loop">
+<DocsSection id="canvas-runtime" index="11" title="Canvas runtime 1.1">
   <p>
-    The runtime loop reports elapsed time in seconds. Keep state changes in
-    <code>update</code> and canvas work in <code>draw</code>; call
-    <code>clearCanvas()</code> before rendering the next frame. Use
-    <code>createFixedStepLoop()</code> when collisions or tile movement need equal
-    simulation steps.
+    Use <code>createCanvasRuntime()</code> when a scene needs logical coordinates,
+    responsive resizing, DPR control, normalized pointer events and a single lifecycle
+    object to clean up. It composes the animation loop v2 and keeps the canvas in
+    logical units by applying the active pixel ratio transform after each resize.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.canvasRuntime} />
+  <nav class="docs-game-examples" aria-label="Canvas runtime examples">
+    <a href="/playground/?example=canvas-runtime">
+      <span>
+        <strong>Canvas runtime playground</strong>
+        <small>Responsive DPR scene with logical pointer coordinates.</small>
+      </span>
+    </a>
+    <a href={`${repoUrl}/tree/main/examples/vanilla/interactive-character`}>
+      <span>
+        <strong>Interactive character source</strong>
+        <small>
+          One-shot animation, pointer reaction, resize and explicit cleanup.
+        </small>
+      </span>
+    </a>
+  </nav>
+</DocsSection>
+
+<DocsSection id="animation-loop" index="12" title="Animation loop">
+  <p>
+    Existing <code>createAnimationLoop()</code> callbacks still receive elapsed seconds.
+    Version 1.1 adds <code>updateMs</code>, <code>drawMs</code>,<code>pause()</code>,{" "}
+    <code>resume()</code>, <code>destroy()</code>, visibility pause and reduced-motion
+    modes. Use <code>createFixedStepLoop()</code>
+    when collisions or tile movement need equal simulation steps.
   </p>
   <CodeBlock snippet={docsSnippetMap.runtime} />
 </DocsSection>
 
-<DocsSection id="input-motion" index="12" title="Input and motion">
+<DocsSection id="input-motion" index="13" title="Input and motion">
   <p>
     Keyboard and pointer trackers are attached to an explicit target.
     <code>MassBody</code>, angle utilities, collision tests, particles and grid
@@ -246,14 +272,26 @@ import {
   </p>
 </DocsSection>
 
-<DocsSection id="state-sprites" index="13" title="State and sprites">
+<DocsSection id="state-sprites" index="14" title="State and sprites">
   <p>
     The sprite animator selects frame IDs; the state machine validates transitions.
-    Neither helper draws, so both are easy to test and reuse.
+    Version 1.1 keeps both generic, adds subscriptions, bounded history and one-shot
+    animation callbacks, and still leaves all drawing to your render function.
+  </p>
+  <CodeBlock snippet={docsSnippetMap.spriteAnimator} />
+  <CodeBlock snippet={docsSnippetMap.stateMachine} />
+</DocsSection>
+
+<DocsSection id="framework-cleanup" index="15" title="Framework cleanup">
+  <p>
+    In React, Angular, Vue, Astro islands or any component system, create the runtime
+    only after the canvas element exists and call <code>destroy()</code> from the
+    framework cleanup hook. Keep every unsubscribe returned by pointer, animator and
+    machine subscriptions next to that cleanup path.
   </p>
 </DocsSection>
 
-<DocsSection id="game-architecture" index="14" title="Build a small game">
+<DocsSection id="game-architecture" index="16" title="Build a small game">
   <p>
     A playable scene is the same explicit redraw cycle with four connected
     responsibilities. Read input first, advance simulation with elapsed seconds, resolve
@@ -305,7 +343,7 @@ import {
   </nav>
 </DocsSection>
 
-<DocsSection id="playground" index="15" title="Playground">
+<DocsSection id="playground" index="17" title="Playground">
   <p>
     Edit executable scenes with Monaco Editor and run them against the current local
     library build. Every run starts in a fresh preview frame, so animation loops, input
@@ -321,7 +359,7 @@ import {
   </a>
 </DocsSection>
 
-<DocsSection id="api-reference" index="16" title="API map">
+<DocsSection id="api-reference" index="18" title="API map">
   <div class="docs-api-table" role="table" aria-label="API groups">
     {docsApiGroupsByLocale.en.map(([name, text]) => (
       <div role="row">
@@ -332,7 +370,7 @@ import {
   </div>
 </DocsSection>
 
-<DocsSection id="method-reference" index="17" title="Method reference">
+<DocsSection id="method-reference" index="19" title="Method reference">
   <p>
     Public methods stay grouped by responsibility. Drawing methods mutate only the
     canvas; runtime helpers remain reusable without a renderer.
@@ -354,7 +392,7 @@ import {
   </div>
 </DocsSection>
 
-<DocsSection id="recipes" index="18" title="Recipes">
+<DocsSection id="recipes" index="20" title="Recipes">
   <p>
     Open a working scene directly in the Playground, inspect both files and change the
     smallest possible piece.
@@ -371,7 +409,7 @@ import {
   </nav>
 </DocsSection>
 
-<DocsSection id="errors" index="19" title="Errors and validation">
+<DocsSection id="errors" index="21" title="Errors and validation">
   <p>
     Configuration and drawing inputs fail close to the call site. Boolean state
     transitions are the exception: invalid transitions are expected control flow and do
@@ -387,7 +425,7 @@ import {
   </div>
 </DocsSection>
 
-<DocsSection id="performance" index="20" title="Performance notes">
+<DocsSection id="performance" index="22" title="Performance notes">
   <p>
     The library favors readable Canvas code. These habits keep small scenes responsive
     without introducing a scene graph or renderer abstraction.

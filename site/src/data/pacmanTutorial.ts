@@ -26,9 +26,9 @@ export type PacmanTutorialLocale = "en" | "es" | "ja";
 
 // El HTML y el JavaScript de cada juego se inyectan como cadenas.
 // El JS no usa backticks ni interpolacion para poder vivir dentro de esta plantilla.
-const PACMAN_GAME_HTML = `<canvas id="canvas" aria-label="Pac-Man completo hecho con grid-canvas-system"></canvas>`;
+export const PACMAN_GAME_HTML = `<canvas id="canvas" aria-label="Pac-Man completo hecho con grid-canvas-system"></canvas>`;
 
-const PACMAN_GAME_JS_EN = `// Pac-Man - a faithful tribute built with grid-canvas-system.
+export const PACMAN_GAME_JS_EN = `// Pac-Man - a faithful tribute built with grid-canvas-system.
 // In the Playground, GridCanvasSystem, createArcadeAudio, canvas and root already exist.
 "use strict";
 
@@ -1063,7 +1063,7 @@ var loop = runtime.createFixedStepLoop({
     manager.draw(ctx);
   },
 });`;
-const PACMAN_GAME_JS_JA = `// Pac-Man - grid-canvas-system で作った忠実なトリビュート。
+export const PACMAN_GAME_JS_JA = `// Pac-Man - grid-canvas-system で作った忠実なトリビュート。
 // Playground には GridCanvasSystem、createArcadeAudio、canvas、root が既にあります。
 "use strict";
 
@@ -2099,7 +2099,7 @@ var loop = runtime.createFixedStepLoop({
   },
 });`;
 
-const PACMAN_GAME_JS_ES = `// Pac-Man - tributo fiel construido con grid-canvas-system.
+export const PACMAN_GAME_JS_ES = `// Pac-Man - tributo fiel construido con grid-canvas-system.
 // En el Playground ya existen GridCanvasSystem, createArcadeAudio, canvas y root.
 "use strict";
 
@@ -3824,17 +3824,14 @@ GridCanvasSystem.runtime.createFixedStepLoop({
       ],
       why: {
         title: "De cero a experto",
-        text: "Empezaste con un canvas vacio y terminaste con un arcade fiel que ejercita practicamente toda la superficie 1.0 de la libreria en un solo proyecto coherente. Esa es la meta: no memorizar metodos, sino saber combinarlos para construir algo real.",
+        text: "Empezaste con un canvas vacio y terminaste con un arcade fiel que ejercita practicamente toda la superficie 1.1 de la libreria en un solo proyecto coherente. Esa es la meta: no memorizar metodos, sino saber combinarlos para construir algo real.",
       },
       milestone:
         "Completaste el tributo: un Pac-Man fiel, con reglas y score, construido de cero a experto con grid-canvas-system.",
       interactive: {
         description:
           "El juego completo corre aqui mismo. Muevete con las flechas o WASD, Enter para empezar, P para pausar. Abrelo en el Playground para leer y editar las mas de 900 lineas comentadas.",
-        files: {
-          html: PACMAN_GAME_HTML,
-          javascript: PACMAN_GAME_JS_ES,
-        },
+        example: "pacman-complete",
         kind: "playground",
         title: "Juega el Pac-Man completo",
       },
@@ -4538,17 +4535,14 @@ GridCanvasSystem.runtime.createFixedStepLoop({
       ],
       why: {
         title: "From zero to expert",
-        text: "You started with an empty canvas and ended with a faithful arcade that exercises practically the entire 1.0 surface of the library in a single coherent project. That is the goal: not to memorize methods, but to know how to combine them to build something real.",
+        text: "You started with an empty canvas and ended with a faithful arcade that exercises practically the entire 1.1 surface of the library in a single coherent project. That is the goal: not to memorize methods, but to know how to combine them to build something real.",
       },
       milestone:
         "You completed the tribute: a faithful Pac-Man, with rules and score, built from zero to expert with grid-canvas-system.",
       interactive: {
         description:
           "The complete game runs right here. Move with the arrows or WASD, Enter to start, P to pause. Open it in the Playground to read and edit the 900+ commented lines.",
-        files: {
-          html: PACMAN_GAME_HTML,
-          javascript: PACMAN_GAME_JS_EN,
-        },
+        example: "pacman-complete",
         kind: "playground",
         title: "Play the complete Pac-Man",
       },
@@ -5250,17 +5244,14 @@ GridCanvasSystem.runtime.createFixedStepLoop({
       ],
       why: {
         title: "ゼロからエキスパートへ",
-        text: "空のキャンバスから始めて、ライブラリの 1.0 の表面のほぼ全体を1つの一貫したプロジェクトで動かす忠実なアーケードにたどり着きました。それが目標です。メソッドを暗記するのではなく、それらを組み合わせて本物を作れるようになることです。",
+        text: "空のキャンバスから始めて、ライブラリの 1.1 の表面のほぼ全体を1つの一貫したプロジェクトで動かす忠実なアーケードにたどり着きました。それが目標です。メソッドを暗記するのではなく、それらを組み合わせて本物を作れるようになることです。",
       },
       milestone:
         "トリビュートを完成させました: ルールとスコアを備えた忠実なパックマンを、grid-canvas-system でゼロからエキスパートまで作りました。",
       interactive: {
         description:
           "完全なゲームがここで動きます。移動は矢印か WASD、開始は Enter、ポーズは P。Playground で開くと、コメント付きの900行超を読んで編集できます。",
-        files: {
-          html: PACMAN_GAME_HTML,
-          javascript: PACMAN_GAME_JS_JA,
-        },
+        example: "pacman-complete",
         kind: "playground",
         title: "完全なパックマンで遊ぶ",
       },

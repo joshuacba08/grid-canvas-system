@@ -177,9 +177,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Drop in Pac-Man, ghosts, ships, asteroids, HUD pieces and other reusable shapes instead of rebuilding them.",
       },
       {
-        code: "createFixedStepLoop / createSceneManager",
-        name: "Deterministic runtime",
-        text: "Drive collisions, scene transitions and game flow with fixed-step loops plus a tiny scene manager.",
+        code: "createCanvasRuntime / onPointerMove",
+        name: "Reactive canvas runtime",
+        text: "Use logical sizing, DPR caps, pointer subscriptions, visibility pause and explicit cleanup without replacing Canvas 2D.",
       },
       {
         code: "createKeyTracker / createPointerTracker",
@@ -207,7 +207,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       install: "Install",
       pixelSprite: "Compiled Sprite",
       pointerGrid: "Tilemap",
-      runtime: "Fixed Step",
+      runtime: "Canvas Runtime",
     },
     docs: [
       {
@@ -228,12 +228,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       {
         href: `${repoUrl}/blob/main/docs/PUBLIC_API.md`,
         label: "Public API",
-        text: "See exactly which APIs are Stable, Experimental and Legacy for the 1.0.0 contract.",
+        text: "See exactly which APIs are Stable, Experimental and Legacy for the 1.1.0 contract.",
       },
       {
         href: `${repoUrl}/blob/main/docs/MIGRATION.md`,
         label: "Migration",
-        text: "Move from 0.x to 1.0.0 with namespace guidance, audio status and compatibility notes.",
+        text: "Move from 1.0.0 to 1.1.0 with runtime, lifecycle, motion preference and compatibility notes.",
       },
       {
         href: "/docs/#audio-addons",
@@ -276,11 +276,11 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "A compact character demo that shows how far sprites, state and persistence can go with very little code.",
       },
       {
-        href: `${repoUrl}/tree/main/examples/vanilla/runtime`,
+        href: `${repoUrl}/tree/main/examples/vanilla/interactive-character`,
         id: "runtime",
-        name: "Runtime",
+        name: "Interactive Character",
         number: "02",
-        text: "A clean motion sandbox for loops, body movement and keyboard-driven interaction.",
+        text: "A responsive runtime demo with DPR resize, pointer reactions, one-shot animation and explicit cleanup.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/audio-arcade`,
@@ -358,7 +358,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       timeline: [
         {
           summary:
-            "Stable public API, compiled sprites, fixed-step loops, scene manager, tilemaps and export smoke tests.",
+            "Reactive canvas runtime, logical pointer events, lifecycle cleanup, reduced motion, sprite animator v2 and state machine v2.",
           version: libraryVersion,
         },
         {
@@ -383,7 +383,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         },
       ],
       title:
-        "Shipped as a stable grid-first runtime with the public contract documented.",
+        "Shipped as a reactive grid-first runtime with the public contract documented.",
     },
     runtimeHint: "Focus canvas + arrow keys",
     sourceAriaPrefix: "Open source for",
@@ -456,9 +456,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Suma Pac-Man, fantasmas, naves, asteroides, HUD y otras formas reutilizables sin reconstruirlas cada vez.",
       },
       {
-        code: "createFixedStepLoop / createSceneManager",
-        name: "Runtime deterministico",
-        text: "Controla colisiones, transiciones y flujo de juego con loops fixed-step y un scene manager pequeno.",
+        code: "createCanvasRuntime / onPointerMove",
+        name: "Runtime canvas reactivo",
+        text: "Usa tamano logico, DPR limitado, suscripciones de puntero, pausa por visibilidad y cleanup explicito sin reemplazar Canvas 2D.",
       },
       {
         code: "createKeyTracker / createPointerTracker",
@@ -486,7 +486,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       install: "Instalacion",
       pixelSprite: "Sprite compilado",
       pointerGrid: "Tilemap",
-      runtime: "Fixed Step",
+      runtime: "Canvas Runtime",
     },
     docs: [
       {
@@ -507,12 +507,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       {
         href: `${repoUrl}/blob/main/docs/PUBLIC_API.md`,
         label: "API publica",
-        text: "Consulta que APIs son Stable, Experimental y Legacy dentro del contrato 1.0.0.",
+        text: "Consulta que APIs son Stable, Experimental y Legacy dentro del contrato 1.1.0.",
       },
       {
         href: `${repoUrl}/blob/main/docs/MIGRATION.md`,
         label: "Migracion",
-        text: "Pasa de 0.x a 1.0.0 con guia de namespaces, estado de audio y compatibilidad.",
+        text: "Pasa de 1.0.0 a 1.1.0 con runtime, lifecycle, preferencias de movimiento y compatibilidad.",
       },
       {
         href: "/es/docs/#audio-addons",
@@ -555,11 +555,11 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Una demo compacta que muestra hasta donde llegan sprites, estado y persistencia con muy poco codigo.",
       },
       {
-        href: `${repoUrl}/tree/main/examples/vanilla/runtime`,
+        href: `${repoUrl}/tree/main/examples/vanilla/interactive-character`,
         id: "runtime",
-        name: "Runtime",
+        name: "Personaje interactivo",
         number: "02",
-        text: "Un sandbox limpio para loops, movimiento de cuerpos e interaccion por teclado.",
+        text: "Demo responsive con DPR, reaccion al puntero, one-shot animation y cleanup explicito.",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/audio-arcade`,
@@ -643,7 +643,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       timeline: [
         {
           summary:
-            "API publica estable, sprites compilados, loops fixed-step, scene manager, tilemaps y smoke tests de exports.",
+            "Runtime canvas reactivo, eventos logicos de puntero, cleanup, reduced motion, sprite animator v2 y state machine v2.",
           version: libraryVersion,
         },
         {
@@ -668,7 +668,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         },
       ],
       title:
-        "Se entrega como runtime grid-first estable con contrato publico documentado.",
+        "Se entrega como runtime grid-first reactivo con contrato publico documentado.",
     },
     runtimeHint: "Enfoca el canvas y usa las flechas",
     sourceAriaPrefix: "Abrir codigo fuente de",
@@ -741,9 +741,9 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "Pac-Man、ghost、ship、asteroid、HUD などの再利用パーツを、そのままシーンへ持ち込めます。",
       },
       {
-        code: "createFixedStepLoop / createSceneManager",
-        name: "決定的runtime",
-        text: "fixed-step loop と小さな scene manager で、collision、transition、game flow を扱えます。",
+        code: "createCanvasRuntime / onPointerMove",
+        name: "リアクティブcanvas runtime",
+        text: "論理サイズ、DPR制限、pointer購読、visibility pause、明示的cleanupを Canvas 2D のまま扱えます。",
       },
       {
         code: "createKeyTracker / createPointerTracker",
@@ -771,7 +771,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       install: "導入",
       pixelSprite: "compiled sprite",
       pointerGrid: "tilemap",
-      runtime: "fixed step",
+      runtime: "canvas runtime",
     },
     docs: [
       {
@@ -792,12 +792,12 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       {
         href: `${repoUrl}/blob/main/docs/PUBLIC_API.md`,
         label: "Public API",
-        text: "1.0.0 contract で Stable、Experimental、Legacy に分かれる API を確認できます。",
+        text: "1.1.0 contract で Stable、Experimental、Legacy に分かれる API を確認できます。",
       },
       {
         href: `${repoUrl}/blob/main/docs/MIGRATION.md`,
         label: "Migration",
-        text: "0.x から 1.0.0 へ移るための namespace、audio status、互換性メモをまとめています。",
+        text: "1.0.0 から 1.1.0 へ移る runtime、lifecycle、motion preference、互換性メモをまとめています。",
       },
       {
         href: "/docs/#audio-addons",
@@ -840,11 +840,11 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
         text: "少ないコードで sprite、state、persistence がどこまで届くかを見せるコンパクトなデモ。",
       },
       {
-        href: `${repoUrl}/tree/main/examples/vanilla/runtime`,
+        href: `${repoUrl}/tree/main/examples/vanilla/interactive-character`,
         id: "runtime",
-        name: "Runtime",
+        name: "Interactive Character",
         number: "02",
-        text: "loop、body movement、keyboard 操作を素直に試せる motion sandbox。",
+        text: "DPR resize、pointer reaction、one-shot animation、明示的cleanupを含む responsive runtime demo。",
       },
       {
         href: `${repoUrl}/tree/main/examples/vanilla/audio-arcade`,
@@ -922,7 +922,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
       timeline: [
         {
           summary:
-            "安定した public API、compiled sprite、fixed-step loop、scene manager、tilemap、export smoke test を追加。",
+            "Reactive canvas runtime、logical pointer events、cleanup、reduced motion、sprite animator v2、state machine v2 を追加。",
           version: libraryVersion,
         },
         {
@@ -943,7 +943,7 @@ export const homeContentByLocale: Record<HomeLocale, HomeContent> = {
           version: "0.1.x",
         },
       ],
-      title: "public contract を明文化した、安定版の grid-first runtime です。",
+      title: "public contract を明文化した、reactive な grid-first runtime です。",
     },
     runtimeHint: "canvasを選んで矢印キー",
     sourceAriaPrefix: "ソースを開く",

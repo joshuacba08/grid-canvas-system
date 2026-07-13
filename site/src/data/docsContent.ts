@@ -16,6 +16,9 @@ interface RawDocsSnippet extends Omit<DocsSnippet, "highlighted"> {
     | "firstScene"
     | "sprite"
     | "runtime"
+    | "canvasRuntime"
+    | "spriteAnimator"
+    | "stateMachine"
     | "gameLoop"
     | "audioArcade"
     | "audioAdapters";
@@ -146,6 +149,103 @@ GridCanvasSystem.runtime.createAnimationLoop({
       GridCanvasSystem.runtime.oscillate01(time, 2)
     );
   }
+});`,
+  },
+  {
+    key: "canvasRuntime",
+    id: "canvas-runtime-code",
+    title: "canvas-runtime.ts",
+    lang: "typescript",
+    code: `import { createCanvasRuntime } from "grid-canvas-system/runtime";
+
+const canvas = document.querySelector<HTMLCanvasElement>("#scene");
+
+if (canvas === null) {
+  throw new Error("Canvas #scene not found");
+}
+
+const runtime = createCanvasRuntime({
+  canvas,
+  logicalWidth: 320,
+  logicalHeight: 180,
+  pixelRatio: "auto",
+  maxPixelRatio: 2,
+  pauseWhenHidden: true,
+  reducedMotion: "lower-fps",
+  update(deltaMs) {
+    actor.update(deltaMs);
+  },
+  render(ctx) {
+    drawScene(ctx, actor);
+  }
+});
+
+const unsubscribe = runtime.onPointerMove(({ x, y }) => {
+  actor.target = { x, y };
+});
+
+runtime.resizeToDisplaySize();
+runtime.start();
+
+export function cleanup() {
+  unsubscribe();
+  runtime.destroy();
+}`,
+  },
+  {
+    key: "spriteAnimator",
+    id: "sprite-animator-code",
+    title: "sprite-animator.ts",
+    lang: "typescript",
+    code: `const animator = GridCanvasSystem.runtime.createSpriteAnimator({
+  initial: "idle",
+  animations: {
+    idle: { frames: ["idleA", "idleB"], fps: 4, loop: true },
+    wave: { frames: ["waveA", "waveB", "waveC"], fps: 10, loop: false }
+  }
+});
+
+animator.play("wave", {
+  restart: true,
+  onComplete() {
+    animator.play("idle");
+  }
+});
+
+const offFrame = animator.subscribe((event) => {
+  if (event.type === "frame") {
+    redraw(event.frame);
+  }
+});`,
+  },
+  {
+    key: "stateMachine",
+    id: "state-machine-code",
+    title: "state-machine.ts",
+    lang: "typescript",
+    code: `const machine = GridCanvasSystem.runtime.createStateMachine({
+  initial: "idle",
+  transitions: {
+    idle: ["tracking"],
+    tracking: ["idle", "acting"],
+    acting: ["idle"]
+  },
+  states: {
+    acting: {
+      onEnter({ metadata }) {
+        console.log("acting", metadata);
+      }
+    }
+  },
+  historyLimit: 8
+});
+
+const offState = machine.subscribe((event) => {
+  animator.play(event.to === "acting" ? "wave" : "idle");
+});
+
+machine.transition("tracking", {
+  metadata: { source: "pointer" }
 });`,
   },
   {
@@ -282,9 +382,11 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
       {
         label: "Runtime",
         links: [
+          ["Canvas runtime", "#canvas-runtime"],
           ["Animation loop", "#animation-loop"],
           ["Input and motion", "#input-motion"],
           ["State and sprites", "#state-sprites"],
+          ["Framework cleanup", "#framework-cleanup"],
           ["Build a small game", "#game-architecture"],
         ],
       },
@@ -326,8 +428,11 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
       ["Audio add-ons", "#audio-addons"],
       ["Audio Arcade", "#audio-arcade"],
       ["Howler and Tone", "#audio-adapters"],
+      ["Canvas runtime", "#canvas-runtime"],
       ["Animation loop", "#animation-loop"],
       ["Input and motion", "#input-motion"],
+      ["State and sprites", "#state-sprites"],
+      ["Framework cleanup", "#framework-cleanup"],
       ["Build a small game", "#game-architecture"],
       ["Playground", "#playground"],
       ["API map", "#api-reference"],
@@ -393,9 +498,11 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
       {
         label: "Runtime",
         links: [
+          ["Runtime canvas", "#canvas-runtime"],
           ["Loop de animacion", "#animation-loop"],
           ["Input y movimiento", "#input-motion"],
           ["Estados y sprites", "#state-sprites"],
+          ["Cleanup en frameworks", "#framework-cleanup"],
           ["Construir un juego", "#game-architecture"],
         ],
       },
@@ -437,8 +544,11 @@ export const docsShellByLocale: Record<DocsLocale, DocsShellConfig> = {
       ["Add-ons de audio", "#audio-addons"],
       ["Audio Arcade", "#audio-arcade"],
       ["Howler y Tone", "#audio-adapters"],
+      ["Runtime canvas", "#canvas-runtime"],
       ["Loop de animacion", "#animation-loop"],
       ["Input y movimiento", "#input-motion"],
+      ["Estados y sprites", "#state-sprites"],
+      ["Cleanup en frameworks", "#framework-cleanup"],
       ["Construir un juego", "#game-architecture"],
       ["Playground", "#playground"],
       ["Mapa de API", "#api-reference"],
@@ -455,7 +565,10 @@ export const docsApiGroupsByLocale: Record<DocsLocale, DocsApiGroup[]> = {
     ["Core", "constructor, canvas, ctx, options, clearCanvas"],
     ["Drawing", "raw and compiled sprites, shapes, lines, text, HUD"],
     ["Audio", "arcade cues, loops, optional Howler and Tone adapters"],
-    ["Runtime", "variable and fixed loops, input, motion, state, scenes, tilemaps"],
+    [
+      "Runtime",
+      "canvas runtime, loop lifecycle, reduced motion, input, state, scenes, tilemaps",
+    ],
   ],
   es: [
     ["Base", "constructor, canvas, ctx, options, clearCanvas"],
@@ -463,7 +576,7 @@ export const docsApiGroupsByLocale: Record<DocsLocale, DocsApiGroup[]> = {
     ["Audio", "cues arcade, loops, adapters opcionales de Howler y Tone"],
     [
       "Runtime",
-      "loops variables y fijos, input, movimiento, estado, escenas y tilemaps",
+      "runtime canvas, lifecycle de loops, reduced motion, input, estado, escenas y tilemaps",
     ],
   ],
 };
@@ -552,8 +665,12 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
       name: "Runtime",
       methods: [
         [
+          "createCanvasRuntime(options)",
+          "Manage a 2D canvas with logical size, DPR, resize, pointer events and cleanup.",
+        ],
+        [
           "createAnimationLoop(options)",
-          "Run update and draw callbacks with elapsed seconds.",
+          "Run update/draw callbacks with legacy seconds or v2 millisecond callbacks and lifecycle controls.",
         ],
         [
           "createFixedStepLoop(options)",
@@ -565,9 +682,16 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
         ],
         [
           "createSpriteAnimator(options)",
-          "Advance named frame IDs independently of rendering.",
+          "Advance legacy or v2 animation definitions, one-shots and frame events independently of rendering.",
         ],
-        ["createStateMachine(options)", "Validate explicit state transitions."],
+        [
+          "createStateMachine(options)",
+          "Validate generic transitions with metadata, hooks, subscriptions and bounded history.",
+        ],
+        [
+          "getMotionPreference(window?)",
+          "Read prefers-reduced-motion lazily without touching window during import.",
+        ],
         [
           "createKeyTracker(target, options?)",
           "Track normalized keys on an explicit target.",
@@ -677,8 +801,12 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
       name: "Runtime",
       methods: [
         [
+          "createCanvasRuntime(options)",
+          "Administra canvas 2D con tamano logico, DPR, resize, eventos de puntero y cleanup.",
+        ],
+        [
           "createAnimationLoop(options)",
-          "Ejecuta callbacks de update y draw con segundos transcurridos.",
+          "Ejecuta callbacks legacy en segundos o callbacks v2 en milisegundos con controles de lifecycle.",
         ],
         [
           "createFixedStepLoop(options)",
@@ -690,9 +818,16 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
         ],
         [
           "createSpriteAnimator(options)",
-          "Avanza IDs de frames sin depender del render.",
+          "Avanza animaciones legacy o v2, one-shots y eventos de frame sin depender del render.",
         ],
-        ["createStateMachine(options)", "Valida transiciones de estado explicitas."],
+        [
+          "createStateMachine(options)",
+          "Valida transiciones genericas con metadata, hooks, suscripciones e historial limitado.",
+        ],
+        [
+          "getMotionPreference(window?)",
+          "Lee prefers-reduced-motion sin tocar window durante el import.",
+        ],
         [
           "createKeyTracker(target, options?)",
           "Sigue teclas normalizadas sobre un target explicito.",
@@ -723,6 +858,21 @@ export const docsMethodGroupsByLocale: Record<DocsLocale, DocsMethodGroup[]> = {
 
 export const docsRecipesByLocale: Record<DocsLocale, DocsRecipe[]> = {
   en: [
+    [
+      "Use the 1.1 canvas runtime",
+      "Resize with DPR, subscribe to logical pointer coordinates and destroy cleanly on unmount.",
+      "canvas-runtime",
+    ],
+    [
+      "Play a one-shot animation",
+      "Use Sprite Animator v2 to play an action once and return to idle on completion.",
+      "sprite-one-shot",
+    ],
+    [
+      "Connect state to animation",
+      "Subscribe to State Machine v2 transitions and keep rendering independent from state flow.",
+      "state-machine-sync",
+    ],
     [
       "Prototype retro feedback",
       "Unlock browser audio and test the audio-arcade addon directly in the Playground.",
@@ -761,6 +911,21 @@ export const docsRecipesByLocale: Record<DocsLocale, DocsRecipe[]> = {
     ],
   ],
   es: [
+    [
+      "Usa el runtime canvas 1.1",
+      "Redimensiona con DPR, suscribete a coordenadas logicas de puntero y destruye limpio en unmount.",
+      "canvas-runtime",
+    ],
+    [
+      "Reproduce una animacion one-shot",
+      "Usa Sprite Animator v2 para ejecutar una accion una vez y volver a idle al completar.",
+      "sprite-one-shot",
+    ],
+    [
+      "Conecta estado y animacion",
+      "Suscribete a transiciones de State Machine v2 y manten el render separado del flujo de estado.",
+      "state-machine-sync",
+    ],
     [
       "Prototipa feedback retro",
       "Desbloquea el audio del navegador y prueba audio-arcade directo en el Playground.",
@@ -803,6 +968,18 @@ export const docsRecipesByLocale: Record<DocsLocale, DocsRecipe[]> = {
 export const docsErrorRowsByLocale: Record<DocsLocale, DocsErrorRow[]> = {
   en: [
     [
+      "Canvas target missing",
+      "CanvasTargetNotFoundError means the ID is wrong or the element is not a canvas.",
+    ],
+    [
+      "2D context unavailable",
+      "CanvasContextUnavailableError means the browser could not create a canvas 2D context.",
+    ],
+    [
+      "Runtime destroyed",
+      "RuntimeDestroyedError protects lifecycle bugs after destroy().",
+    ],
+    [
       "Canvas not found",
       "The constructor ID must reference an existing canvas element.",
     ],
@@ -820,6 +997,18 @@ export const docsErrorRowsByLocale: Record<DocsLocale, DocsErrorRow[]> = {
     ["Invalid transition", "transition() returns false and keeps the current state."],
   ],
   es: [
+    [
+      "Canvas target faltante",
+      "CanvasTargetNotFoundError indica que el ID es incorrecto o el elemento no es canvas.",
+    ],
+    [
+      "Contexto 2D no disponible",
+      "CanvasContextUnavailableError indica que el navegador no pudo crear un contexto 2D.",
+    ],
+    [
+      "Runtime destruido",
+      "RuntimeDestroyedError protege bugs de lifecycle despues de destroy().",
+    ],
     [
       "Canvas no encontrado",
       "El ID del constructor debe apuntar a un canvas existente.",
@@ -848,12 +1037,25 @@ export const docsErrorRowsByLocale: Record<DocsLocale, DocsErrorRow[]> = {
 export const docsPerformanceNotesByLocale: Record<DocsLocale, DocsPerformanceNote[]> = {
   en: [
     ["Cap DPR", "Use a lower devicePixelRatio for large animated canvases."],
+    [
+      "Destroy on unmount",
+      "Call destroy() to release RAF handles and pointer listeners.",
+    ],
+    [
+      "Respect reduced motion",
+      'Use reducedMotion: "pause" or "lower-fps" for user preference aware loops.',
+    ],
     ["Reuse shapes", "Create asteroid data and static palettes outside draw()."],
     ["Pause hidden loops", "Stop animation when previews leave the viewport."],
     ["Clamp elapsed", "Set maxElapsed to avoid jumps after an inactive tab resumes."],
   ],
   es: [
     ["Limita DPR", "Usa un devicePixelRatio menor en canvases animados grandes."],
+    ["Destruye en unmount", "Llama destroy() para liberar RAF y listeners de puntero."],
+    [
+      "Respeta reduced motion",
+      'Usa reducedMotion: "pause" o "lower-fps" para loops sensibles a la preferencia del usuario.',
+    ],
     [
       "Reutiliza formas",
       "Crea datos de asteroides y paletas estaticas fuera de draw().",

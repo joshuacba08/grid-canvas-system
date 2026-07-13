@@ -1,10 +1,10 @@
-export const libraryVersion = "1.0.0";
+export const libraryVersion = "1.1.0";
 
 export const currentRelease = {
   version: libraryVersion,
-  title: "Stable grid-first canvas runtime",
+  title: "Reactive canvas runtime and interaction primitives",
   summary:
-    "Freeze the public API, add compiled sprites, fixed-step loops, scene management, tilemaps and package export verification.",
+    "Adds createCanvasRuntime, v2 animation loop lifecycle, reduced-motion handling, sprite one-shots, generic state machines and the runtime subpath export.",
 } as const;
 
 export interface ReleaseNote {
@@ -17,6 +17,11 @@ export const changelogCardText = `Release notes from 0.1.x through the current $
 export const releaseTimeline: readonly ReleaseNote[] = [
   {
     version: currentRelease.version,
+    summary:
+      "Reactive canvas runtime, logical pointer events, lifecycle cleanup, reduced motion, sprite animator v2, state machine v2 and package subpath exports.",
+  },
+  {
+    version: "1.0.0",
     summary:
       "Stable public API, compiled sprites, fixed-step loops, scene manager, tilemaps and export smoke tests.",
   },
