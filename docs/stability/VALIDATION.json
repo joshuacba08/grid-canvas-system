@@ -289,7 +289,221 @@
   "pending": [
     "ios-safari-physical",
     "android-chrome-physical",
-    "webkit-web-audio",
     "complete-promise-review"
-  ]
+  ],
+  "ci": {
+    "sourceCommit": "439ef4e2e86f9cd5962e96bd73c216d221a1c476",
+    "url": "https://github.com/joshuacba08/grid-canvas-system/actions/runs/38398357239",
+    "environment": {
+      "node": "v24.21.0",
+      "platform": "linux",
+      "playwright": "1.64.0",
+      "browsers": {
+        "chromium": "156.0.8078.4",
+        "firefox": "157.0",
+        "webkit": "27.2"
+      },
+      "os": "Ubuntu 24.04",
+      "audioOutput": "PulseAudio virtual sink gcs_validation"
+    },
+    "release": {
+      "node": "v24.21.0",
+      "runs": [
+        {
+          "iteration": 1,
+          "check": "format:check",
+          "passed": true,
+          "elapsedMs": 4319
+        },
+        {
+          "iteration": 1,
+          "check": "test",
+          "passed": true,
+          "elapsedMs": 2384
+        },
+        {
+          "iteration": 1,
+          "check": "build",
+          "passed": true,
+          "elapsedMs": 2465
+        },
+        {
+          "iteration": 1,
+          "check": "verify:types",
+          "passed": true,
+          "elapsedMs": 1066
+        },
+        {
+          "iteration": 1,
+          "check": "verify:package-exports",
+          "passed": true,
+          "elapsedMs": 3053
+        },
+        {
+          "iteration": 1,
+          "check": "verify:bundles",
+          "passed": true,
+          "elapsedMs": 500
+        },
+        {
+          "iteration": 1,
+          "check": "verify:dependencies",
+          "passed": true,
+          "elapsedMs": 810
+        },
+        {
+          "iteration": 1,
+          "check": "verify:contract",
+          "passed": true,
+          "elapsedMs": 1225
+        },
+        {
+          "iteration": 1,
+          "check": "site:build",
+          "passed": true,
+          "elapsedMs": 10234
+        },
+        {
+          "iteration": 1,
+          "check": "test:browser",
+          "passed": true,
+          "elapsedMs": 86703
+        },
+        {
+          "iteration": 1,
+          "check": "verify:performance",
+          "passed": true,
+          "elapsedMs": 4443
+        },
+        {
+          "iteration": 2,
+          "check": "format:check",
+          "passed": true,
+          "elapsedMs": 3298
+        },
+        {
+          "iteration": 2,
+          "check": "test",
+          "passed": true,
+          "elapsedMs": 2234
+        },
+        {
+          "iteration": 2,
+          "check": "build",
+          "passed": true,
+          "elapsedMs": 2439
+        },
+        {
+          "iteration": 2,
+          "check": "verify:types",
+          "passed": true,
+          "elapsedMs": 1044
+        },
+        {
+          "iteration": 2,
+          "check": "verify:package-exports",
+          "passed": true,
+          "elapsedMs": 2539
+        },
+        {
+          "iteration": 2,
+          "check": "verify:bundles",
+          "passed": true,
+          "elapsedMs": 506
+        },
+        {
+          "iteration": 2,
+          "check": "verify:dependencies",
+          "passed": true,
+          "elapsedMs": 790
+        },
+        {
+          "iteration": 2,
+          "check": "verify:contract",
+          "passed": true,
+          "elapsedMs": 1203
+        },
+        {
+          "iteration": 2,
+          "check": "site:build",
+          "passed": true,
+          "elapsedMs": 10143
+        },
+        {
+          "iteration": 2,
+          "check": "test:browser",
+          "passed": true,
+          "elapsedMs": 85738
+        },
+        {
+          "iteration": 2,
+          "check": "verify:performance",
+          "passed": true,
+          "elapsedMs": 4087
+        }
+      ]
+    },
+    "browser": {
+      "startTime": "2026-10-13T12:38:34.708Z",
+      "duration": 83969.882,
+      "expected": 190,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "performance": {
+      "node": "v24.21.0",
+      "platform": "linux",
+      "cpu": "Intel(R) Xeon(R) 6973P-C",
+      "iterations": 5000,
+      "repetitions": 10,
+      "warmup": 1,
+      "medians": {
+        "drawPixelSprite": 80.04525849999982,
+        "drawCompiledPixelSprite": 62.16419199999996
+      },
+      "samples": {
+        "drawPixelSprite": [
+          91.23132799999996, 89.85405800000012, 79.25059199999987, 79.27468399999998,
+          79.20137799999998, 77.94203700000025, 89.17357400000037, 79.99806099999978,
+          80.23740599999974, 80.09245599999986
+        ],
+        "drawCompiledPixelSprite": [
+          62.97150999999997, 81.24900000000002, 61.89490099999989, 61.272034000000076,
+          62.38716400000021, 61.51626499999975, 62.35584800000015, 62.616941000000224,
+          61.843796999999995, 61.972535999999764
+        ]
+      },
+      "librarySha256": "1f0aee3a3197d64fae2167c79d68e514d25c18423b0029c0756a7be95f559d6f",
+      "reference": {
+        "sourceCommit": "90719e6ade310f47731c64adf683fbc7f6707b61",
+        "librarySha256": "191ac5cbfb86ff8f3b4f11198db6c00353f5afa40013cedb09f0796e8a84e88e",
+        "medians": {
+          "drawPixelSprite": 77.75346050000007,
+          "drawCompiledPixelSprite": 61.85823849999997
+        },
+        "samples": {
+          "drawPixelSprite": [
+            84.67758200000003, 90.067857, 77.39770499999986, 79.92001200000004,
+            80.97424199999978, 76.05670599999985, 76.01827599999979, 77.25619700000016,
+            78.10921600000029, 76.63654799999995
+          ],
+          "drawCompiledPixelSprite": [
+            68.72769800000003, 71.0286900000001, 61.92309999999998, 61.140948999999864,
+            61.37948000000006, 61.54170599999998, 62.151650000000245, 63.94812700000011,
+            61.6908370000001, 61.793376999999964
+          ]
+        }
+      },
+      "gzipBytes": {
+        "audio/index.js": 2642,
+        "audio-arcade/index.js": 2972,
+        "chunks/shared-CmQ1q6Rp.js": 475,
+        "grid-canvas-system.es.js": 16932,
+        "grid-canvas-system.umd.js": 14868,
+        "runtime/index.js": 11190
+      },
+      "totalGzipBytes": 49079
+    }
+  }
 }

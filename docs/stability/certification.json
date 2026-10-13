@@ -33,10 +33,10 @@
     },
     {
       "id": "webkit-web-audio",
-      "status": "pending",
-      "environment": null,
-      "evidence": null,
-      "reviewer": null,
+      "status": "passed",
+      "environment": "Ubuntu 24.04, Node 24.21.0, pnpm 11.7.0, Playwright 1.64.0, WebKit 27.2; PulseAudio virtual output",
+      "evidence": "https://github.com/joshuacba08/grid-canvas-system/actions/runs/38398357239 — two complete runs, 190 browser cases, zero omissions/retries",
+      "reviewer": "Codex — reviewed browser report and release-check artifact for commit 439ef4e2e86f9cd5962e96bd73c216d221a1c476",
       "scenarios": ["all audio.spec.ts tests in a Web Audio-capable WebKit environment"]
     },
     {

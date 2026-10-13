@@ -55,7 +55,7 @@ Se conservaron dos fallos de comparación con las medianas históricas mientras 
 ## Pendientes de certificación
 
 1. **Safari iOS y Chrome Android físicos:** registrar modelo, sistema, navegador, versión candidata, fecha y evidencia de touch, orientación, audio, background/resume y teardown. La emulación no cubre este requisito.
-2. **Web Audio en WebKit compatible:** Windows WebKit no expone AudioContext en el entorno observado. Sus casos de audio se omiten con una razón explícita; repetirlos en Linux/macOS con soporte y adjuntar resultados sin omisiones.
+2. **Web Audio en WebKit compatible — cerrado:** Windows WebKit no expone AudioContext en el entorno observado. Sus omisiones locales se conservan; [CI Linux](https://github.com/joshuacba08/grid-canvas-system/actions/runs/38398357239) ejecuta WebKit 27.2 con una salida PulseAudio virtual y pasa todos los casos en dos controles completos sin omisiones ni reintentos.
 3. **Revisión completa de promesas:** verificar las aserciones vinculadas a cada fila; cerrar lagunas con pruebas o evidencia adicional. Una fila o un test existente no sustituye esta revisión.
 
 [certification.json](./certification.json) registra estos requisitos como pendientes. La publicación exige `verify:certification` y falla mientras falte evidencia revisada. No se promociona audio ni se anuncia cumplimiento total por pruebas omitidas.
