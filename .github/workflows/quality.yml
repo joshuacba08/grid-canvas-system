@@ -25,6 +25,14 @@ jobs:
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Provide an audio output for headless browsers
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes pulseaudio
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=gcs_validation
+          pactl set-default-sink gcs_validation
+          pactl info
       - name: Two consecutive checks without retries
         run: pnpm run verify:release
       - name: Real-time soak
