@@ -74,14 +74,14 @@ function resolveSprite(sprite: GridCanvasPixelSprite): GridCanvasPixelSprite {
     throw new Error("sprite must contain at least one row");
   }
 
-  const width = sprite[0]?.length ?? 0;
+  const width = typeof sprite[0] === "string" ? Array.from(sprite[0]).length : 0;
 
   if (width === 0) {
     throw new Error("sprite rows must contain at least one pixel");
   }
 
   sprite.forEach((row) => {
-    if (typeof row !== "string" || row.length !== width) {
+    if (typeof row !== "string" || Array.from(row).length !== width) {
       throw new Error("sprite rows must have the same length");
     }
   });
@@ -151,6 +151,10 @@ function resolveCompiledSprite(
       typeof pixel !== "object" ||
       !Number.isInteger(pixel.column) ||
       !Number.isInteger(pixel.row) ||
+      pixel.column < 0 ||
+      pixel.column >= compiled.width ||
+      pixel.row < 0 ||
+      pixel.row >= compiled.height ||
       typeof pixel.color !== "string"
     ) {
       throw new Error(`compiled sprite pixel ${index} is invalid`);
@@ -191,7 +195,7 @@ function resolveSpriteDimensions(sprite: SpriteSource): {
 
   const resolvedSprite = resolveSprite(sprite);
 
-  return { height: resolvedSprite.length, width: resolvedSprite[0].length };
+  return { height: resolvedSprite.length, width: Array.from(resolvedSprite[0]).length };
 }
 
 function compileForGeometry(
@@ -246,7 +250,7 @@ export function compilePixelSprite(
   return {
     height: resolvedSprite.length,
     pixels,
-    width: resolvedSprite[0].length,
+    width: Array.from(resolvedSprite[0]).length,
   };
 }
 

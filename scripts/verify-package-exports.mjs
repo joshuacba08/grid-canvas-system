@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -84,6 +84,9 @@ try {
   await writeFile(
     verifyScriptPath,
     `import { createRequire } from "node:module";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { runInNewContext } from "node:vm";
 import GridCanvasSystem from "grid-canvas-system";
 import { createHowlerAssetAudio, createToneMusicAudio } from "grid-canvas-system/audio";
 import { createArcadeAudio } from "grid-canvas-system/audio-arcade";
@@ -91,6 +94,12 @@ import { createCanvasRuntime, getMotionPreference } from "grid-canvas-system/run
 
 const require = createRequire(import.meta.url);
 const packageJson = require("grid-canvas-system/package.json");
+const packageRoot = dirname(require.resolve("grid-canvas-system/package.json"));
+const browser = {};
+runInNewContext(readFileSync(join(packageRoot, "dist/grid-canvas-system.umd.js"), "utf8"), browser);
+if (typeof browser.GridCanvasSystem !== "function" || browser.GridCanvasSystem.default !== browser.GridCanvasSystem || typeof browser.GridCanvasSystem.RuntimeDestroyedError !== "function") {
+  throw new Error("UMD must expose the documented constructor and error classes");
+}
 
 if (packageJson.name !== "grid-canvas-system") {
   throw new Error("package.json subpath did not resolve to grid-canvas-system");
@@ -153,7 +162,44 @@ if (typeof createHowlerAssetAudio !== "function" || typeof createToneMusicAudio 
   );
 
   run(process.execPath, [verifyScriptPath], smokeProject);
+  await copyFile(
+    join(projectRoot, "tests/types/package-smoke.ts"),
+    join(smokeProject, "consumer.ts"),
+  );
+  for (const moduleResolution of ["NodeNext", "Bundler"]) {
+    await writeFile(
+      join(smokeProject, "tsconfig.json"),
+      JSON.stringify({
+        compilerOptions: {
+          target: "ES2022",
+          module: moduleResolution === "NodeNext" ? "NodeNext" : "ESNext",
+          moduleResolution,
+          strict: true,
+          skipLibCheck: false,
+          noEmit: true,
+        },
+        include: ["consumer.ts"],
+      }),
+    );
+    run(
+      process.execPath,
+      [
+        join(projectRoot, "node_modules/typescript/bin/tsc"),
+        "-p",
+        join(smokeProject, "tsconfig.json"),
+      ],
+      smokeProject,
+    );
+  }
   console.log("Package exports verified from packed tarball.");
 } finally {
-  await rm(tempDir, { recursive: true, force: true });
+  const cleanupTarget = resolve(tempDir);
+  if (
+    dirname(cleanupTarget) !== resolve(tmpdir()) ||
+    !basename(cleanupTarget).startsWith("grid-canvas-system-exports-")
+  )
+    throw new Error(
+      "Refusing to remove a directory outside the temporary exports workspace",
+    );
+  await rm(cleanupTarget, { recursive: true, force: true });
 }

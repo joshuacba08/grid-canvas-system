@@ -1,3 +1,5 @@
+import { InvalidStateTransitionError, RuntimeDestroyedError } from "./errors";
+
 export interface GridCanvasScene<TDrawContext = unknown> {
   draw?: (context: TDrawContext) => void;
   enter?: (previousScene: string | null) => void;
@@ -11,9 +13,11 @@ export interface GridCanvasSceneManagerOptions<TDrawContext = unknown> {
 }
 
 export interface GridCanvasSceneManager<TDrawContext = unknown> {
+  destroy(): void;
   draw(context: TDrawContext): void;
   getScene(): GridCanvasScene<TDrawContext>;
   getSceneId(): string;
+  isDestroyed(): boolean;
   reset(): void;
   transition(nextScene: string): boolean;
   update(elapsed: number): void;
@@ -59,6 +63,29 @@ export function createSceneManager<TDrawContext = unknown>(
   const scenes = resolveScenes(options.scenes);
   const initial = resolveSceneId(options.initial, "initial");
   let currentSceneId = initial;
+  let destroyed = false;
+  let transitioning = false;
+  let exiting = false;
+  const assertActive = (): void => {
+    if (destroyed) throw new RuntimeDestroyedError("Scene manager has been destroyed.");
+  };
+  const changeScene = (nextScene: string): void => {
+    transitioning = true;
+    const previous = currentSceneId;
+    try {
+      exiting = true;
+      try {
+        scenes[previous].exit?.(nextScene);
+      } finally {
+        exiting = false;
+      }
+      if (destroyed) return;
+      currentSceneId = nextScene;
+      scenes[nextScene].enter?.(previous);
+    } finally {
+      transitioning = false;
+    }
+  };
 
   if (!Object.prototype.hasOwnProperty.call(scenes, initial)) {
     throw new Error("initial must reference an existing scene");
@@ -67,7 +94,13 @@ export function createSceneManager<TDrawContext = unknown>(
   scenes[initial].enter?.(null);
 
   return {
+    destroy(): void {
+      if (destroyed) return;
+      destroyed = true;
+      if (!exiting) scenes[currentSceneId].exit?.(currentSceneId);
+    },
     draw(context: TDrawContext): void {
+      assertActive();
       scenes[currentSceneId].draw?.(context);
     },
     getScene(): GridCanvasScene<TDrawContext> {
@@ -76,19 +109,31 @@ export function createSceneManager<TDrawContext = unknown>(
     getSceneId(): string {
       return currentSceneId;
     },
+    isDestroyed(): boolean {
+      return destroyed;
+    },
     reset(): void {
+      assertActive();
+      if (transitioning)
+        throw new InvalidStateTransitionError(
+          "Cannot reset during a scene transition.",
+        );
       if (currentSceneId !== initial) {
-        scenes[currentSceneId].exit?.(initial);
-        const previousSceneId = currentSceneId;
-        currentSceneId = initial;
-        scenes[currentSceneId].enter?.(previousSceneId);
+        changeScene(initial);
 
         return;
       }
 
-      scenes[currentSceneId].enter?.(currentSceneId);
+      transitioning = true;
+      try {
+        scenes[currentSceneId].enter?.(currentSceneId);
+      } finally {
+        transitioning = false;
+      }
     },
     transition(nextScene: string): boolean {
+      assertActive();
+      if (transitioning) return false;
       const resolvedNextScene = resolveSceneId(nextScene, "nextScene");
 
       if (!Object.prototype.hasOwnProperty.call(scenes, resolvedNextScene)) {
@@ -99,15 +144,12 @@ export function createSceneManager<TDrawContext = unknown>(
         return true;
       }
 
-      const previousSceneId = currentSceneId;
-
-      scenes[currentSceneId].exit?.(resolvedNextScene);
-      currentSceneId = resolvedNextScene;
-      scenes[currentSceneId].enter?.(previousSceneId);
+      changeScene(resolvedNextScene);
 
       return true;
     },
     update(elapsed: number): void {
+      assertActive();
       if (!Number.isFinite(elapsed)) {
         throw new Error("elapsed must be a finite number");
       }

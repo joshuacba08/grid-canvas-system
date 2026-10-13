@@ -1,4 +1,4 @@
-import { RuntimeDestroyedError } from "./errors";
+import { InvalidStateTransitionError, RuntimeDestroyedError } from "./errors";
 import type { Unsubscribe } from "./createCanvasRuntime";
 
 export interface StateTransitionEvent<TState extends string = string> {
@@ -76,7 +76,12 @@ function resolveTransitions<TState extends string>(
     });
   }
 
-  return transitions;
+  return Object.fromEntries(
+    Object.entries(transitions).map(([state, nextStates]) => [
+      state,
+      [...(nextStates as readonly TState[])],
+    ]),
+  ) as unknown as Record<TState, readonly TState[]>;
 }
 
 function resolveHistoryLimit(value: number | undefined): number {
@@ -94,6 +99,8 @@ function resolveHistoryLimit(value: number | undefined): number {
 export function createStateMachine<TState extends string = string>(
   options: GridCanvasStateMachineOptions<TState>,
 ): GridCanvasStateMachine<TState> {
+  if (options === null || typeof options !== "object")
+    throw new Error("options must be an object");
   const transitions = resolveTransitions(options.transitions);
   const initial = options.initial;
   const states: Partial<Record<TState, StateDefinition<TState>>> = options.states ?? {};
@@ -103,6 +110,7 @@ export function createStateMachine<TState extends string = string>(
   const history: StateHistoryEntry<TState>[] = [];
   let currentState = initial;
   let destroyed = false;
+  let transitioning = false;
 
   if (!Object.prototype.hasOwnProperty.call(transitions, initial)) {
     throw new Error("initial must reference an existing state");
@@ -116,6 +124,8 @@ export function createStateMachine<TState extends string = string>(
 
   const emit = (event: StateTransitionEvent<TState>): void => {
     for (const subscriber of [...subscribers]) {
+      if (destroyed) break;
+      if (!subscribers.has(subscriber)) continue;
       try {
         subscriber(event);
       } catch {
@@ -164,6 +174,10 @@ export function createStateMachine<TState extends string = string>(
     },
     reset(): void {
       assertActive();
+      if (transitioning)
+        throw new InvalidStateTransitionError(
+          "Cannot reset during a state transition.",
+        );
       currentState = initial;
       history.length = 0;
     },
@@ -181,6 +195,8 @@ export function createStateMachine<TState extends string = string>(
     ): boolean {
       assertActive();
 
+      if (transitioning) return false;
+
       if (!this.canTransition(nextState)) {
         return false;
       }
@@ -192,19 +208,28 @@ export function createStateMachine<TState extends string = string>(
         metadata: transitionOptions.metadata,
       };
 
-      states[from]?.onExit?.(context);
-      currentState = nextState;
-      states[nextState]?.onEnter?.(context);
-
       const event: StateTransitionEvent<TState> = {
         from,
         to: nextState,
         timestamp: now(),
         metadata: transitionOptions.metadata,
       };
-
-      pushHistory(event);
-      emit(event);
+      transitioning = true;
+      try {
+        states[from]?.onExit?.(context);
+        if (destroyed) return false;
+        currentState = nextState;
+        try {
+          states[nextState]?.onEnter?.(context);
+        } finally {
+          if (!destroyed) {
+            pushHistory(event);
+            emit(event);
+          }
+        }
+      } finally {
+        transitioning = false;
+      }
 
       return true;
     },

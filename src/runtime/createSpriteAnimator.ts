@@ -136,6 +136,8 @@ function resolveAnimations<TAnimation extends string, TFrame>(
 
   const resolvedEntries = Object.entries(animations).map(([name, value]) => {
     const definition = value as readonly TFrame[] | SpriteAnimation<TFrame>;
+    if (definition === null || typeof definition !== "object")
+      throw new Error(`animations.${name} must contain frames`);
     const frames = isAnimationDefinition(definition) ? definition.frames : definition;
 
     if (!Array.isArray(frames) || frames.length === 0) {
@@ -150,7 +152,7 @@ function resolveAnimations<TAnimation extends string, TFrame>(
     return [
       name,
       {
-        frames,
+        frames: [...frames],
         fps,
         loop: isAnimationDefinition(definition)
           ? (definition.loop ?? defaultLoop)
@@ -197,6 +199,7 @@ export function createSpriteAnimator(
   let paused = false;
   let complete = false;
   let destroyed = false;
+  let revision = 0;
   let playCompleteCallback: (() => void) | undefined;
   const subscribers = new Set<(event: SpriteAnimatorEvent<string, unknown>) => void>();
   const completeSubscribers = new Set<
@@ -232,6 +235,8 @@ export function createSpriteAnimator(
     };
 
     for (const subscriber of [...subscribers]) {
+      if (destroyed) break;
+      if (!subscribers.has(subscriber)) continue;
       try {
         subscriber(event);
       } catch {
@@ -248,25 +253,27 @@ export function createSpriteAnimator(
     const callback = playCompleteCallback;
 
     playCompleteCallback = undefined;
+    emit("complete");
 
     try {
-      callback?.();
+      if (!destroyed) callback?.();
     } catch {
       // Completion callback failures are isolated from animator state.
     }
 
     for (const subscriber of [...completeSubscribers]) {
+      if (destroyed) break;
+      if (!completeSubscribers.has(subscriber)) continue;
       try {
         subscriber(event);
       } catch {
         // Listener failures are isolated from animator state.
       }
     }
-
-    emit("complete");
   };
 
   const resetPlayback = (animation: string): void => {
+    revision += 1;
     currentAnimation = animation;
     frameIndex = 0;
     elapsedInFrame = 0;
@@ -291,6 +298,7 @@ export function createSpriteAnimator(
       }
 
       destroyed = true;
+      revision += 1;
       playing = false;
       paused = false;
       playCompleteCallback = undefined;
@@ -383,6 +391,7 @@ export function createSpriteAnimator(
     },
     stop(): void {
       assertActive();
+      revision += 1;
 
       playing = false;
       paused = false;
@@ -410,6 +419,7 @@ export function createSpriteAnimator(
 
       const resolvedElapsed = resolveNonNegative(elapsed, "elapsed");
       const animation = getResolvedAnimation();
+      const updateRevision = revision;
 
       elapsedInFrame += resolvedElapsed;
       elapsedInAnimationMs += resolvedElapsed * 1000;
@@ -425,6 +435,7 @@ export function createSpriteAnimator(
       if (animation.loop) {
         frameIndex = (frameIndex + elapsedFrames) % animation.frames.length;
         emit("frame");
+        if (destroyed || revision !== updateRevision || paused || !playing) return;
         return;
       }
 
@@ -436,6 +447,7 @@ export function createSpriteAnimator(
       if (nextFrameIndex !== frameIndex) {
         frameIndex = nextFrameIndex;
         emit("frame");
+        if (destroyed || revision !== updateRevision || paused || !playing) return;
       }
 
       if (frameIndex === animation.frames.length - 1 && !complete) {

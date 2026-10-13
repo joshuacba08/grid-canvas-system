@@ -14,6 +14,7 @@ import {
   type PacmanTutorialLocale,
 } from "../../data/pacmanTutorial";
 import { libraryVersion } from "../../data/siteRelease";
+import ReleaseCandidateNotice from "../ReleaseCandidateNotice.astro";
 import "../../styles/global.css";
 import "../../styles/docs.css";
 import "../../styles/tutorials.css";
@@ -145,6 +146,7 @@ const ui = UI[locale];
     />
   </head>
   <body class="docs-page tutorials-page">
+    <ReleaseCandidateNotice locale={locale} />
     <header class="docs-topbar tutorials-topbar">
       <div class="docs-topbar-inner">
         <a class="brand docs-brand" href={ui.tutorialsPath} aria-label={ui.siteBadge}>

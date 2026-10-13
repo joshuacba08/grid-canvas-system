@@ -13,6 +13,7 @@ import { codeToHtml } from "shiki";
 
 import { type HomeLocale, homeContentByLocale } from "../../data/homeContent";
 import { libraryVersion } from "../../data/siteRelease";
+import ReleaseCandidateNotice from "../ReleaseCandidateNotice.astro";
 import "../../styles/global.css";
 
 interface Props {
@@ -402,6 +403,9 @@ const latestRelease = content.release.timeline[0];
       </header>
 
       <main id="top">
+        <div style="padding-top: 90px">
+          <ReleaseCandidateNotice locale={locale} />
+        </div>
         <section class="hero" aria-label={content.brandAria}>
           <canvas id="hero-canvas"></canvas>
           <div>

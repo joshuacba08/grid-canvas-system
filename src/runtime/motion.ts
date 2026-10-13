@@ -79,6 +79,9 @@ export function circlesIntersect(
     radius: resolveFinite(b.radius, "b.radius"),
   };
 
+  if (resolvedA.radius < 0 || resolvedB.radius < 0)
+    throw new Error("circle radii must be non-negative");
+
   return (
     distanceBetweenPoints(resolvedA, resolvedB) <= resolvedA.radius + resolvedB.radius
   );
@@ -92,6 +95,7 @@ export function wrapPoint(
   const resolvedPoint = resolvePoint(point, "point");
   const resolvedBounds = resolveBounds(bounds);
   const resolvedRadius = resolveFinite(radius, "radius");
+  if (resolvedRadius < 0) throw new Error("radius must be non-negative");
   let { x, y } = resolvedPoint;
 
   if (x - resolvedRadius > resolvedBounds.width) {

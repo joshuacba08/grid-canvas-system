@@ -1,0 +1,3549 @@
+{
+  "interpretation": "test-linked acredita trazabilidad; no implica que todas las ramas o todos los entornos estén certificados. Ver AUDIT.md y certification.json.",
+  "apis": [
+    {
+      "id": "dist/index.d.ts:default",
+      "expectation": "El export default resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSystem",
+      "expectation": "El export GridCanvasSystem resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasTarget",
+      "expectation": "El export CanvasTarget resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasClearOptions",
+      "expectation": "El export GridCanvasClearOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSystemOptions",
+      "expectation": "El export GridCanvasSystemOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSystemResolvedOptions",
+      "expectation": "El export GridCanvasSystemResolvedOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasAsteroidOptions",
+      "expectation": "El export GridCanvasAsteroidOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasAsteroidShape",
+      "expectation": "El export GridCanvasAsteroidShape resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasBarIndicatorOptions",
+      "expectation": "El export GridCanvasBarIndicatorOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasCircleSectorOptions",
+      "expectation": "El export GridCanvasCircleSectorOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasGhostOptions",
+      "expectation": "El export GridCanvasGhostOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasMessageOptions",
+      "expectation": "El export GridCanvasMessageOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPacmanOptions",
+      "expectation": "El export GridCanvasPacmanOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasCompiledPixel",
+      "expectation": "El export GridCanvasCompiledPixel resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasCompiledPixelSprite",
+      "expectation": "El export GridCanvasCompiledPixelSprite resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasCompiledPixelSpriteDrawOptions",
+      "expectation": "El export GridCanvasCompiledPixelSpriteDrawOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPixelPalette",
+      "expectation": "El export GridCanvasPixelPalette resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPixelSprite",
+      "expectation": "El export GridCanvasPixelSprite resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPixelSpriteDrawOptions",
+      "expectation": "El export GridCanvasPixelSpriteDrawOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPixelSpriteGeometryOptions",
+      "expectation": "El export GridCanvasPixelSpriteGeometryOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPoint",
+      "expectation": "El export GridCanvasPoint resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPolylineOptions",
+      "expectation": "El export GridCanvasPolylineOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasProjectileOptions",
+      "expectation": "El export GridCanvasProjectileOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasShapeOptions",
+      "expectation": "El export GridCanvasShapeOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasShipOptions",
+      "expectation": "El export GridCanvasShipOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasStrokeOptions",
+      "expectation": "El export GridCanvasStrokeOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTextOptions",
+      "expectation": "El export GridCanvasTextOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasValueLabelOptions",
+      "expectation": "El export GridCanvasValueLabelOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:AnimationCompleteEvent",
+      "expectation": "El export AnimationCompleteEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasPointerEvent",
+      "expectation": "El export CanvasPointerEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasResizeOptions",
+      "expectation": "El export CanvasResizeOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasRuntime",
+      "expectation": "El export CanvasRuntime resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.destroy",
+      "expectation": "El miembro CanvasRuntime.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.getCanvas",
+      "expectation": "El miembro CanvasRuntime.getCanvas conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.getContext",
+      "expectation": "El miembro CanvasRuntime.getContext conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.getSize",
+      "expectation": "El miembro CanvasRuntime.getSize conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.isDestroyed",
+      "expectation": "El miembro CanvasRuntime.isDestroyed conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.onPointerCancel",
+      "expectation": "El miembro CanvasRuntime.onPointerCancel conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.onPointerDown",
+      "expectation": "El miembro CanvasRuntime.onPointerDown conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.onPointerMove",
+      "expectation": "El miembro CanvasRuntime.onPointerMove conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.onPointerUp",
+      "expectation": "El miembro CanvasRuntime.onPointerUp conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.pause",
+      "expectation": "El miembro CanvasRuntime.pause conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.renderOnce",
+      "expectation": "El miembro CanvasRuntime.renderOnce conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.resize",
+      "expectation": "El miembro CanvasRuntime.resize conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.resizeToDisplaySize",
+      "expectation": "El miembro CanvasRuntime.resizeToDisplaySize conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.resume",
+      "expectation": "El miembro CanvasRuntime.resume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.start",
+      "expectation": "El miembro CanvasRuntime.start conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:CanvasRuntime.stop",
+      "expectation": "El miembro CanvasRuntime.stop conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createCanvasRuntime.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasRuntimeOptions",
+      "expectation": "El export CanvasRuntimeOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasRuntimeSize",
+      "expectation": "El export CanvasRuntimeSize resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasAnimationLoop",
+      "expectation": "El export GridCanvasAnimationLoop resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.destroy",
+      "expectation": "El miembro GridCanvasAnimationLoop.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.frame",
+      "expectation": "El miembro GridCanvasAnimationLoop.frame conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.isDestroyed",
+      "expectation": "El miembro GridCanvasAnimationLoop.isDestroyed conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.isPaused",
+      "expectation": "El miembro GridCanvasAnimationLoop.isPaused conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.isRunning",
+      "expectation": "El miembro GridCanvasAnimationLoop.isRunning conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.pause",
+      "expectation": "El miembro GridCanvasAnimationLoop.pause conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.reset",
+      "expectation": "El miembro GridCanvasAnimationLoop.reset conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.resume",
+      "expectation": "El miembro GridCanvasAnimationLoop.resume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.start",
+      "expectation": "El miembro GridCanvasAnimationLoop.start conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasAnimationLoop.stop",
+      "expectation": "El miembro GridCanvasAnimationLoop.stop conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createAnimationLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasAnimationLoopOptions",
+      "expectation": "El export GridCanvasAnimationLoopOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasFixedStepLoop",
+      "expectation": "El export GridCanvasFixedStepLoop resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasFixedStepLoop.destroy",
+      "expectation": "El miembro GridCanvasFixedStepLoop.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createFixedStepLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasFixedStepLoop.frame",
+      "expectation": "El miembro GridCanvasFixedStepLoop.frame conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createFixedStepLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasFixedStepLoop.isDestroyed",
+      "expectation": "El miembro GridCanvasFixedStepLoop.isDestroyed conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createFixedStepLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasFixedStepLoop.isRunning",
+      "expectation": "El miembro GridCanvasFixedStepLoop.isRunning conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createFixedStepLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasFixedStepLoop.reset",
+      "expectation": "El miembro GridCanvasFixedStepLoop.reset conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createFixedStepLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasFixedStepLoop.start",
+      "expectation": "El miembro GridCanvasFixedStepLoop.start conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createFixedStepLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasFixedStepLoop.stop",
+      "expectation": "El miembro GridCanvasFixedStepLoop.stop conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createFixedStepLoop.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasFixedStepLoopOptions",
+      "expectation": "El export GridCanvasFixedStepLoopOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasKeyTracker",
+      "expectation": "El export GridCanvasKeyTracker resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasKeyTracker.destroy",
+      "expectation": "El miembro GridCanvasKeyTracker.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createKeyTracker.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasKeyTracker.focus",
+      "expectation": "El miembro GridCanvasKeyTracker.focus conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createKeyTracker.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasKeyTracker.isPressed",
+      "expectation": "El miembro GridCanvasKeyTracker.isPressed conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createKeyTracker.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasKeyTracker.pressedKeys",
+      "expectation": "El miembro GridCanvasKeyTracker.pressedKeys conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createKeyTracker.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasKeyTrackerOptions",
+      "expectation": "El export GridCanvasKeyTrackerOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasGridCell",
+      "expectation": "El export GridCanvasGridCell resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasGridOptions",
+      "expectation": "El export GridCanvasGridOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasScene",
+      "expectation": "El export GridCanvasScene resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSceneManager",
+      "expectation": "El export GridCanvasSceneManager resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.destroy",
+      "expectation": "El miembro GridCanvasSceneManager.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.draw",
+      "expectation": "El miembro GridCanvasSceneManager.draw conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.getScene",
+      "expectation": "El miembro GridCanvasSceneManager.getScene conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.getSceneId",
+      "expectation": "El miembro GridCanvasSceneManager.getSceneId conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.isDestroyed",
+      "expectation": "El miembro GridCanvasSceneManager.isDestroyed conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.reset",
+      "expectation": "El miembro GridCanvasSceneManager.reset conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.transition",
+      "expectation": "El miembro GridCanvasSceneManager.transition conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSceneManager.update",
+      "expectation": "El miembro GridCanvasSceneManager.update conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSceneManager.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSceneManagerOptions",
+      "expectation": "El export GridCanvasSceneManagerOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSpriteAnimator",
+      "expectation": "El export GridCanvasSpriteAnimator resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.destroy",
+      "expectation": "El miembro GridCanvasSpriteAnimator.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.getAnimation",
+      "expectation": "El miembro GridCanvasSpriteAnimator.getAnimation conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.getCurrentAnimation",
+      "expectation": "El miembro GridCanvasSpriteAnimator.getCurrentAnimation conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.getFrame",
+      "expectation": "El miembro GridCanvasSpriteAnimator.getFrame conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.getFrameIndex",
+      "expectation": "El miembro GridCanvasSpriteAnimator.getFrameIndex conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.isComplete",
+      "expectation": "El miembro GridCanvasSpriteAnimator.isComplete conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.isDestroyed",
+      "expectation": "El miembro GridCanvasSpriteAnimator.isDestroyed conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.isPaused",
+      "expectation": "El miembro GridCanvasSpriteAnimator.isPaused conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.isPlaying",
+      "expectation": "El miembro GridCanvasSpriteAnimator.isPlaying conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.onComplete",
+      "expectation": "El miembro GridCanvasSpriteAnimator.onComplete conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.pause",
+      "expectation": "El miembro GridCanvasSpriteAnimator.pause conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.play",
+      "expectation": "El miembro GridCanvasSpriteAnimator.play conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.reset",
+      "expectation": "El miembro GridCanvasSpriteAnimator.reset conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.resume",
+      "expectation": "El miembro GridCanvasSpriteAnimator.resume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.stop",
+      "expectation": "El miembro GridCanvasSpriteAnimator.stop conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.subscribe",
+      "expectation": "El miembro GridCanvasSpriteAnimator.subscribe conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasSpriteAnimator.update",
+      "expectation": "El miembro GridCanvasSpriteAnimator.update conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createSpriteAnimator.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSpriteAnimatorOptions",
+      "expectation": "El export GridCanvasSpriteAnimatorOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasStateMachine",
+      "expectation": "El export GridCanvasStateMachine resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.canTransition",
+      "expectation": "El miembro GridCanvasStateMachine.canTransition conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.destroy",
+      "expectation": "El miembro GridCanvasStateMachine.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.getHistory",
+      "expectation": "El miembro GridCanvasStateMachine.getHistory conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.getState",
+      "expectation": "El miembro GridCanvasStateMachine.getState conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.isDestroyed",
+      "expectation": "El miembro GridCanvasStateMachine.isDestroyed conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.reset",
+      "expectation": "El miembro GridCanvasStateMachine.reset conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.subscribe",
+      "expectation": "El miembro GridCanvasStateMachine.subscribe conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasStateMachine.transition",
+      "expectation": "El miembro GridCanvasStateMachine.transition conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createStateMachine.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasStateMachineOptions",
+      "expectation": "El export GridCanvasStateMachineOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasMassBodyOptions",
+      "expectation": "El export GridCanvasMassBodyOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPointerTracker",
+      "expectation": "El export GridCanvasPointerTracker resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasPointerTracker.destroy",
+      "expectation": "El miembro GridCanvasPointerTracker.destroy conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createPointerTracker.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasPointerTracker.isDown",
+      "expectation": "El miembro GridCanvasPointerTracker.isDown conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createPointerTracker.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:GridCanvasPointerTracker.position",
+      "expectation": "El miembro GridCanvasPointerTracker.position conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Node / DOM / navegadores",
+      "source": "dist/runtime/createPointerTracker.d.ts",
+      "tests": [
+        "tests/RuntimePrimitives.test.ts",
+        "tests/Stabilization.test.ts",
+        "tests/browser/runtime.spec.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasPointerTrackerOptions",
+      "expectation": "El export GridCanvasPointerTrackerOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasBounds",
+      "expectation": "El export GridCanvasBounds resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasCircleLike",
+      "expectation": "El export GridCanvasCircleLike resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasCollisionTarget",
+      "expectation": "El export GridCanvasCollisionTarget resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasParticle",
+      "expectation": "El export GridCanvasParticle resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasParticleBurstOptions",
+      "expectation": "El export GridCanvasParticleBurstOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasParticleStepOptions",
+      "expectation": "El export GridCanvasParticleStepOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasRectangleLike",
+      "expectation": "El export GridCanvasRectangleLike resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasSize",
+      "expectation": "El export GridCanvasSize resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasStackAlign",
+      "expectation": "El export GridCanvasStackAlign resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasStackDirection",
+      "expectation": "El export GridCanvasStackDirection resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasStackLayoutOptions",
+      "expectation": "El export GridCanvasStackLayoutOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTileDefinition",
+      "expectation": "El export GridCanvasTileDefinition resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTileMap",
+      "expectation": "El export GridCanvasTileMap resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTileMapDrawOptions",
+      "expectation": "El export GridCanvasTileMapDrawOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTileMapDrawRenderer",
+      "expectation": "El export GridCanvasTileMapDrawRenderer resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTileMapOptions",
+      "expectation": "El export GridCanvasTileMapOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTileObjectDefinition",
+      "expectation": "El export GridCanvasTileObjectDefinition resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasTileSet",
+      "expectation": "El export GridCanvasTileSet resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:GridCanvasVelocity",
+      "expectation": "El export GridCanvasVelocity resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:MotionPreference",
+      "expectation": "El export MotionPreference resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:PixelRatioOption",
+      "expectation": "El export PixelRatioOption resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:PlayAnimationOptions",
+      "expectation": "El export PlayAnimationOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:ReducedMotionBehavior",
+      "expectation": "El export ReducedMotionBehavior resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:SpriteAnimation",
+      "expectation": "El export SpriteAnimation resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:SpriteAnimatorEvent",
+      "expectation": "El export SpriteAnimatorEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:SpriteAnimatorEventType",
+      "expectation": "El export SpriteAnimatorEventType resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:StateDefinition",
+      "expectation": "El export StateDefinition resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:StateHistoryEntry",
+      "expectation": "El export StateHistoryEntry resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:StateLifecycleContext",
+      "expectation": "El export StateLifecycleContext resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:StateTransitionEvent",
+      "expectation": "El export StateTransitionEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:StateTransitionOptions",
+      "expectation": "El export StateTransitionOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:Unsubscribe",
+      "expectation": "El export Unsubscribe resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasContextUnavailableError",
+      "expectation": "El export CanvasContextUnavailableError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:CanvasTargetNotFoundError",
+      "expectation": "El export CanvasTargetNotFoundError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:InvalidStateTransitionError",
+      "expectation": "El export InvalidStateTransitionError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:RuntimeDestroyedError",
+      "expectation": "El export RuntimeDestroyedError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/index.d.ts:UnknownAnimationError",
+      "expectation": "El export UnknownAnimationError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasRuntime",
+      "expectation": "El export GridCanvasRuntime resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:hitTestCircleRectangle",
+      "expectation": "El export hitTestCircleRectangle resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:hitTestPoint",
+      "expectation": "El export hitTestPoint resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:hitTestRectangle",
+      "expectation": "El export hitTestRectangle resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:appendTrailPoint",
+      "expectation": "El export appendTrailPoint resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createParticleBurst",
+      "expectation": "El export createParticleBurst resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:layoutStack",
+      "expectation": "El export layoutStack resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:stepParticles",
+      "expectation": "El export stepParticles resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:canvasToGrid",
+      "expectation": "El export canvasToGrid resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:gridToCanvas",
+      "expectation": "El export gridToCanvas resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:snapPointToGrid",
+      "expectation": "El export snapPointToGrid resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasGridCell",
+      "expectation": "El export GridCanvasGridCell resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasGridOptions",
+      "expectation": "El export GridCanvasGridOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createAnimationLoop",
+      "expectation": "El export createAnimationLoop resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createFixedStepLoop",
+      "expectation": "El export createFixedStepLoop resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createCanvasRuntime",
+      "expectation": "El export createCanvasRuntime resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:CanvasPointerEvent",
+      "expectation": "El export CanvasPointerEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:CanvasResizeOptions",
+      "expectation": "El export CanvasResizeOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:CanvasRuntime",
+      "expectation": "El export CanvasRuntime resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:CanvasRuntimeOptions",
+      "expectation": "El export CanvasRuntimeOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:CanvasRuntimeSize",
+      "expectation": "El export CanvasRuntimeSize resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:PixelRatioOption",
+      "expectation": "El export PixelRatioOption resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:Unsubscribe",
+      "expectation": "El export Unsubscribe resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:CanvasContextUnavailableError",
+      "expectation": "El export CanvasContextUnavailableError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:CanvasTargetNotFoundError",
+      "expectation": "El export CanvasTargetNotFoundError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:InvalidStateTransitionError",
+      "expectation": "El export InvalidStateTransitionError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:RuntimeDestroyedError",
+      "expectation": "El export RuntimeDestroyedError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:UnknownAnimationError",
+      "expectation": "El export UnknownAnimationError resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:getMotionPreference",
+      "expectation": "El export getMotionPreference resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:MotionPreference",
+      "expectation": "El export MotionPreference resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:ReducedMotionBehavior",
+      "expectation": "El export ReducedMotionBehavior resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasFixedStepLoop",
+      "expectation": "El export GridCanvasFixedStepLoop resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasFixedStepLoopOptions",
+      "expectation": "El export GridCanvasFixedStepLoopOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createPointerTracker",
+      "expectation": "El export createPointerTracker resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createSceneManager",
+      "expectation": "El export createSceneManager resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasScene",
+      "expectation": "El export GridCanvasScene resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasSceneManager",
+      "expectation": "El export GridCanvasSceneManager resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasSceneManagerOptions",
+      "expectation": "El export GridCanvasSceneManagerOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createSpriteAnimator",
+      "expectation": "El export createSpriteAnimator resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:createStateMachine",
+      "expectation": "El export createStateMachine resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:drawTileMap",
+      "expectation": "El export drawTileMap resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:getTileAt",
+      "expectation": "El export getTileAt resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:hitTestTileMap",
+      "expectation": "El export hitTestTileMap resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:setTileAt",
+      "expectation": "El export setTileAt resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:tileToBounds",
+      "expectation": "El export tileToBounds resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasTileDefinition",
+      "expectation": "El export GridCanvasTileDefinition resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasTileMap",
+      "expectation": "El export GridCanvasTileMap resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasTileMapDrawOptions",
+      "expectation": "El export GridCanvasTileMapDrawOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasTileMapDrawRenderer",
+      "expectation": "El export GridCanvasTileMapDrawRenderer resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasTileMapOptions",
+      "expectation": "El export GridCanvasTileMapOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasTileObjectDefinition",
+      "expectation": "El export GridCanvasTileObjectDefinition resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasTileSet",
+      "expectation": "El export GridCanvasTileSet resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasAnimationLoop",
+      "expectation": "El export GridCanvasAnimationLoop resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasAnimationLoopOptions",
+      "expectation": "El export GridCanvasAnimationLoopOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasKeyTracker",
+      "expectation": "El export GridCanvasKeyTracker resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasKeyTrackerOptions",
+      "expectation": "El export GridCanvasKeyTrackerOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasPointerTracker",
+      "expectation": "El export GridCanvasPointerTracker resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasPointerTrackerOptions",
+      "expectation": "El export GridCanvasPointerTrackerOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:AnimationCompleteEvent",
+      "expectation": "El export AnimationCompleteEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasSpriteAnimator",
+      "expectation": "El export GridCanvasSpriteAnimator resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasSpriteAnimatorOptions",
+      "expectation": "El export GridCanvasSpriteAnimatorOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:PlayAnimationOptions",
+      "expectation": "El export PlayAnimationOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:SpriteAnimation",
+      "expectation": "El export SpriteAnimation resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:SpriteAnimatorEvent",
+      "expectation": "El export SpriteAnimatorEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:SpriteAnimatorEventType",
+      "expectation": "El export SpriteAnimatorEventType resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasStateMachine",
+      "expectation": "El export GridCanvasStateMachine resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasStateMachineOptions",
+      "expectation": "El export GridCanvasStateMachineOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:StateDefinition",
+      "expectation": "El export StateDefinition resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:StateHistoryEntry",
+      "expectation": "El export StateHistoryEntry resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:StateLifecycleContext",
+      "expectation": "El export StateLifecycleContext resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:StateTransitionEvent",
+      "expectation": "El export StateTransitionEvent resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:StateTransitionOptions",
+      "expectation": "El export StateTransitionOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasMassBodyOptions",
+      "expectation": "El export GridCanvasMassBodyOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasBounds",
+      "expectation": "El export GridCanvasBounds resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasCircleLike",
+      "expectation": "El export GridCanvasCircleLike resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasCollisionTarget",
+      "expectation": "El export GridCanvasCollisionTarget resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasParticle",
+      "expectation": "El export GridCanvasParticle resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasParticleBurstOptions",
+      "expectation": "El export GridCanvasParticleBurstOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasParticleStepOptions",
+      "expectation": "El export GridCanvasParticleStepOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasRectangleLike",
+      "expectation": "El export GridCanvasRectangleLike resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasSize",
+      "expectation": "El export GridCanvasSize resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasStackAlign",
+      "expectation": "El export GridCanvasStackAlign resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasStackDirection",
+      "expectation": "El export GridCanvasStackDirection resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasStackLayoutOptions",
+      "expectation": "El export GridCanvasStackLayoutOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/runtime/index.d.ts:GridCanvasVelocity",
+      "expectation": "El export GridCanvasVelocity resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/runtime/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:createHowlerAssetAudio",
+      "expectation": "El export createHowlerAssetAudio resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:createToneMusicAudio",
+      "expectation": "El export createToneMusicAudio resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:HowlerAssetDefinition",
+      "expectation": "El export HowlerAssetDefinition resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:HowlerAssetMap",
+      "expectation": "El export HowlerAssetMap resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:HowlerPlayOptions",
+      "expectation": "El export HowlerPlayOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:HowlerAssetAudioController",
+      "expectation": "El export HowlerAssetAudioController resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.dispose",
+      "expectation": "El miembro HowlerAssetAudioController.dispose conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.fade",
+      "expectation": "El miembro HowlerAssetAudioController.fade conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.mute",
+      "expectation": "El miembro HowlerAssetAudioController.mute conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.pause",
+      "expectation": "El miembro HowlerAssetAudioController.pause conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.play",
+      "expectation": "El miembro HowlerAssetAudioController.play conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.setVolume",
+      "expectation": "El miembro HowlerAssetAudioController.setVolume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.stop",
+      "expectation": "El miembro HowlerAssetAudioController.stop conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:HowlerAssetAudioController.unload",
+      "expectation": "El miembro HowlerAssetAudioController.unload conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:ToneInstrumentKind",
+      "expectation": "El export ToneInstrumentKind resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:ToneMusicOptions",
+      "expectation": "El export ToneMusicOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:ToneSequenceStep",
+      "expectation": "El export ToneSequenceStep resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:ToneSequence",
+      "expectation": "El export ToneSequence resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio/index.d.ts:ToneMusicAudioController",
+      "expectation": "El export ToneMusicAudioController resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.dispose",
+      "expectation": "El miembro ToneMusicAudioController.dispose conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.playSequence",
+      "expectation": "El miembro ToneMusicAudioController.playSequence conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.registerSequence",
+      "expectation": "El miembro ToneMusicAudioController.registerSequence conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.resume",
+      "expectation": "El miembro ToneMusicAudioController.resume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.setBpm",
+      "expectation": "El miembro ToneMusicAudioController.setBpm conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.setMasterVolume",
+      "expectation": "El miembro ToneMusicAudioController.setMasterVolume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.stopSequence",
+      "expectation": "El miembro ToneMusicAudioController.stopSequence conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ToneMusicAudioController.trigger",
+      "expectation": "El miembro ToneMusicAudioController.trigger conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:createArcadeAudio",
+      "expectation": "El export createArcadeAudio resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeSfxPreset",
+      "expectation": "El export ArcadeSfxPreset resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeLoopPreset",
+      "expectation": "El export ArcadeLoopPreset resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeVoice",
+      "expectation": "El export ArcadeVoice resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeAudioOptions",
+      "expectation": "El export ArcadeAudioOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeSfxOptions",
+      "expectation": "El export ArcadeSfxOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeLoopOptions",
+      "expectation": "El export ArcadeLoopOptions resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeSequenceStep",
+      "expectation": "El export ArcadeSequenceStep resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeSequenceChannel",
+      "expectation": "El export ArcadeSequenceChannel resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeSequence",
+      "expectation": "El export ArcadeSequence resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "dist/audio-arcade/index.d.ts:ArcadeAudioController",
+      "expectation": "El export ArcadeAudioController resuelve desde el tarball; sus declaraciones compilan en NodeNext y Bundler sin skipLibCheck.",
+      "environment": "Node 24 / TypeScript 5.6.3",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/types/package-smoke.ts", "scripts/verify-package-exports.mjs"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.dispose",
+      "expectation": "El miembro ArcadeAudioController.dispose conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.mute",
+      "expectation": "El miembro ArcadeAudioController.mute conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.playExplosion",
+      "expectation": "El miembro ArcadeAudioController.playExplosion conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.playLoop",
+      "expectation": "El miembro ArcadeAudioController.playLoop conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.playPickup",
+      "expectation": "El miembro ArcadeAudioController.playPickup conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.playPreset",
+      "expectation": "El miembro ArcadeAudioController.playPreset conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.playShoot",
+      "expectation": "El miembro ArcadeAudioController.playShoot conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.resume",
+      "expectation": "El miembro ArcadeAudioController.resume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.setMasterVolume",
+      "expectation": "El miembro ArcadeAudioController.setMasterVolume conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.stopAll",
+      "expectation": "El miembro ArcadeAudioController.stopAll conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.stopLoop",
+      "expectation": "El miembro ArcadeAudioController.stopLoop conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "member:ArcadeAudioController.suspend",
+      "expectation": "El miembro ArcadeAudioController.suspend conserva su firma, comportamiento y ciclo de vida documentados; revisar aserciones de entradas, resultados y errores aplicables.",
+      "environment": "Web Audio / Howler / Tone en navegadores compatibles",
+      "source": "dist/audio-arcade/index.d.ts",
+      "tests": ["tests/AudioAddons.test.ts", "tests/browser/audio.spec.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:clearCanvas",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de clearCanvas; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawAsteroid",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawAsteroid; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawBarIndicator",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawBarIndicator; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawCircleSector",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawCircleSector; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawCompiledPixelSprite",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawCompiledPixelSprite; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawCoordinate",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawCoordinate; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawGhost",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawGhost; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawLine",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawLine; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawMessage",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawMessage; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawPacman",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawPacman; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawPixelSprite",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawPixelSprite; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawPolyline",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawPolyline; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawProjectile",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawProjectile; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawShip",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawShip; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawText",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawText; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:drawValueLabel",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de drawValueLabel; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:polarToCartesian",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de polarToCartesian; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "instance:createAsteroidShape",
+      "expectation": "Mantener el comportamiento, configuración y validaciones documentados de createAsteroidShape; restaurar el contexto tras el dibujo.",
+      "environment": "Canvas Node / navegadores",
+      "source": "README.md",
+      "tests": [
+        "tests/GridCanvasSystem.test.ts",
+        "tests/GridCanvasSystem.visual.test.ts",
+        "tests/Stabilization.test.ts"
+      ],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:angleToPoint",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de angleToPoint.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:appendTrailPoint",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de appendTrailPoint.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:circlesIntersect",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de circlesIntersect.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:canvasToGrid",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de canvasToGrid.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createAnimationLoop",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createAnimationLoop.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createCanvasRuntime",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createCanvasRuntime.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createFixedStepLoop",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createFixedStepLoop.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createKeyTracker",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createKeyTracker.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createParticleBurst",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createParticleBurst.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createPointerTracker",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createPointerTracker.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createSceneManager",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createSceneManager.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createSpriteAnimator",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createSpriteAnimator.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:createStateMachine",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de createStateMachine.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:getMotionPreference",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de getMotionPreference.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:distanceBetweenPoints",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de distanceBetweenPoints.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:gridToCanvas",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de gridToCanvas.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:hitTestCircleRectangle",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de hitTestCircleRectangle.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:hitTestPoint",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de hitTestPoint.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:hitTestRectangle",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de hitTestRectangle.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:layoutStack",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de layoutStack.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:MassBody",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de MassBody.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:normalizeKeyIdentifier",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de normalizeKeyIdentifier.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:oscillate01",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de oscillate01.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:snapPointToGrid",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de snapPointToGrid.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:stepParticles",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de stepParticles.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:drawTileMap",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de drawTileMap.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:getTileAt",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de getTileAt.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:hitTestTileMap",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de hitTestTileMap.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:setTileAt",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de setTileAt.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:tileToBounds",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de tileToBounds.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:vectorFromAngle",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de vectorFromAngle.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "runtime:wrapPoint",
+      "expectation": "Cumplir las entradas, unidades, resultados y ciclo de vida documentados de wrapPoint.",
+      "environment": "Node / DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "static:compilePixelSprite",
+      "expectation": "Validar y transformar sprites sin modificar los datos de entrada; respetar geometría y transparencia.",
+      "environment": "Node / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "static:createPixelPalette",
+      "expectation": "Validar y transformar sprites sin modificar los datos de entrada; respetar geometría y transparencia.",
+      "environment": "Node / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "static:flipPixelSpriteX",
+      "expectation": "Validar y transformar sprites sin modificar los datos de entrada; respetar geometría y transparencia.",
+      "environment": "Node / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "static:flipPixelSpriteY",
+      "expectation": "Validar y transformar sprites sin modificar los datos de entrada; respetar geometría y transparencia.",
+      "environment": "Node / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "static:getPixelSpriteBounds",
+      "expectation": "Validar y transformar sprites sin modificar los datos de entrada; respetar geometría y transparencia.",
+      "environment": "Node / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "static:hitTestPixelSprite",
+      "expectation": "Validar y transformar sprites sin modificar los datos de entrada; respetar geometría y transparencia.",
+      "environment": "Node / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "static:tintPixelSprite",
+      "expectation": "Validar y transformar sprites sin modificar los datos de entrada; respetar geometría y transparencia.",
+      "environment": "Node / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts", "tests/Stabilization.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:angleToPoint",
+      "expectation": "El alias angleToPoint conserva identidad y comportamiento con GridCanvasSystem.runtime.angleToPoint.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:appendTrailPoint",
+      "expectation": "El alias appendTrailPoint conserva identidad y comportamiento con GridCanvasSystem.runtime.appendTrailPoint.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:canvasToGrid",
+      "expectation": "El alias canvasToGrid conserva identidad y comportamiento con GridCanvasSystem.runtime.canvasToGrid.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:circlesIntersect",
+      "expectation": "El alias circlesIntersect conserva identidad y comportamiento con GridCanvasSystem.runtime.circlesIntersect.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:createAnimationLoop",
+      "expectation": "El alias createAnimationLoop conserva identidad y comportamiento con GridCanvasSystem.runtime.createAnimationLoop.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:createKeyTracker",
+      "expectation": "El alias createKeyTracker conserva identidad y comportamiento con GridCanvasSystem.runtime.createKeyTracker.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:createParticleBurst",
+      "expectation": "El alias createParticleBurst conserva identidad y comportamiento con GridCanvasSystem.runtime.createParticleBurst.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:createPointerTracker",
+      "expectation": "El alias createPointerTracker conserva identidad y comportamiento con GridCanvasSystem.runtime.createPointerTracker.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:createSpriteAnimator",
+      "expectation": "El alias createSpriteAnimator conserva identidad y comportamiento con GridCanvasSystem.runtime.createSpriteAnimator.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:createStateMachine",
+      "expectation": "El alias createStateMachine conserva identidad y comportamiento con GridCanvasSystem.runtime.createStateMachine.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:distanceBetweenPoints",
+      "expectation": "El alias distanceBetweenPoints conserva identidad y comportamiento con GridCanvasSystem.runtime.distanceBetweenPoints.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:gridToCanvas",
+      "expectation": "El alias gridToCanvas conserva identidad y comportamiento con GridCanvasSystem.runtime.gridToCanvas.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:hitTestCircleRectangle",
+      "expectation": "El alias hitTestCircleRectangle conserva identidad y comportamiento con GridCanvasSystem.runtime.hitTestCircleRectangle.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:hitTestPoint",
+      "expectation": "El alias hitTestPoint conserva identidad y comportamiento con GridCanvasSystem.runtime.hitTestPoint.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:hitTestRectangle",
+      "expectation": "El alias hitTestRectangle conserva identidad y comportamiento con GridCanvasSystem.runtime.hitTestRectangle.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:layoutStack",
+      "expectation": "El alias layoutStack conserva identidad y comportamiento con GridCanvasSystem.runtime.layoutStack.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:MassBody",
+      "expectation": "El alias MassBody conserva identidad y comportamiento con GridCanvasSystem.runtime.MassBody.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:normalizeKeyIdentifier",
+      "expectation": "El alias normalizeKeyIdentifier conserva identidad y comportamiento con GridCanvasSystem.runtime.normalizeKeyIdentifier.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:oscillate01",
+      "expectation": "El alias oscillate01 conserva identidad y comportamiento con GridCanvasSystem.runtime.oscillate01.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:snapPointToGrid",
+      "expectation": "El alias snapPointToGrid conserva identidad y comportamiento con GridCanvasSystem.runtime.snapPointToGrid.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:stepParticles",
+      "expectation": "El alias stepParticles conserva identidad y comportamiento con GridCanvasSystem.runtime.stepParticles.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:vectorFromAngle",
+      "expectation": "El alias vectorFromAngle conserva identidad y comportamiento con GridCanvasSystem.runtime.vectorFromAngle.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "legacy:wrapPoint",
+      "expectation": "El alias wrapPoint conserva identidad y comportamiento con GridCanvasSystem.runtime.wrapPoint.",
+      "environment": "ESM / UMD",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/RuntimePrimitives.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "constructor:id",
+      "expectation": "El constructor id crea un canvas con las dimensiones y opciones documentadas; rechaza destinos inválidos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "constructor:id-options",
+      "expectation": "El constructor id-options crea un canvas con las dimensiones y opciones documentadas; rechaza destinos inválidos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "constructor:id-width-height",
+      "expectation": "El constructor id-width-height crea un canvas con las dimensiones y opciones documentadas; rechaza destinos inválidos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "constructor:element-options",
+      "expectation": "El constructor element-options crea un canvas con las dimensiones y opciones documentadas; rechaza destinos inválidos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "constructor:element-width-height",
+      "expectation": "El constructor element-width-height crea un canvas con las dimensiones y opciones documentadas; rechaza destinos inválidos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "field:canvas",
+      "expectation": "canvas sigue disponible como propiedad pública; options conserva los valores resueltos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "field:ctx",
+      "expectation": "ctx sigue disponible como propiedad pública; options conserva los valores resueltos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    },
+    {
+      "id": "field:options",
+      "expectation": "options sigue disponible como propiedad pública; options conserva los valores resueltos.",
+      "environment": "DOM / navegadores",
+      "source": "docs/PUBLIC_API.md",
+      "tests": ["tests/GridCanvasSystem.test.ts"],
+      "status": "test-linked"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "cdn",
+      "expectation": "Constructor global UMD y helpers, sin .default obligatorio",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/product.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "package",
+      "expectation": "Imports ESM, subpaths y tipos desde el tarball instalado",
+      "source": "README.md / docs / site / examples",
+      "test": "scripts/verify-package-exports.mjs",
+      "status": "test-linked"
+    },
+    {
+      "id": "ssr",
+      "expectation": "Imports seguros sin globals del navegador y render SSR React/Vue",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/FrameworkSSR.test.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "hidpi",
+      "expectation": "Buffer, pixels y coordenadas lógicas en DPR 1, 1.25, 2 y 3",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/runtime.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "resize",
+      "expectation": "No-op conserva bitmap; errores no cambian tamaño; ResizeObserver y canvas oculto",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/runtime.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "time",
+      "expectation": "FPS reducido conserva tiempo y aplica el límite al delta entregado",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/Stabilization.test.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "cleanup",
+      "expectation": "100 ciclos sin RAF ni listeners efectivos después de destroy",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/runtime.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "audio",
+      "expectation": "Web Audio, Howler y Tone reales; aislamiento, carga fallida y cleanup",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/audio.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "frameworks",
+      "expectation": "React StrictMode, Vue, Angular y Custom Elements destruyen al desmontar",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/frameworks.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "examples",
+      "expectation": "Todas las demos vanilla cargan el build candidato y dibujan",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/product.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "website",
+      "expectation": "Web multilingüe, documentación, tutoriales y playground ejecutables",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/product.spec.ts",
+      "status": "test-linked"
+    },
+    {
+      "id": "tree-shaking",
+      "expectation": "Audio fuera del root y runtime consumidor elimina helpers sin uso",
+      "source": "README.md / docs / site / examples",
+      "test": "scripts/verify-bundles.mjs",
+      "status": "test-linked"
+    },
+    {
+      "id": "performance",
+      "expectation": "Diez repeticiones tras calentamiento; medianas +10% y gzip total +5%",
+      "source": "README.md / docs / site / examples",
+      "test": "scripts/benchmark-pixel-sprites.mjs",
+      "status": "test-linked"
+    },
+    {
+      "id": "soak",
+      "expectation": "30 minutos reales con resize, escenas, audio y teardown",
+      "source": "README.md / docs / site / examples",
+      "test": "tests/browser/soak.spec.ts",
+      "status": "test-linked"
+    }
+  ]
+}

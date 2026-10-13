@@ -1,0 +1,55 @@
+{
+  "version": "1.2.0-rc.1",
+  "status": "pending",
+  "artifacts": null,
+  "requirements": [
+    {
+      "id": "ios-safari-physical",
+      "status": "pending",
+      "environment": null,
+      "evidence": null,
+      "reviewer": null,
+      "scenarios": [
+        "touch/cancel",
+        "orientation/DPR",
+        "gesture audio unlock",
+        "background/resume",
+        "destroy/no later playback"
+      ]
+    },
+    {
+      "id": "android-chrome-physical",
+      "status": "pending",
+      "environment": null,
+      "evidence": null,
+      "reviewer": null,
+      "scenarios": [
+        "touch/cancel",
+        "orientation/DPR",
+        "gesture audio unlock",
+        "background/resume",
+        "destroy/no later playback"
+      ]
+    },
+    {
+      "id": "webkit-web-audio",
+      "status": "pending",
+      "environment": null,
+      "evidence": null,
+      "reviewer": null,
+      "scenarios": ["all audio.spec.ts tests in a Web Audio-capable WebKit environment"]
+    },
+    {
+      "id": "complete-promise-review",
+      "status": "pending",
+      "environment": null,
+      "evidence": null,
+      "reviewer": null,
+      "scenarios": [
+        "review every contract.json row against its actual assertions",
+        "no uncovered published promise",
+        "no unresolved contract failure"
+      ]
+    }
+  ]
+}

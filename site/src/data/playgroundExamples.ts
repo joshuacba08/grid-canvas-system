@@ -388,8 +388,13 @@ GridCanvasSystem.runtime.createAnimationLoop({
   gridColor: "rgba(77, 169, 255, 0.14)"
 });
 
-const audio = createArcadeAudio({ masterVolume: 0.72 });
+const supportsAudio = Boolean(window.AudioContext || window.webkitAudioContext);
+const audio = supportsAudio ? createArcadeAudio({ masterVolume: 0.72 }) : null;
 const statusNode = document.querySelector("#audio-status");
+if (!supportsAudio) {
+  statusNode.textContent = "Web Audio is unavailable in this browser.";
+  document.querySelectorAll(".demo-actions button").forEach(button => { button.disabled = true; });
+}
 
 let activeLoopId;
 let activePreset = "none";
@@ -501,7 +506,7 @@ document.querySelector("#audio-mute").addEventListener("click", () => {
 });
 
 window.addEventListener("beforeunload", () => {
-  void audio.dispose();
+  void audio?.dispose();
 });`,
   },
   {

@@ -1,0 +1,295 @@
+{
+  "version": "1.2.0-rc.1",
+  "recordedAt": "2026-10-13T12:23:48.864Z",
+  "certificationStatus": "pending",
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "playwright": "1.64.0",
+    "browsers": {
+      "chromium": "156.0.8078.4",
+      "firefox": "157.0",
+      "webkit": "27.2"
+    },
+    "pnpm": "11.7.0",
+    "typescript": "5.6.3"
+  },
+  "inventory": {
+    "apis": 385,
+    "capabilities": 14,
+    "interpretation": "test-linked acredita trazabilidad; no implica que todas las ramas o todos los entornos estén certificados. Ver AUDIT.md y certification.json."
+  },
+  "release": {
+    "node": "v24.21.0",
+    "runs": [
+      {
+        "iteration": 1,
+        "check": "format:check",
+        "passed": true,
+        "elapsedMs": 4517
+      },
+      {
+        "iteration": 1,
+        "check": "test",
+        "passed": true,
+        "elapsedMs": 2853
+      },
+      {
+        "iteration": 1,
+        "check": "build",
+        "passed": true,
+        "elapsedMs": 3402
+      },
+      {
+        "iteration": 1,
+        "check": "verify:types",
+        "passed": true,
+        "elapsedMs": 1105
+      },
+      {
+        "iteration": 1,
+        "check": "verify:package-exports",
+        "passed": true,
+        "elapsedMs": 4964
+      },
+      {
+        "iteration": 1,
+        "check": "verify:bundles",
+        "passed": true,
+        "elapsedMs": 753
+      },
+      {
+        "iteration": 1,
+        "check": "verify:dependencies",
+        "passed": true,
+        "elapsedMs": 1124
+      },
+      {
+        "iteration": 1,
+        "check": "verify:contract",
+        "passed": true,
+        "elapsedMs": 1301
+      },
+      {
+        "iteration": 1,
+        "check": "site:build",
+        "passed": true,
+        "elapsedMs": 15012
+      },
+      {
+        "iteration": 1,
+        "check": "test:browser",
+        "passed": true,
+        "elapsedMs": 132810
+      },
+      {
+        "iteration": 1,
+        "check": "verify:performance",
+        "passed": true,
+        "elapsedMs": 6168
+      },
+      {
+        "iteration": 2,
+        "check": "format:check",
+        "passed": true,
+        "elapsedMs": 4252
+      },
+      {
+        "iteration": 2,
+        "check": "test",
+        "passed": true,
+        "elapsedMs": 3092
+      },
+      {
+        "iteration": 2,
+        "check": "build",
+        "passed": true,
+        "elapsedMs": 3494
+      },
+      {
+        "iteration": 2,
+        "check": "verify:types",
+        "passed": true,
+        "elapsedMs": 1216
+      },
+      {
+        "iteration": 2,
+        "check": "verify:package-exports",
+        "passed": true,
+        "elapsedMs": 5186
+      },
+      {
+        "iteration": 2,
+        "check": "verify:bundles",
+        "passed": true,
+        "elapsedMs": 765
+      },
+      {
+        "iteration": 2,
+        "check": "verify:dependencies",
+        "passed": true,
+        "elapsedMs": 1062
+      },
+      {
+        "iteration": 2,
+        "check": "verify:contract",
+        "passed": true,
+        "elapsedMs": 1342
+      },
+      {
+        "iteration": 2,
+        "check": "site:build",
+        "passed": true,
+        "elapsedMs": 15012
+      },
+      {
+        "iteration": 2,
+        "check": "test:browser",
+        "passed": true,
+        "elapsedMs": 158968
+      },
+      {
+        "iteration": 2,
+        "check": "verify:performance",
+        "passed": true,
+        "elapsedMs": 6301
+      }
+    ]
+  },
+  "unitTests": {
+    "passed": 120,
+    "files": 7,
+    "source": "Two final verify:release console results"
+  },
+  "browserTests": {
+    "startTime": "2026-10-13T12:19:44.617Z",
+    "duration": 155986.49000000002,
+    "expected": 185,
+    "skipped": 5,
+    "unexpected": 0,
+    "flaky": 0,
+    "skippedDetails": [
+      {
+        "test": "real Web Audio unlocks from a gesture, plays, suspends and disposes",
+        "project": "webkit-dpr-1",
+        "reasons": ["Web Audio unavailable in webkit-dpr-1 on win32"]
+      },
+      {
+        "test": "real Howler assets load and controller controls leave global audio untouched",
+        "project": "webkit-dpr-1",
+        "reasons": ["Web Audio unavailable in webkit-dpr-1 on win32"]
+      },
+      {
+        "test": "real Howler reports a failed asset load",
+        "project": "webkit-dpr-1",
+        "reasons": ["Web Audio unavailable in webkit-dpr-1 on win32"]
+      },
+      {
+        "test": "real Tone contexts isolate tempo, master volume and transport lifecycle",
+        "project": "webkit-dpr-1",
+        "reasons": ["Web Audio unavailable in webkit-dpr-1 on win32"]
+      },
+      {
+        "test": "device QA page plays the three real audio controllers and exports their state",
+        "project": "webkit-dpr-1",
+        "reasons": ["Web Audio unavailable in this environment on win32"]
+      }
+    ]
+  },
+  "soak": {
+    "elapsedMs": 1800305,
+    "cycles": 1767,
+    "stopped": true,
+    "frames": 109776,
+    "destroyed": true,
+    "browser": "156.0.8078.4",
+    "node": "v24.21.0",
+    "errors": [],
+    "artifactMetadata": {
+      "version": "1.2.0-rc.1",
+      "runtimeSha256": "aa5a20f1b45e25ba7c8b3ce218be195c4eca53318609409b6f0fe67bf4ea5adf",
+      "audioSha256": "a6f297fac163255fed63799371e16ddf09c8528214483a7a3782c513d5f848bf",
+      "actualWorkers": 1
+    }
+  },
+  "performance": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "cpu": "AMD Ryzen 7 8745HX with Radeon Graphics        ",
+    "iterations": 5000,
+    "repetitions": 10,
+    "warmup": 1,
+    "medians": {
+      "drawPixelSprite": 112.72939999999994,
+      "drawCompiledPixelSprite": 105.02024999999992
+    },
+    "samples": {
+      "drawPixelSprite": [
+        97.88079999999991, 95.7228, 98.71100000000001, 162.17830000000004, 112.4674,
+        112.99139999999989, 108.32560000000012, 116.27430000000004, 141.34229999999934,
+        135.5039999999999
+      ],
+      "drawCompiledPixelSprite": [
+        79.26530000000002, 109.56929999999988, 91.21369999999979, 100.47119999999995,
+        132.89109999999982, 149.01350000000002, 89.91240000000016, 96.38559999999961,
+        133.47550000000047, 111.9310000000005
+      ]
+    },
+    "librarySha256": "1f0aee3a3197d64fae2167c79d68e514d25c18423b0029c0756a7be95f559d6f",
+    "reference": {
+      "sourceCommit": "90719e6ade310f47731c64adf683fbc7f6707b61",
+      "librarySha256": "191ac5cbfb86ff8f3b4f11198db6c00353f5afa40013cedb09f0796e8a84e88e",
+      "medians": {
+        "drawPixelSprite": 114.82250000000022,
+        "drawCompiledPixelSprite": 106.21659999999997
+      },
+      "samples": {
+        "drawPixelSprite": [
+          99.34449999999993, 99.61680000000001, 104.67660000000001, 149.70129999999972,
+          131.86749999999984, 125.53710000000001, 110.95409999999993,
+          108.72910000000047, 126.09959999999955, 118.69090000000051
+        ],
+        "drawCompiledPixelSprite": [
+          88.91489999999999, 94.42560000000003, 91.85559999999987, 114.39589999999998,
+          130.83419999999978, 144.93499999999995, 98.03729999999996, 91.53930000000037,
+          116.73769999999968, 154.96750000000065
+        ]
+      }
+    },
+    "gzipBytes": {
+      "audio/index.js": 2642,
+      "audio-arcade/index.js": 2972,
+      "chunks/shared-CmQ1q6Rp.js": 475,
+      "grid-canvas-system.es.js": 16932,
+      "grid-canvas-system.umd.js": 14868,
+      "runtime/index.js": 11190
+    },
+    "totalGzipBytes": 49079,
+    "totalGzipChangePercent": 3.4112937210282412,
+    "timeChangePercent": {
+      "drawPixelSprite": -1.8229005639141094,
+      "drawCompiledPixelSprite": -1.1263305359049847
+    }
+  },
+  "audit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 0,
+    "high": 0,
+    "critical": 0
+  },
+  "artifacts": {
+    "dist/audio-arcade/index.js": "a6f297fac163255fed63799371e16ddf09c8528214483a7a3782c513d5f848bf",
+    "dist/audio/index.js": "334bfe84e5f0c165250cc6712159cb03530f74b12ae9b7612896d371449fab1c",
+    "dist/chunks/shared-CmQ1q6Rp.js": "c4ca81b5378e7229e76d15540934090aebbbf0f9510095f540bd6cc311a53dd3",
+    "dist/grid-canvas-system.es.js": "1f0aee3a3197d64fae2167c79d68e514d25c18423b0029c0756a7be95f559d6f",
+    "dist/grid-canvas-system.umd.js": "429f52685c552088ea8852df074efefa6bb59bcd55ae49a9784d886719bf17ea",
+    "dist/runtime/index.js": "aa5a20f1b45e25ba7c8b3ce218be195c4eca53318609409b6f0fe67bf4ea5adf"
+  },
+  "pending": [
+    "ios-safari-physical",
+    "android-chrome-physical",
+    "webkit-web-audio",
+    "complete-promise-review"
+  ]
+}

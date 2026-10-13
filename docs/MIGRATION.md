@@ -1,5 +1,15 @@
 # Migration Guide
 
+## From 1.1.0 to the 1.2.0-rc.1 candidate
+
+Existing constructors, helper names and legacy aliases remain available. CDN users can again call `new GridCanvasSystem(...)`; `.default` remains a compatibility alias. Fixed-step loops and scene managers add `destroy()`/`isDestroyed()`; destroy invokes the active scene's exit hook once with its own id.
+
+Reduced-FPS callbacks now receive accumulated simulation time, so remove application workarounds that multiplied elapsed time to compensate. Repeated resize preserves pixels and display-size resize preserves responsive CSS. Pointer tracker logical dimensions are optional; default coordinates remain CSS-relative.
+
+Audio controls now affect their controller's own sounds/context. Use Howler/Tone global APIs explicitly if the application intentionally controls audio outside the addon. Howler asset definitions can provide `onError(error)` for loading/playback failures. Audio remains Experimental until physical-device and WebKit certification completes.
+
+Strict NodeNext/Bundler consumers can compile the installed declarations without skipLibCheck. See [audit](./stability/AUDIT.md) for evidence and pending certification.
+
 ## From 1.0.0 to 1.1.0
 
 `1.1.0` is backward-compatible. The update adds a reactive runtime layer for long-lived canvas components while keeping the grid-first drawing API intact.

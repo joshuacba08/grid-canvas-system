@@ -32,7 +32,7 @@ import {
   tileToBounds,
 } from "./tilemap";
 
-export const GridCanvasRuntime = Object.freeze({
+export const GridCanvasRuntime = /* @__PURE__ */ Object.freeze({
   angleToPoint,
   appendTrailPoint,
   circlesIntersect,

@@ -1,6 +1,7 @@
 import {
   type HowlLike,
   type ToneInstrumentLike,
+  type ToneContextLike,
   type ToneModuleLike,
   type TonePartLike,
   loadHowlerModule,
@@ -15,6 +16,7 @@ import {
 } from "./internal/shared";
 
 export interface HowlerAssetDefinition {
+  onError?: (error: Error) => void;
   loop?: boolean;
   sprite?: Record<string, [number, number]>;
   src: string | readonly string[];
@@ -85,11 +87,24 @@ interface SequencePlaybackHandle {
 export async function createHowlerAssetAudio(
   config: HowlerAssetMap,
 ): Promise<HowlerAssetAudioController> {
+  if (config === null || typeof config !== "object" || Array.isArray(config))
+    throw new Error("assets must be an object");
+  for (const [id, asset] of Object.entries(config)) {
+    const sources = typeof asset?.src === "string" ? [asset.src] : asset?.src;
+    if (
+      !Array.isArray(sources) ||
+      sources.length === 0 ||
+      sources.some((source) => typeof source !== "string" || !source.length)
+    )
+      throw new Error(`asset ${id} must contain non-empty sources`);
+    if (asset.volume !== undefined) clampUnitVolume(asset.volume, "asset.volume");
+  }
   const module = await loadHowlerModule();
   const assets = new Map(Object.entries(config));
   const loadedHowls = new Map<string, HowlLike>();
   let disposed = false;
   let muted = false;
+  let controllerVolume: number | undefined;
 
   function ensureActive(): void {
     assertNotDisposed(disposed, "Howler asset audio controller");
@@ -110,10 +125,20 @@ export async function createHowlerAssetAudio(
       src: Array.isArray(definition.src) ? [...definition.src] : [definition.src],
       loop: definition.loop,
       sprite: definition.sprite,
+      mute: muted,
+      onloaderror: (_id, error) => {
+        if (!disposed)
+          definition.onError?.(new Error(`Audio load failed: ${String(error)}`));
+      },
+      onplayerror: (_id, error) => {
+        if (!disposed)
+          definition.onError?.(new Error(`Audio playback failed: ${String(error)}`));
+      },
       volume:
-        definition.volume === undefined
+        controllerVolume ??
+        (definition.volume === undefined
           ? undefined
-          : clampUnitVolume(definition.volume, "asset.volume"),
+          : clampUnitVolume(definition.volume, "asset.volume")),
     });
   }
 
@@ -145,12 +170,16 @@ export async function createHowlerAssetAudio(
   return {
     play(id, options = {}) {
       ensureActive();
+      const volume =
+        options.volume === undefined
+          ? undefined
+          : clampUnitVolume(options.volume, "volume");
       const howl = ensureHowl(id);
       const playbackId =
         options.sprite === undefined ? howl.play() : howl.play(options.sprite);
 
-      if (options.volume !== undefined) {
-        howl.volume(clampUnitVolume(options.volume, "volume"), playbackId);
+      if (volume !== undefined) {
+        howl.volume(volume, playbackId);
       }
 
       if (options.loop !== undefined) {
@@ -179,7 +208,7 @@ export async function createHowlerAssetAudio(
         return;
       }
 
-      module.Howler.stop();
+      for (const howl of loadedHowls.values()) howl.stop();
     },
     setVolume(idOrValue, value) {
       ensureActive();
@@ -187,7 +216,7 @@ export async function createHowlerAssetAudio(
       if (typeof idOrValue === "number") {
         const nextVolume = clampUnitVolume(idOrValue, "volume");
 
-        module.Howler.volume?.(nextVolume);
+        controllerVolume = nextVolume;
 
         for (const howl of loadedHowls.values()) {
           howl.volume(nextVolume);
@@ -204,12 +233,14 @@ export async function createHowlerAssetAudio(
     mute(next) {
       ensureActive();
       muted = normalizeMuteState(next, muted);
-      module.Howler.mute(muted);
+      for (const howl of loadedHowls.values()) howl.mute(muted);
 
       return muted;
     },
     fade(id, from, to, durationMs) {
       ensureActive();
+      if (!Number.isFinite(durationMs) || durationMs < 0)
+        throw new Error("durationMs must be non-negative and finite");
       getLoadedHowl(id)?.fade(
         clampUnitVolume(from, "from"),
         clampUnitVolume(to, "to"),
@@ -257,12 +288,19 @@ export async function createToneMusicAudio(
     throw new Error("Tone music audio requires at least one instrument");
   }
 
+  for (const kind of Object.values(instrumentKinds)) {
+    if (!["synth", "amsynth", "fmsynth", "membrane"].includes(kind))
+      throw new Error(`Unknown Tone instrument kind "${kind}"`);
+  }
+  const context = new module.Context();
+  const transport = context.transport;
+
   for (const [instrumentId, kind] of Object.entries(instrumentKinds)) {
-    instruments.set(instrumentId, createToneInstrument(module, kind));
+    instruments.set(instrumentId, createToneInstrument(module, kind, context));
   }
 
-  module.Transport.bpm.value = bpm;
-  module.Destination.volume.value = linearVolumeToDecibels(masterVolume);
+  transport.bpm.value = bpm;
+  context.destination.volume.value = linearVolumeToDecibels(masterVolume);
 
   const defaultInstrumentId = Array.from(instruments.keys())[0];
 
@@ -281,12 +319,36 @@ export async function createToneMusicAudio(
   }
 
   function resolveTimeToSeconds(value: number | string): number {
-    return typeof value === "number" ? value : module.Time(value).toSeconds();
+    const seconds =
+      typeof value === "number"
+        ? value
+        : new module.TimeClass(context, value).toSeconds();
+    if (!Number.isFinite(seconds) || seconds < 0)
+      throw new Error("sequence time must be finite and non-negative");
+    return seconds;
+  }
+
+  function triggerNote(
+    instrumentId: string,
+    note: readonly string[] | string,
+    duration: number | string,
+    time?: number | string,
+    velocity?: number,
+  ): void {
+    const requestedTime =
+      time === undefined ? context.now() : resolveTimeToSeconds(time);
+    resolveInstrument(instrumentId).triggerAttackRelease(
+      note,
+      duration,
+      requestedTime,
+      velocity,
+    );
   }
 
   async function resumeTransport(): Promise<void> {
     ensureActive();
-    await module.start();
+    await context.resume();
+    ensureActive();
   }
 
   function stopAllSequences(): void {
@@ -296,8 +358,8 @@ export async function createToneMusicAudio(
       activePlaybacks.delete(sequenceId);
     }
 
-    module.Transport.stop();
-    module.Transport.cancel(0);
+    transport.stop();
+    transport.cancel(0);
   }
 
   return {
@@ -307,36 +369,64 @@ export async function createToneMusicAudio(
     setBpm(value) {
       ensureActive();
       bpm = assertPositiveNumber(value, "bpm");
-      module.Transport.bpm.value = bpm;
+      transport.bpm.value = bpm;
 
       return bpm;
     },
     setMasterVolume(value) {
       ensureActive();
       masterVolume = clampUnitVolume(value, "masterVolume");
-      module.Destination.volume.value = linearVolumeToDecibels(masterVolume);
+      context.destination.volume.value = linearVolumeToDecibels(masterVolume);
 
       return masterVolume;
     },
     async trigger(instrumentId, note, duration, time) {
       ensureActive();
+      resolveInstrument(instrumentId);
       await resumeTransport();
-      resolveInstrument(instrumentId).triggerAttackRelease(note, duration, time);
+      triggerNote(instrumentId, note, duration, time);
     },
     registerSequence(id, sequence) {
       ensureActive();
+      if (
+        typeof id !== "string" ||
+        !id.length ||
+        !Array.isArray(sequence?.steps) ||
+        !sequence.steps.length
+      )
+        throw new Error("sequence requires an id and non-empty steps");
+      for (const step of sequence.steps) {
+        resolveInstrument(step.instrumentId ?? defaultInstrumentId);
+        resolveTimeToSeconds(step.time);
+        assertPositiveNumber(
+          resolveTimeToSeconds(step.duration ?? "8n"),
+          "step.duration",
+        );
+        if (
+          step.velocity !== undefined &&
+          (!Number.isFinite(step.velocity) || step.velocity < 0 || step.velocity > 1)
+        )
+          throw new Error("step.velocity must be between 0 and 1");
+      }
       sequences.set(id, {
         loop: sequence.loop ?? false,
         steps: sequence.steps.map((step) => ({
           duration: step.duration,
           instrumentId: step.instrumentId,
-          note: step.note,
+          note: Array.isArray(step.note) ? [...step.note] : step.note,
           time: step.time,
           velocity: step.velocity,
         })),
       });
 
-      return sequences.get(id) as ToneSequence;
+      const registered = sequences.get(id) as ToneSequence;
+      return {
+        ...registered,
+        steps: registered.steps.map((step) => ({
+          ...step,
+          note: Array.isArray(step.note) ? [...step.note] : step.note,
+        })),
+      };
     },
     async playSequence(id) {
       ensureActive();
@@ -356,20 +446,23 @@ export async function createToneMusicAudio(
         activePlaybacks.delete(id);
       }
 
-      const part = new module.Part((time, event) => {
-        if (event.note === null) {
-          return;
-        }
+      const part = new module.Part({
+        context,
+        callback: (time, event) => {
+          if (disposed || event.note === null) {
+            return;
+          }
 
-        const instrument = resolveInstrument(event.instrumentId ?? defaultInstrumentId);
-
-        instrument.triggerAttackRelease(
-          event.note,
-          event.duration ?? "8n",
-          time,
-          event.velocity,
-        );
-      }, sequence.steps);
+          triggerNote(
+            event.instrumentId ?? defaultInstrumentId,
+            event.note,
+            event.duration ?? "8n",
+            time,
+            event.velocity,
+          );
+        },
+        events: sequence.steps,
+      });
 
       part.loop = sequence.loop ?? false;
 
@@ -385,14 +478,14 @@ export async function createToneMusicAudio(
         );
       }
 
-      part.start(0);
+      part.start(transport.seconds ?? 0);
       activePlaybacks.set(id, {
         part,
         sequence,
       });
 
-      if (module.Transport.state !== "started") {
-        module.Transport.start();
+      if (transport.state !== "started") {
+        transport.start();
       }
 
       return id;
@@ -412,8 +505,8 @@ export async function createToneMusicAudio(
         activePlaybacks.delete(id);
 
         if (activePlaybacks.size === 0) {
-          module.Transport.stop();
-          module.Transport.cancel(0);
+          transport.stop();
+          transport.cancel(0);
         }
 
         return;
@@ -435,6 +528,7 @@ export async function createToneMusicAudio(
       instruments.clear();
       sequences.clear();
       disposed = true;
+      context.dispose();
     },
   };
 }
@@ -442,16 +536,20 @@ export async function createToneMusicAudio(
 function createToneInstrument(
   module: ToneModuleLike,
   kind: ToneInstrumentKind,
+  context: ToneContextLike,
 ): ToneInstrumentLike {
   switch (kind) {
     case "amsynth":
-      return new module.AMSynth().toDestination();
+      return new module.PolySynth({ context, voice: module.AMSynth }).toDestination();
     case "fmsynth":
-      return new module.FMSynth().toDestination();
+      return new module.PolySynth({ context, voice: module.FMSynth }).toDestination();
     case "membrane":
-      return new module.MembraneSynth().toDestination();
+      return new module.PolySynth({
+        context,
+        voice: module.MembraneSynth,
+      }).toDestination();
     case "synth":
     default:
-      return new module.Synth().toDestination();
+      return new module.PolySynth({ context, voice: module.Synth }).toDestination();
   }
 }

@@ -227,16 +227,19 @@ const SFX_PRESETS: Record<ArcadeSfxPreset, ScheduledArcadeVoice[]> = {
 export function createArcadeAudio(
   options: ArcadeAudioOptions = {},
 ): ArcadeAudioController {
+  const initialVolume = clampUnitVolume(options.masterVolume ?? 0.8, "masterVolume");
   const audioContext = createAudioContext();
   const masterGain = audioContext.createGain();
   const loopHandles = new Map<string, LoopHandle>();
   const activeSources = new Set<AudioScheduledSourceNode>();
+  const sourceGains = new WeakMap<AudioScheduledSourceNode, GainNode>();
   const noiseBuffer = createNoiseBuffer(audioContext, 0.5);
   let disposed = false;
   let loopCounter = 0;
-  let masterVolume = clampUnitVolume(options.masterVolume ?? 0.8, "masterVolume");
+  let masterVolume = initialVolume;
   let muted = options.muted ?? false;
   let lastLoopId: string | undefined;
+  let disposal: Promise<void> | undefined;
 
   masterGain.connect(audioContext.destination);
   applyMasterGain();
@@ -256,20 +259,25 @@ export function createArcadeAudio(
     if (audioContext.state !== "running") {
       await audioContext.resume();
     }
+    ensureActive();
   }
 
   function trackSource<T extends AudioScheduledSourceNode>(
     source: T,
     loopSources?: Set<AudioScheduledSourceNode>,
+    gainNode?: GainNode,
   ): T {
     activeSources.add(source);
     loopSources?.add(source);
+    if (gainNode) sourceGains.set(source, gainNode);
 
     const previousOnEnded = source.onended;
 
     source.onended = (event) => {
       activeSources.delete(source);
       loopSources?.delete(source);
+      source.disconnect();
+      gainNode?.disconnect();
       previousOnEnded?.call(source, event);
     };
 
@@ -286,8 +294,12 @@ export function createArcadeAudio(
     detune?: number,
     loopSources?: Set<AudioScheduledSourceNode>,
   ): void {
-    const oscillator = trackSource(audioContext.createOscillator(), loopSources);
     const gainNode = audioContext.createGain();
+    const oscillator = trackSource(
+      audioContext.createOscillator(),
+      loopSources,
+      gainNode,
+    );
     const oscillatorType: OscillatorType = voice === "pulse" ? "square" : "triangle";
 
     oscillator.type = oscillatorType;
@@ -319,8 +331,12 @@ export function createArcadeAudio(
     volume: number,
     loopSources?: Set<AudioScheduledSourceNode>,
   ): void {
-    const source = trackSource(audioContext.createBufferSource(), loopSources);
     const gainNode = audioContext.createGain();
+    const source = trackSource(
+      audioContext.createBufferSource(),
+      loopSources,
+      gainNode,
+    );
 
     source.buffer = noiseBuffer;
     source.playbackRate.setValueAtTime(Math.max(0.2, note / 220), startTime);
@@ -340,6 +356,11 @@ export function createArcadeAudio(
     overrides: ArcadeSfxOptions = {},
   ): Promise<void> {
     ensureActive();
+    if (!Object.prototype.hasOwnProperty.call(SFX_PRESETS, name))
+      throw new Error(`Unknown arcade preset "${name}"`);
+    if (!Number.isFinite(overrides.detune ?? 0))
+      throw new Error("detune must be finite");
+    clampUnitVolume(overrides.volume ?? 1, "volume");
     await ensureRunning();
 
     const volumeScale = clampUnitVolume(overrides.volume ?? 1, "volume");
@@ -383,6 +404,8 @@ export function createArcadeAudio(
   }
 
   function validateSequence(sequence: ArcadeSequence): ArcadeSequence {
+    if (!sequence || !Array.isArray(sequence.channels))
+      throw new Error("sequence.channels must be an array");
     assertPositiveNumber(sequence.bpm, "sequence.bpm");
 
     if (sequence.channels.length === 0) {
@@ -390,6 +413,10 @@ export function createArcadeAudio(
     }
 
     for (const channel of sequence.channels) {
+      if (!channel || !Array.isArray(channel.steps))
+        throw new Error("channel.steps must be an array");
+      if (!["pulse", "triangle", "noise"].includes(channel.voice))
+        throw new Error("Unknown arcade voice");
       if (channel.steps.length === 0) {
         throw new Error("sequence channel steps must not be empty");
       }
@@ -467,19 +494,32 @@ export function createArcadeAudio(
       }
     }
 
-    if (handle.sequence.loop === false || !loopHandles.has(handle.id)) {
+    if (!loopHandles.has(handle.id)) {
       return;
     }
 
+    const boundary =
+      startTime + cycleDuration + (handle.sequence.loop === false ? 0.05 : -0.02);
+    const advance = (): void => {
+      if (loopHandles.get(handle.id) !== handle || disposed) return;
+      const waitMs = Math.max(0, (boundary - audioContext.currentTime) * 1000);
+      if (audioContext.state !== "running" || waitMs > 5) {
+        handle.timeoutId = setTimeout(
+          advance,
+          audioContext.state === "running" ? waitMs : 100,
+        );
+        return;
+      }
+      if (handle.sequence.loop === false) stopLoopInternal(handle.id);
+      else
+        scheduleLoopCycle(
+          handle,
+          Math.max(startTime + cycleDuration, audioContext.currentTime + 0.02),
+        );
+    };
     handle.timeoutId = setTimeout(
-      () => {
-        if (!loopHandles.has(handle.id) || disposed) {
-          return;
-        }
-
-        scheduleLoopCycle(handle, startTime + cycleDuration);
-      },
-      Math.max(0, (cycleDuration - 0.02) * 1000),
+      advance,
+      Math.max(0, (boundary - audioContext.currentTime) * 1000),
     );
   }
 
@@ -489,6 +529,9 @@ export function createArcadeAudio(
     } catch {
       // Ignore already-stopped scheduled sources.
     }
+    source.disconnect();
+    sourceGains.get(source)?.disconnect();
+    source.onended = null;
   }
 
   function stopLoopInternal(loopId: string): boolean {
@@ -518,6 +561,12 @@ export function createArcadeAudio(
     return true;
   }
 
+  function stopAllInternal(): void {
+    for (const loopId of [...loopHandles.keys()]) stopLoopInternal(loopId);
+    for (const source of [...activeSources]) safeStopSource(source);
+    activeSources.clear();
+  }
+
   return {
     async resume() {
       await ensureRunning();
@@ -531,15 +580,16 @@ export function createArcadeAudio(
     },
     async dispose() {
       if (disposed) {
-        return;
+        return disposal;
       }
 
-      this.stopAll();
+      stopAllInternal();
       disposed = true;
       masterGain.disconnect();
 
       if (audioContext.state !== "closed") {
-        await audioContext.close();
+        disposal = audioContext.close();
+        await disposal;
       }
     },
     setMasterVolume(value) {
@@ -570,15 +620,23 @@ export function createArcadeAudio(
     },
     async playLoop(presetOrSequence, options = {}) {
       ensureActive();
-      await ensureRunning();
-
-      const resolvedSequence =
+      const input =
         typeof presetOrSequence === "string"
-          ? cloneSequence(LOOP_PRESETS[presetOrSequence])
-          : cloneSequence(presetOrSequence);
-      const sequence = validateSequence(resolvedSequence);
-      const loopId = options.id ?? `arcade-loop-${++loopCounter}`;
+          ? Object.prototype.hasOwnProperty.call(LOOP_PRESETS, presetOrSequence)
+            ? LOOP_PRESETS[presetOrSequence]
+            : undefined
+          : presetOrSequence;
+      if (!input) throw new Error("Unknown arcade loop preset");
+      const sequence = cloneSequence(validateSequence(input));
+      assertPositiveNumber(sequenceCycleDuration(sequence), "sequence duration");
       const volume = clampUnitVolume(options.volume ?? 1, "volume");
+      if (
+        options.id !== undefined &&
+        (typeof options.id !== "string" || !options.id.length)
+      )
+        throw new Error("loop id must be non-empty");
+      await ensureRunning();
+      const loopId = options.id ?? `arcade-loop-${++loopCounter}`;
 
       stopLoopInternal(loopId);
 
@@ -608,16 +666,7 @@ export function createArcadeAudio(
     },
     stopAll() {
       ensureActive();
-
-      for (const loopId of [...loopHandles.keys()]) {
-        stopLoopInternal(loopId);
-      }
-
-      for (const source of [...activeSources]) {
-        safeStopSource(source);
-      }
-
-      activeSources.clear();
+      stopAllInternal();
     },
   };
 }

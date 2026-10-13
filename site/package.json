@@ -3,24 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.9",
-    "astro": "^7.0.6",
-    "typescript": "~5.6.3"
+    "@astrojs/check": "0.9.9",
+    "astro": "7.3.8",
+    "typescript": "5.6.3"
   },
   "dependencies": {
-    "@astrojs/mdx": "^7.0.2",
-    "@lucide/astro": "^1.23.0",
-    "gsap": "^3.15.0",
-    "howler": "^2.2.4",
-    "mermaid": "^11.16.0",
-    "monaco-editor": "^0.55.1",
-    "shiki": "^4.3.0",
-    "tone": "^15.1.22"
+    "@astrojs/mdx": "7.0.8",
+    "@lucide/astro": "1.23.0",
+    "gsap": "3.15.0",
+    "howler": "2.2.4",
+    "mermaid": "11.17.2",
+    "monaco-editor": "0.55.1",
+    "shiki": "4.5.0",
+    "tone": "15.1.22"
   }
 }

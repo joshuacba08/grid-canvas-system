@@ -139,12 +139,14 @@ describe("runtime and utility exports", () => {
 
     expect(animator.getCurrentAnimation()).toBe("idle");
     expect(animator.getFrame()).toBe("idle-1");
+    expect(animator.getFrameIndex()).toBe(0);
 
     animator.update(0.49);
     expect(animator.getFrame()).toBe("idle-1");
 
     animator.update(0.01);
     expect(animator.getFrame()).toBe("idle-2");
+    expect(animator.getFrameIndex()).toBe(1);
 
     animator.update(1);
     expect(animator.getFrame()).toBe("idle-1");

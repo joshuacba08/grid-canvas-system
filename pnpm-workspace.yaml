@@ -1,5 +1,31 @@
 packages:
   - "site"
 
+# Patched transitive versions prevent reintroducing the vulnerable site/build
+# dependency resolutions present in the 1.1.0 lockfile.
+overrides:
+  dompurify: 3.4.17
+  js-yaml: 4.3.2
+  http-cache-semantics: 4.3.0
+  source-map-js: 1.2.2
+  katex: 0.18.2
+  fast-uri: 3.1.8
+  undici: 7.30.0
+  postcss: 8.5.30
+
 allowBuilds:
   esbuild: true
+
+minimumReleaseAgeExclude:
+  - dompurify@3.4.17
+  - "@vue/compiler-core@3.5.44"
+  - "@vue/compiler-dom@3.5.44"
+  - "@vue/compiler-sfc@3.5.44"
+  - "@vue/compiler-ssr@3.5.44"
+  - "@vue/reactivity@3.5.44"
+  - "@vue/runtime-core@3.5.44"
+  - "@vue/runtime-dom@3.5.44"
+  - "@vue/server-renderer@3.5.44"
+  - "@vue/shared@3.5.44"
+  - vue@3.5.44
+  - postcss@8.5.30

@@ -1,6 +1,6 @@
 # Public API Contract
 
-This document defines the public surface for `grid-canvas-system@1.1.0`.
+This document defines the public surface for the unpublished `grid-canvas-system@1.2.0-rc.1` candidate, extending the stable `1.x` contract.
 
 ## Stable
 
@@ -130,4 +130,16 @@ New runtime helpers added for `1.0.0` are not mirrored as direct root aliases. U
 
 ## Outside 1.0.0
 
-The `1.0.0` release intentionally does not include React/Vue bindings, WebGL, ECS, a visual editor, multiplayer, advanced physics, camera controls or a complex asset manager. Camera work is planned for a later `1.1` track.
+The current contract does not include framework-specific bindings, WebGL, ECS, a visual editor, multiplayer, advanced physics, camera controls or a complex asset manager. Framework integration uses the generic runtime lifecycle. Camera controls remain a roadmap item.
+
+## Stabilization candidate contracts
+
+- Fixed-step loops and scene managers expose idempotent `destroy()` and readable `isDestroyed()`. Fixed-step `start()` and `reset()` reject later use; `stop()` remains harmless and manual `frame()` does nothing. Scene mutation/update/draw methods reject later use, while getters remain readable.
+- Scene destruction invokes the current scene's `exit(currentSceneId)` once. The caller remains responsible for resources created outside these helpers.
+- State/scene transitions reject nested transitions with `false`. Reset inside a transition throws `InvalidStateTransitionError`. An exit failure leaves the old state; an enter failure leaves the new state. State history and events reflect a committed transition even if enter throws.
+- Animator frame subscribers may replace or destroy playback; the interrupted animation cannot complete the replacement. Completion events describe the completed animation and precede user completion callbacks.
+- Runtime `resize()` validates all dimensions/DPR before committing. An unchanged size preserves the bitmap and context state.
+- Reduced-FPS updates receive accumulated time since the previous delivered update, limited by `maxDeltaMs`. Delta discarded by that limit is intentionally not simulated.
+- Pointer tracker coordinates remain CSS-relative by default; optional `logicalWidth`/`logicalHeight` map scaled display dimensions to a logical coordinate system.
+- Howler controllers affect only their own sounds. Asset definitions may provide `onError(error)` for load/playback errors. Tone controllers own independent contexts, transports and output volumes, with polyphonic voices for overlapping notes/chords.
+- Audio is still Experimental pending the certification checklist. See [audit](./stability/AUDIT.md) and [inventory](./stability/contract.json).

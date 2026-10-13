@@ -253,6 +253,30 @@ function createFakeToneModule() {
       Transport.state = "stopped";
     }),
   };
+  const Destination = { volume: { value: 0 } };
+  const start = vi.fn(async () => {});
+  const contexts: audioLoaders.ToneContextLike[] = [];
+  function Context() {
+    const transport =
+      contexts.length === 0
+        ? Transport
+        : {
+            bpm: { value: 120 },
+            state: "stopped",
+            cancel: vi.fn(),
+            start: vi.fn(),
+            stop: vi.fn(),
+          };
+    const context = {
+      now: () => 0,
+      transport,
+      destination: contexts.length === 0 ? Destination : { volume: { value: 0 } },
+      resume: start,
+      dispose: vi.fn(),
+    };
+    contexts.push(context);
+    return context;
+  }
 
   function createInstrument(store: FakeToneInstrument[]) {
     return function Instrument(this: unknown) {
@@ -266,10 +290,9 @@ function createFakeToneModule() {
 
   function PartConstructor(
     this: unknown,
-    callback: FakeTonePart["callback"],
-    events: FakeTonePart["events"],
+    options: { callback: FakeTonePart["callback"]; events: FakeTonePart["events"] },
   ) {
-    const part = new FakeTonePart(callback, events);
+    const part = new FakeTonePart(options.callback, options.events);
 
     createdParts.push(part);
 
@@ -278,14 +301,23 @@ function createFakeToneModule() {
 
   return {
     module: {
+      Context: Context as unknown as audioLoaders.ToneModuleLike["Context"],
+      PolySynth: function (options: { voice: new () => FakeToneInstrument }) {
+        return new options.voice();
+      } as unknown as audioLoaders.ToneModuleLike["PolySynth"],
+      TimeClass: class {
+        constructor(
+          _context: unknown,
+          public value: number | string,
+        ) {}
+        toSeconds() {
+          return parseToneTime(this.value);
+        }
+      },
       AMSynth: createInstrument(
         amSynths,
       ) as unknown as audioLoaders.ToneModuleLike["AMSynth"],
-      Destination: {
-        volume: {
-          value: 0,
-        },
-      },
+      Destination,
       FMSynth: createInstrument(
         fmSynths,
       ) as unknown as audioLoaders.ToneModuleLike["FMSynth"],
@@ -300,7 +332,7 @@ function createFakeToneModule() {
         toSeconds: () => parseToneTime(value),
       }),
       Transport,
-      start: vi.fn(async () => {}),
+      start,
     },
     createdParts,
     synths,
@@ -308,6 +340,7 @@ function createFakeToneModule() {
     fmSynths,
     membraneSynths,
     Transport,
+    contexts,
   };
 }
 
@@ -379,6 +412,17 @@ describe("audio addons", () => {
     expect(audioContext.close).toHaveBeenCalled();
   });
 
+  it("supports the general preset API and rejects unknown names before playback", async () => {
+    const audio = createArcadeAudio();
+    const context = FakeAudioContext.instances[0];
+    await expect(audio.playPreset("missing" as any)).rejects.toThrow();
+    expect(context.resume).not.toHaveBeenCalled();
+    await audio.playPreset("shoot");
+    expect(context.oscillators.length).toBeGreaterThan(0);
+    audio.stopAll();
+    await audio.dispose();
+  });
+
   it("accepts custom arcade sequences and clears timers with stopAll", async () => {
     const arcadeAudio = createArcadeAudio();
 
@@ -443,7 +487,8 @@ describe("audio addons", () => {
     assetAudio.unload("laser");
     assetAudio.dispose();
 
-    expect(fakeHowler.Howler.mute).toHaveBeenCalledWith(true);
+    expect(fakeHowler.instances[0].mute).toHaveBeenCalledWith(true);
+    expect(fakeHowler.Howler.mute).not.toHaveBeenCalled();
     expect(fakeHowler.instances[0].fade).toHaveBeenCalledWith(0.2, 0.7, 120);
     expect(fakeHowler.instances[0].stop).toHaveBeenCalled();
     expect(fakeHowler.instances[0].unload).toHaveBeenCalled();
@@ -507,6 +552,7 @@ describe("audio addons", () => {
     expect(fakeTone.synths[0].triggerAttackRelease).toHaveBeenCalledWith(
       "E4",
       "8n",
+      expect.any(Number),
       undefined,
     );
     expect(fakeTone.createdParts).toHaveLength(1);
@@ -530,5 +576,104 @@ describe("audio addons", () => {
     );
 
     await expect(createToneMusicAudio()).rejects.toThrow("npm install tone");
+  });
+
+  it("isolates Howler controllers and validates volume before starting playback", async () => {
+    const fake = createFakeHowlerModule();
+    vi.spyOn(audioLoaders, "loadHowlerModule").mockResolvedValue(fake.module);
+    const a = await createHowlerAssetAudio({ sound: { src: "a.wav" } });
+    const b = await createHowlerAssetAudio({ sound: { src: "b.wav" } });
+    a.play("sound");
+    b.play("sound");
+    a.mute(true);
+    a.stop();
+    a.setVolume(0.2);
+    expect(fake.instances[1].mute).not.toHaveBeenCalled();
+    expect(fake.instances[1].stop).not.toHaveBeenCalled();
+    expect(fake.Howler.stop).not.toHaveBeenCalled();
+    expect(fake.Howler.volume).not.toHaveBeenCalled();
+    expect(() => a.play("sound", { volume: NaN })).toThrow();
+    expect(fake.instances[0].play).toHaveBeenCalledTimes(1);
+    a.dispose();
+    b.dispose();
+  });
+
+  it("isolates Tone tempo, destination volume and disposal in owned contexts", async () => {
+    const fake = createFakeToneModule();
+    vi.spyOn(audioLoaders, "loadToneModule").mockResolvedValue(fake.module);
+    const a = await createToneMusicAudio({ bpm: 90 });
+    const b = await createToneMusicAudio({ bpm: 140 });
+    a.setBpm(100);
+    a.setMasterVolume(0.1);
+    a.dispose();
+    expect(fake.contexts[1].transport.bpm.value).toBe(140);
+    expect(fake.contexts[1].transport.stop).not.toHaveBeenCalled();
+    expect(fake.contexts[1].dispose).not.toHaveBeenCalled();
+    b.dispose();
+  });
+
+  it("cleans up one-shot loop timers and disconnects stopped sources", async () => {
+    const audio = createArcadeAudio();
+    const context = FakeAudioContext.instances[0];
+    const id = await audio.playLoop({
+      bpm: 120,
+      loop: false,
+      channels: [{ voice: "pulse", steps: [{ beats: 1, note: 440 }] }],
+    });
+    context.currentTime = 1;
+    vi.advanceTimersByTime(1000);
+    expect(audio.stopLoop(id)).toBe(false);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(context.oscillators[0].disconnect).toHaveBeenCalled();
+    const dispose = audio.dispose;
+    await dispose();
+    await dispose();
+  });
+
+  it("rejects invalid loop input before resume and scheduling", async () => {
+    const audio = createArcadeAudio();
+    await expect(audio.playLoop("missing" as any)).rejects.toThrow(
+      "Unknown arcade loop",
+    );
+    expect(FakeAudioContext.instances[0].resume).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+    await audio.dispose();
+  });
+
+  it("does not create Tone parts or trigger notes after dispose during resume", async () => {
+    const fake = createFakeToneModule();
+    vi.spyOn(audioLoaders, "loadToneModule").mockResolvedValue(fake.module);
+    let finish!: () => void;
+    fake.module.start.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = resolve;
+        }),
+    );
+    const audio = await createToneMusicAudio();
+    audio.registerSequence("s", { steps: [{ time: 0, note: "C4" }] });
+    const playback = audio.playSequence("s");
+    audio.dispose();
+    finish();
+    await expect(playback).rejects.toThrow("disposed");
+    expect(fake.createdParts).toHaveLength(0);
+  });
+
+  it("does not schedule arcade sources after dispose during resume", async () => {
+    const audio = createArcadeAudio();
+    const context = FakeAudioContext.instances[0];
+    let finish!: () => void;
+    context.resume.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = resolve;
+        }),
+    );
+    const playback = audio.playShoot();
+    await audio.dispose();
+    finish();
+    await expect(playback).rejects.toThrow("disposed");
+    expect(context.oscillators).toHaveLength(0);
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

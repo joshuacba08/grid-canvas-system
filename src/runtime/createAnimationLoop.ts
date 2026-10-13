@@ -99,6 +99,9 @@ export function createAnimationLoop(
         ? Number.POSITIVE_INFINITY
         : resolveFinite(options.maxElapsed, 0, "maxElapsed") * 1000
       : resolvePositive(options.maxDeltaMs, 100, "maxDeltaMs");
+  if (maxDeltaMs < 0) {
+    throw new Error("maxElapsed must be non-negative");
+  }
   const reducedMotion = options.reducedMotion ?? "ignore";
   const reducedMotionFrameMs =
     1000 / resolvePositive(options.reducedMotionFps, 15, "reducedMotionFps");
@@ -143,7 +146,12 @@ export function createAnimationLoop(
       return;
     }
 
-    loop.frame(timestamp);
+    try {
+      loop.frame(timestamp);
+    } catch (error) {
+      loop.stop();
+      throw error;
+    }
     scheduleNextFrame();
   };
 
@@ -154,8 +162,8 @@ export function createAnimationLoop(
 
     if (documentRef.hidden) {
       if (running && !paused) {
-        pausedByVisibility = true;
         loop.pause();
+        pausedByVisibility = true;
       }
 
       return;
@@ -194,30 +202,39 @@ export function createAnimationLoop(
       }
 
       const elapsedMilliseconds = Math.max(0, resolvedTimestamp - previousTimestamp);
-      const clampedMilliseconds = Math.min(elapsedMilliseconds, maxDeltaMs);
+      previousTimestamp = resolvedTimestamp;
+      let deliveredMilliseconds = elapsedMilliseconds;
 
       if (
         reducedMotion === "lower-fps" &&
         getMotionPreference(options.windowRef) === "reduce"
       ) {
-        lowerFpsAccumulator += clampedMilliseconds;
+        lowerFpsAccumulator += elapsedMilliseconds;
 
         if (lowerFpsAccumulator < reducedMotionFrameMs) {
-          previousTimestamp = resolvedTimestamp;
           return;
         }
 
-        lowerFpsAccumulator %= reducedMotionFrameMs;
+        deliveredMilliseconds = lowerFpsAccumulator;
+        lowerFpsAccumulator = 0;
+      } else {
+        deliveredMilliseconds += lowerFpsAccumulator;
+        lowerFpsAccumulator = 0;
       }
 
+      const clampedMilliseconds = Math.min(deliveredMilliseconds, maxDeltaMs);
       const elapsed = clampedMilliseconds / 1000;
-
-      options.update?.(elapsed, resolvedTimestamp);
-      options.updateMs?.(clampedMilliseconds, resolvedTimestamp);
-      options.draw?.(elapsed, resolvedTimestamp);
-      options.drawMs?.(clampedMilliseconds, resolvedTimestamp);
-
-      previousTimestamp = resolvedTimestamp;
+      const wasRunning = running;
+      const callbacks = [
+        () => options.update?.(elapsed, resolvedTimestamp),
+        () => options.updateMs?.(clampedMilliseconds, resolvedTimestamp),
+        () => options.draw?.(elapsed, resolvedTimestamp),
+        () => options.drawMs?.(clampedMilliseconds, resolvedTimestamp),
+      ];
+      for (const callback of callbacks) {
+        if (destroyed || paused || (wasRunning && !running)) break;
+        callback();
+      }
     },
     isDestroyed(): boolean {
       return destroyed;
@@ -229,11 +246,13 @@ export function createAnimationLoop(
       return running;
     },
     pause(): void {
+      pausedByVisibility = false;
       if (destroyed || !running || paused) {
         return;
       }
 
       paused = true;
+      lowerFpsAccumulator = 0;
       cancelScheduledFrame();
     },
     reset(): void {
@@ -244,7 +263,7 @@ export function createAnimationLoop(
     resume(): void {
       assertNotDestroyed();
 
-      if (!running || !paused || shouldPauseForReducedMotion()) {
+      if (!running || !paused || documentRef?.hidden || shouldPauseForReducedMotion()) {
         return;
       }
 
@@ -263,7 +282,8 @@ export function createAnimationLoop(
       previousTimestamp = undefined;
       lowerFpsAccumulator = 0;
 
-      if (shouldPauseForReducedMotion()) {
+      pausedByVisibility = documentRef?.hidden === true;
+      if (shouldPauseForReducedMotion() || pausedByVisibility) {
         paused = true;
         return;
       }

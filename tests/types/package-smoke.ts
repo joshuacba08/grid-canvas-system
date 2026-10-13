@@ -108,6 +108,10 @@ GridCanvasSystem.runtime.getTileAt({ x: 1, y: 1 }, map, {
 });
 sceneManager.draw(undefined);
 fixedLoop.stop();
+fixedLoop.destroy();
+fixedLoop.isDestroyed();
+sceneManager.destroy();
+sceneManager.isDestroyed();
 arcadeAudio.stopAll();
 void howlerAudio;
 void toneAudio;
@@ -116,3 +120,12 @@ void runtimeOptions;
 reactiveLoop.destroy();
 inferredAnimator.play(inferredAnimation);
 unsubscribeMachine();
+
+// @ts-expect-error Unknown animation names must not degrade to any.
+inferredAnimator.play("missing");
+// @ts-expect-error State names remain constrained by the machine type.
+typedMachine.transition("missing");
+// @ts-expect-error The public constructor requires a canvas target.
+new GridCanvasSystem(42);
+// @ts-expect-error Sprite geometry requires a numeric pixel size.
+grid.drawCompiledPixelSprite(compiled, { x: 0, y: 0, pixelSize: "8" });

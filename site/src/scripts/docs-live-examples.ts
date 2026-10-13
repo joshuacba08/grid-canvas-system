@@ -148,7 +148,16 @@ function mountAudioArcadeDemo(): void {
     grid: "rgba(77, 169, 255, 0.14)",
     text: "#dbeafe",
   });
-  const audio = createArcadeAudio({ masterVolume: 0.72 });
+  let audio: ReturnType<typeof createArcadeAudio>;
+  try {
+    audio = createArcadeAudio({ masterVolume: 0.72 });
+  } catch (error) {
+    setStatus(root, error instanceof Error ? error.message : String(error));
+    root.querySelectorAll("button").forEach((button) => {
+      button.disabled = true;
+    });
+    return;
+  }
   let activeLoopId: string | undefined;
   let activePreset = "none";
   let muted = false;

@@ -1,6 +1,6 @@
 {
   "name": "grid-canvas-system",
-  "version": "1.1.0",
+  "version": "1.2.0-rc.1",
   "packageManager": "pnpm@11.7.0",
   "type": "module",
   "private": false,
@@ -34,7 +34,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build && vite build --config vite.audio.config.ts && tsc -p tsconfig.build.json",
+    "build": "vite build && vite build --config vite.cdn.config.ts && vite build --config vite.audio.config.ts && tsc -p tsconfig.build.json && node scripts/fix-declaration-imports.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview",
@@ -43,7 +43,15 @@
     "test:visual": "vitest run tests/GridCanvasSystem.visual.test.ts",
     "test:visual:update": "npm run build && node scripts/update-visual-snapshots.mjs",
     "verify:types": "tsc -p tsconfig.types-smoke.json",
+    "verify:bundles": "node scripts/verify-bundles.mjs",
+    "verify:dependencies": "pnpm audit --audit-level=high",
     "verify:package-exports": "node scripts/verify-package-exports.mjs",
+    "test:browser": "node scripts/browser-versions.mjs && playwright test",
+    "test:soak": "playwright test --config playwright.soak.config.ts",
+    "verify:contract": "node scripts/verify-contract.mjs",
+    "verify:performance": "node scripts/prepare-performance-reference.mjs && node scripts/benchmark-pixel-sprites.mjs --check",
+    "verify:release": "node scripts/verify-release.mjs",
+    "verify:certification": "node scripts/verify-certification.mjs",
     "test:watch": "vitest",
     "site:dev": "pnpm --filter grid-canvas-system-site dev",
     "site:build": "pnpm --filter grid-canvas-system-site build",
@@ -88,12 +96,21 @@
     }
   },
   "devDependencies": {
-    "@napi-rs/canvas": "^1.0.0",
-    "jsdom": "^29.1.1",
-    "prettier": "^3.9.4",
-    "prettier-plugin-astro": "^0.14.1",
-    "typescript": "~5.6.2",
-    "vite": "^6.0.1",
-    "vitest": "^4.1.9"
+    "@angular/common": "20.3.33",
+    "@angular/compiler": "20.3.33",
+    "@angular/core": "20.3.33",
+    "@angular/platform-browser": "20.3.33",
+    "@napi-rs/canvas": "1.0.0",
+    "@playwright/test": "1.64.0",
+    "jsdom": "29.1.1",
+    "prettier": "3.9.4",
+    "prettier-plugin-astro": "0.14.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "rxjs": "7.8.2",
+    "typescript": "5.6.3",
+    "vite": "6.4.4",
+    "vitest": "4.1.11",
+    "vue": "3.5.44"
   }
 }

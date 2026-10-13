@@ -21,6 +21,7 @@ import {
   type TutorialLocale,
 } from "../../data/tutorialsContent";
 import { libraryVersion } from "../../data/siteRelease";
+import ReleaseCandidateNotice from "../ReleaseCandidateNotice.astro";
 import "../../styles/global.css";
 import "../../styles/docs.css";
 import "../../styles/tutorials.css";
@@ -66,6 +67,7 @@ const alternatePath =
     />
   </head>
   <body class="docs-page tutorials-page">
+    <ReleaseCandidateNotice locale={locale} />
     <header class="docs-topbar tutorials-topbar">
       <div class="docs-topbar-inner">
         <button

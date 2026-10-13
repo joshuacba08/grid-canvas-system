@@ -1,0 +1,157 @@
+---
+import { libraryVersion } from "../../data/siteRelease";
+const commit = import.meta.env.PUBLIC_BUILD_SHA ?? "local";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prueba en dispositivo · Grid Canvas System</title>
+  </head>
+  <body>
+    <main data-qa-version={libraryVersion} data-qa-commit={commit}>
+      <a href="/es/">← Grid Canvas System</a>
+      <h1>Comprobación en dispositivo</h1>
+      <p>
+        Candidato {libraryVersion}. Toca el canvas, gira el teléfono, prueba el audio y
+        cambia de aplicación antes de volver.
+      </p>
+      <label
+        >Modelo del dispositivo <input
+          id="device-model"
+          placeholder="Por ejemplo: iPhone 14"
+        /></label
+      >
+      <canvas id="qa-canvas" aria-label="Canvas de prueba" tabindex="0"></canvas>
+      <output id="qa-status" aria-live="polite">Preparando canvas…</output>
+      <div class="controls">
+        <button id="qa-start">Iniciar / reanudar</button>
+        <button id="qa-pause">Pausar</button>
+        <button id="qa-prepare">Preparar audio</button>
+        <button id="qa-play" disabled>Reproducir los tres audios</button>
+        <button id="qa-arcade" disabled>Probar Web Audio</button>
+        <button id="qa-howler" disabled>Probar Howler</button>
+        <button id="qa-tone" disabled>Probar Tone</button>
+        <button id="qa-destroy">Destruir recursos</button>
+        <button id="qa-recreate">Recrear canvas</button>
+      </div>
+      <p>
+        Prepara el audio y después pulsa reproducir: esta segunda pulsación proporciona
+        el gesto necesario al navegador. Prueba también cada sistema por separado para
+        comprobar que escuchas sus señales.
+      </p>
+      <fieldset>
+        <legend>Resultados observados personalmente</legend>
+        {
+          [
+            ["sharp", "Los píxeles se ven nítidos"],
+            ["touch", "El punto sigue el toque correctamente"],
+            ["orientation", "El canvas se adapta al girar el dispositivo"],
+            ["audio", "Se escuchan los tres sistemas de audio"],
+            ["background", "Pausa y reanuda al cambiar de aplicación"],
+            ["cleanup", "Después de destruir, la animación y el audio se detienen"],
+          ].map(([id, text]) => (
+            <label>
+              <input type="checkbox" data-observed={id} />
+              {text}
+            </label>
+          ))
+        }
+      </fieldset>
+      <button id="qa-export">Descargar informe JSON</button>
+      <pre id="qa-metrics"></pre>
+      <p>
+        El informe registra el entorno y tus observaciones. La revisión de ese informe
+        completa la evidencia física; ejecutar esta página por sí solo no certifica el
+        dispositivo.
+      </p>
+    </main>
+    <script>
+      import "../../scripts/stability-check";
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #101820;
+    color: #f1f5f9;
+    font:
+      16px/1.5 system-ui,
+      sans-serif;
+  }
+  main {
+    max-width: 760px;
+    margin: auto;
+    padding: 24px;
+  }
+  a {
+    color: #5eead4;
+  }
+  h1 {
+    font-size: clamp(24px, 5vw, 36px);
+  }
+  canvas {
+    display: block;
+    width: 100%;
+    height: 180px;
+    margin: 20px 0;
+    border-radius: 8px;
+    touch-action: none;
+    image-rendering: pixelated;
+    background: #060d14;
+  }
+  button,
+  input {
+    font: inherit;
+  }
+  button {
+    padding: 10px 14px;
+    border: 1px solid #5eead4;
+    border-radius: 6px;
+    background: #16313a;
+    color: #f1f5f9;
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  fieldset {
+    margin: 20px 0;
+    border: 1px solid #4b6473;
+  }
+  fieldset label {
+    display: block;
+    padding: 6px 0;
+  }
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  input[type="text"],
+  input:not([type]) {
+    display: block;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    background: #16313a;
+    border: 1px solid #4b6473;
+    color: #fff;
+  }
+  pre {
+    overflow: auto;
+    font-size: 12px;
+    padding: 16px;
+    background: #060d14;
+    border-radius: 8px;
+  }
+</style>

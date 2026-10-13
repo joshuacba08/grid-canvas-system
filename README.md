@@ -29,7 +29,9 @@ It is built for small interactive products, education demos, toy engines, game p
 
 ## Current release
 
-The package is currently at **1.1.0**.
+The workspace candidate is **1.2.0-rc.1**, based on the `1.1.0` release. It is not yet certified for publication; see [the stabilization audit](./docs/stability/AUDIT.md).
+
+The candidate repairs CDN construction, reduced-FPS timing, resize preservation, lifecycle cleanup, audio isolation and strict TypeScript declarations. It adds browser and framework integration tests. Audio remains Experimental until the certification requirements are complete.
 
 `1.1.0` adds a reactive, framework-friendly runtime for long-lived Canvas components:
 
@@ -114,7 +116,7 @@ The package stays intentionally small and splits cleanly into three layers:
 
 Audio stays outside the root export so the main Canvas layer remains small, while scenes that need sound can opt into the right lane.
 
-The audio subpaths remain usable in `1.0.0`, but they are classified as Experimental in the public API contract while browser autoplay, adapter coverage and richer examples keep maturing.
+The audio subpaths remain classified as Experimental until real-device and supported WebKit audio certification is complete. Controller volume, mute, tempo and stop operations affect the controller's own resources.
 
 ### Arcade audio addon
 

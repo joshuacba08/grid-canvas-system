@@ -2,6 +2,29 @@
 
 All notable changes to `grid-canvas-system` are documented here.
 
+## 1.2.0-rc.1 — unpublished stabilization candidate
+
+### Fixed
+
+- Restored the script-tag `GridCanvasSystem` constructor, retaining `.default` and public errors for compatibility.
+- Preserved elapsed simulation time with reduced FPS; stopped callbacks and RAF after destruction or update failures.
+- Made runtime resize validation atomic and preserved pixels and context state on unchanged sizes.
+- Cleared keyboard and pointer state on focus/capture loss; added optional logical dimensions to pointer tracking.
+- Guarded nested transitions and animation replacement during subscriptions; documented failure state and cleanup.
+- Fixed Unicode sprite geometry, invalid compiled coordinates and tiny/large tile collision bounds; validated tilemaps before drawing.
+- Isolated Howler controls and Tone contexts, tempo and output; supported overlapping notes/chords and prevented playback after asynchronous disposal races.
+- Repaired declaration imports for strict NodeNext consumption and verified types from the installed tarball without skipLibCheck.
+
+### Added
+
+- `destroy()` and `isDestroyed()` on fixed-step loops and scene managers; scene destruction calls the active scene's `exit` hook with its own id.
+- Optional Howler asset `onError` callbacks for load/playback failures.
+- Browser, framework, property and lifecycle regression tests; controlled per-engine visual references; a 30-minute real-time soak test.
+- Contract inventory, reproducible performance baseline, shared CI/release checks and an explicit certification gate.
+- Device acceptance page with downloadable evidence and a multilingual candidate notice; patched site, framework fixture and build dependencies.
+
+Audio remains Experimental. Physical iOS/Android and Web Audio in a supported WebKit environment must be certified before promotion or publication.
+
 ## 1.1.0
 
 ### Added

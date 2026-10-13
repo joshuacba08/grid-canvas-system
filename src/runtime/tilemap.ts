@@ -7,6 +7,7 @@ import type {
   GridCanvasCompiledPixelSprite,
   GridCanvasCompiledPixelSpriteDrawOptions,
 } from "../drawing/pixelSprite";
+import { compilePixelSprite, resolveCompiledSprite } from "../drawing/pixelSprite";
 import type { GridCanvasGridCell } from "./grid";
 import type { GridCanvasRectangleLike } from "./types";
 
@@ -318,13 +319,17 @@ export function hitTestTileMap(
   const resolvedMap = resolveMap(map);
   const { origin, tileSize } = resolveOptions(options);
   const solidTileSet = new Set(solidTiles);
-  const startColumn = Math.floor((resolvedRect.x - origin.x) / tileSize);
-  const endColumn = Math.floor(
-    (resolvedRect.x + resolvedRect.width - 0.000001 - origin.x) / tileSize,
+  const width = Array.from(resolvedMap[0]).length;
+  // Clamp to the map before iterating; tiny rectangles still occupy a tile.
+  const startColumn = Math.max(0, Math.floor((resolvedRect.x - origin.x) / tileSize));
+  const endColumn = Math.min(
+    width - 1,
+    Math.ceil((resolvedRect.x + resolvedRect.width - origin.x) / tileSize) - 1,
   );
-  const startRow = Math.floor((resolvedRect.y - origin.y) / tileSize);
-  const endRow = Math.floor(
-    (resolvedRect.y + resolvedRect.height - 0.000001 - origin.y) / tileSize,
+  const startRow = Math.max(0, Math.floor((resolvedRect.y - origin.y) / tileSize));
+  const endRow = Math.min(
+    resolvedMap.length - 1,
+    Math.ceil((resolvedRect.y + resolvedRect.height - origin.y) / tileSize) - 1,
   );
 
   for (let row = startRow; row <= endRow; row += 1) {
@@ -354,6 +359,7 @@ export function drawTileMap(
   options: GridCanvasTileMapDrawOptions,
 ): void {
   const resolvedMap = resolveMap(map);
+  const resolvedOptions = resolveOptions(options);
   const { grid, palette } = options;
 
   if (grid === null || typeof grid !== "object") {
@@ -364,15 +370,53 @@ export function drawTileMap(
     throw new Error("tileset must be an object");
   }
 
+  // Validate every referenced definition before touching the bitmap.
+  const normalized = new Map<string, GridCanvasTileDefinition>();
+  for (const tile of new Set(resolvedMap.flatMap((row) => Array.from(row)))) {
+    const definition = Object.prototype.hasOwnProperty.call(tileset, tile)
+      ? tileset[tile]
+      : undefined;
+    if (definition == null || typeof definition === "string") {
+      normalized.set(tile, definition);
+      continue;
+    }
+    if (Array.isArray(definition)) {
+      compilePixelSprite(definition, palette!);
+      normalized.set(tile, definition);
+      continue;
+    }
+    if (isCompiledSprite(definition)) {
+      normalized.set(tile, resolveCompiledSprite(definition));
+      continue;
+    }
+    if (!isTileObjectDefinition(definition))
+      throw new Error(`Invalid tile definition "${tile}"`);
+    resolveUnit(definition.opacity, "tile.opacity");
+    if (definition.color !== undefined && typeof definition.color !== "string")
+      throw new Error("tile.color must be a string");
+    if (definition.sprite !== undefined) {
+      if (isCompiledSprite(definition.sprite)) resolveCompiledSprite(definition.sprite);
+      else
+        compilePixelSprite(
+          definition.sprite as GridCanvasPixelSprite,
+          (definition.palette ?? palette)!,
+        );
+    }
+    normalized.set(tile, definition);
+  }
+
   resolvedMap.forEach((row, rowIndex) => {
     Array.from(row).forEach((tile, columnIndex) => {
-      const definition = tileset[tile];
+      const definition = normalized.get(tile);
 
       if (definition === null || definition === undefined) {
         return;
       }
 
-      const bounds = tileToBounds({ column: columnIndex, row: rowIndex }, options);
+      const bounds = tileToBounds(
+        { column: columnIndex, row: rowIndex },
+        resolvedOptions,
+      );
 
       if (typeof definition === "string") {
         drawColorTile(grid, definition, bounds);

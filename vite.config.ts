@@ -8,7 +8,7 @@ export default defineConfig({
       entry: "src/index.ts",
       name: "GridCanvasSystem",
       fileName: (format) => `grid-canvas-system.${format}.js`,
-      formats: ["es", "umd"],
+      formats: ["es"],
     },
     rollupOptions: {
       external,

@@ -1,3 +1,5 @@
+import { RuntimeDestroyedError } from "./errors";
+
 export interface GridCanvasFixedStepLoopOptions {
   autoStart?: boolean;
   cancelFrame?: (handle: number) => void;
@@ -10,7 +12,9 @@ export interface GridCanvasFixedStepLoopOptions {
 }
 
 export interface GridCanvasFixedStepLoop {
+  destroy(): void;
   frame(timestamp: number): void;
+  isDestroyed(): boolean;
   isRunning(): boolean;
   reset(): void;
   start(): void;
@@ -89,17 +93,30 @@ export function createFixedStepLoop(
   let frameHandle: number | null = null;
   let previousTimestamp: number | undefined;
   let running = false;
+  let destroyed = false;
+
+  const assertActive = (): void => {
+    if (destroyed)
+      throw new RuntimeDestroyedError("Fixed-step loop has been destroyed.");
+  };
 
   const scheduleNextFrame = (): void => {
-    frameHandle = requestFrame(onFrame);
+    if (frameHandle === null && running && !destroyed)
+      frameHandle = requestFrame(onFrame);
   };
 
   const onFrame: FrameRequestCallback = (timestamp) => {
-    if (!running) {
+    frameHandle = null;
+    if (!running || destroyed) {
       return;
     }
 
-    loop.frame(timestamp);
+    try {
+      loop.frame(timestamp);
+    } catch (error) {
+      loop.stop();
+      throw error;
+    }
 
     if (running) {
       scheduleNextFrame();
@@ -107,7 +124,15 @@ export function createFixedStepLoop(
   };
 
   const loop: GridCanvasFixedStepLoop = {
+    destroy(): void {
+      if (destroyed) return;
+      loop.stop();
+      destroyed = true;
+      accumulator = 0;
+      previousTimestamp = undefined;
+    },
     frame(timestamp: number): void {
+      if (destroyed) return;
       const resolvedTimestamp = resolveFinite(timestamp, "timestamp");
 
       if (previousTimestamp === undefined) {
@@ -117,13 +142,16 @@ export function createFixedStepLoop(
       const elapsedMilliseconds = Math.max(0, resolvedTimestamp - previousTimestamp);
       const elapsedSeconds = Math.min(elapsedMilliseconds / 1000, maxElapsed);
       let updatesThisFrame = 0;
+      const wasRunning = running;
+      previousTimestamp = resolvedTimestamp;
 
       accumulator += elapsedSeconds;
 
       while (accumulator >= step && updatesThisFrame < maxUpdatesPerFrame) {
-        options.update?.(step, resolvedTimestamp);
         accumulator -= step;
         updatesThisFrame += 1;
+        options.update?.(step, resolvedTimestamp);
+        if (destroyed || (wasRunning && !running)) return;
       }
 
       if (accumulator >= step) {
@@ -135,16 +163,20 @@ export function createFixedStepLoop(
       }
 
       options.draw?.(Math.min(1, accumulator / step), resolvedTimestamp);
-      previousTimestamp = resolvedTimestamp;
+    },
+    isDestroyed(): boolean {
+      return destroyed;
     },
     isRunning(): boolean {
       return running;
     },
     reset(): void {
+      assertActive();
       accumulator = 0;
       previousTimestamp = undefined;
     },
     start(): void {
+      assertActive();
       if (running) {
         return;
       }

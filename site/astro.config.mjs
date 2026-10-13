@@ -8,6 +8,11 @@ export default defineConfig({
   },
   integrations: [mdx()],
   vite: {
+    define: {
+      "import.meta.env.PUBLIC_BUILD_SHA": JSON.stringify(
+        process.env.VERCEL_GIT_COMMIT_SHA ?? "local",
+      ),
+    },
     build: {
       // Monaco is intentionally isolated to the Playground route.
       chunkSizeWarningLimit: 4000,

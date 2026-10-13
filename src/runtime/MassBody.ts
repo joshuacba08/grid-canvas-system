@@ -71,16 +71,17 @@ export class MassBody {
   update(elapsed: number, bounds?: GridCanvasBounds): void {
     const resolvedElapsed = resolveFinite(elapsed, 0, "elapsed");
 
-    this.x += this.xSpeed * resolvedElapsed;
-    this.y += this.ySpeed * resolvedElapsed;
-    this.angle = normalizeAngle(this.angle + this.rotationSpeed * resolvedElapsed);
-
-    if (bounds !== undefined) {
-      const wrapped = wrapPoint({ x: this.x, y: this.y }, bounds, this.radius);
-
-      this.x = wrapped.x;
-      this.y = wrapped.y;
-    }
+    const next = {
+      x: resolveFinite(this.x + this.xSpeed * resolvedElapsed, 0, "next.x"),
+      y: resolveFinite(this.y + this.ySpeed * resolvedElapsed, 0, "next.y"),
+    };
+    const nextAngle = normalizeAngle(
+      resolveFinite(this.angle + this.rotationSpeed * resolvedElapsed, 0, "next.angle"),
+    );
+    const position = bounds === undefined ? next : wrapPoint(next, bounds, this.radius);
+    this.x = position.x;
+    this.y = position.y;
+    this.angle = nextAngle;
   }
 
   push(angle: number, force: number, elapsed: number): void {

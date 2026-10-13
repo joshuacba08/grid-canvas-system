@@ -1,0 +1,35 @@
+{
+  "node": "v24.21.0",
+  "sourceCommit": "90719e6ade310f47731c64adf683fbc7f6707b61",
+  "librarySha256": "191ac5cbfb86ff8f3b4f11198db6c00353f5afa40013cedb09f0796e8a84e88e",
+  "platform": "win32",
+  "cpu": "AMD Ryzen 7 8745HX with Radeon Graphics        ",
+  "iterations": 5000,
+  "repetitions": 10,
+  "warmup": 1,
+  "medians": {
+    "drawPixelSprite": 85.12890000000004,
+    "drawCompiledPixelSprite": 74.37744999999984
+  },
+  "samples": {
+    "drawPixelSprite": [
+      107.47450000000003, 84.88480000000004, 84.40249999999992, 89.14609999999993,
+      83.8728000000001, 83.76160000000004, 85.37300000000005, 83.46770000000015,
+      93.21489999999994, 88.0907000000002
+    ],
+    "drawCompiledPixelSprite": [
+      78.94520000000011, 89.38999999999987, 74.64200000000005, 74.95640000000003,
+      74.07769999999982, 73.12779999999998, 74.08799999999997, 74.11289999999963,
+      73.99350000000004, 80.5300000000002
+    ]
+  },
+  "gzipBytes": {
+    "audio/index.js": 2321,
+    "audio-arcade/index.js": 3117,
+    "chunks/shared-BW6X9wyH.js": 666,
+    "grid-canvas-system.es.js": 15684,
+    "grid-canvas-system.umd.js": 13824,
+    "runtime/index.js": 11848
+  },
+  "totalGzipBytes": 47460
+}

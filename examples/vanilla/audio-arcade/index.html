@@ -75,9 +75,7 @@
         gridLabelColor: "#1d4ed8",
         coordinateLabelColor: "#93c5fd",
       });
-      const audio = createArcadeAudio({
-        masterVolume: 0.7,
-      });
+      let audio;
       const status = document.getElementById("status");
       const preset = document.getElementById("loop-preset");
       let activeLoopId;
@@ -114,6 +112,15 @@
 
       renderScene();
 
+      try {
+        audio = createArcadeAudio({ masterVolume: 0.7 });
+      } catch (error) {
+        setStatus(error.message);
+        document.querySelectorAll("button").forEach((button) => {
+          button.disabled = true;
+        });
+      }
+
       document.getElementById("shoot").addEventListener("click", async () => {
         await audio.playShoot();
         setStatus("Played shoot SFX.");
@@ -146,7 +153,7 @@
       });
 
       window.addEventListener("beforeunload", () => {
-        audio.dispose();
+        audio?.dispose();
       });
     </script>
   </body>

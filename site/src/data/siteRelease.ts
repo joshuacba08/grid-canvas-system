@@ -1,10 +1,10 @@
-export const libraryVersion = "1.1.0";
+export const libraryVersion = "1.2.0-rc.1";
 
 export const currentRelease = {
   version: libraryVersion,
-  title: "Reactive canvas runtime and interaction primitives",
+  title: "Stabilization release candidate",
   summary:
-    "Adds createCanvasRuntime, v2 animation loop lifecycle, reduced-motion handling, sprite one-shots, generic state machines and the runtime subpath export.",
+    "Repairs CDN construction, animation timing, resize, cleanup and strict package types; adds browser verification. Physical-device certification remains pending.",
 } as const;
 
 export interface ReleaseNote {
@@ -18,7 +18,12 @@ export const releaseTimeline: readonly ReleaseNote[] = [
   {
     version: currentRelease.version,
     summary:
-      "Reactive canvas runtime, logical pointer events, lifecycle cleanup, reduced motion, sprite animator v2, state machine v2 and package subpath exports.",
+      "Stabilization candidate: CDN, timing, atomic resize, lifecycle cleanup, audio isolation and package types. Certification pending.",
+  },
+  {
+    version: "1.1.0",
+    summary:
+      "Reactive canvas runtime, logical pointer events, reduced motion and runtime subpath exports.",
   },
   {
     version: "1.0.0",

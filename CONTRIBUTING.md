@@ -7,6 +7,8 @@ compatible with the library's small Canvas-first scope.
 
 Use Node.js 24 and pnpm 11, matching CI.
 
+The stabilization reference pins Node 24.21.0 and pnpm 11.7.0. Run `pnpm exec playwright install chromium firefox webkit` once, then `pnpm run verify:release` for two consecutive automated checks. `pnpm run test:soak` runs the separate 30-minute test. Physical certification lives in `docs/stability/certification.json`; never mark it passed from emulation or skipped tests.
+
 ```bash
 pnpm install --frozen-lockfile
 pnpm build

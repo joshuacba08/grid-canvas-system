@@ -1,5 +1,9 @@
 import { createAnimationLoop } from "./createAnimationLoop";
-import { CanvasContextUnavailableError, RuntimeDestroyedError } from "./errors";
+import {
+  CanvasContextUnavailableError,
+  CanvasTargetNotFoundError,
+  RuntimeDestroyedError,
+} from "./errors";
 import type { ReducedMotionBehavior } from "./motionPreference";
 
 export type PixelRatioOption = number | "auto";
@@ -83,6 +87,13 @@ function resolvePixelRatio(
 }
 
 function getCanvasContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
+  if (
+    canvas === null ||
+    typeof canvas !== "object" ||
+    typeof canvas.getContext !== "function"
+  ) {
+    throw new CanvasTargetNotFoundError("A canvas element is required.");
+  }
   const context = canvas.getContext("2d");
 
   if (context === null) {
@@ -100,6 +111,9 @@ export function createCanvasRuntime(options: CanvasRuntimeOptions): CanvasRuntim
   }
 
   const canvas = options.canvas;
+  if (typeof options.render !== "function") {
+    throw new Error("render must be a function");
+  }
   const context = getCanvasContext(canvas);
   const maxPixelRatio = resolvePositive(options.maxPixelRatio ?? 2, "maxPixelRatio");
   const imageSmoothing = options.imageSmoothing;
@@ -130,14 +144,20 @@ export function createCanvasRuntime(options: CanvasRuntimeOptions): CanvasRuntim
   });
 
   const applyCanvasSize = (): boolean => {
+    const previousPixelRatio = pixelRatio;
     pixelRatio = resolvePixelRatio(pixelRatioOption, maxPixelRatio);
     const bufferWidth = Math.round(logicalWidth * pixelRatio);
     const bufferHeight = Math.round(logicalHeight * pixelRatio);
     const changed =
+      pixelRatio !== previousPixelRatio ||
       canvas.width !== bufferWidth ||
       canvas.height !== bufferHeight ||
       canvas.style.width !== `${logicalWidth}px` ||
       canvas.style.height !== `${logicalHeight}px`;
+
+    if (!changed) {
+      return false;
+    }
 
     canvas.width = bufferWidth;
     canvas.height = bufferHeight;
@@ -260,19 +280,16 @@ export function createCanvasRuntime(options: CanvasRuntimeOptions): CanvasRuntim
     },
     resize(resizeOptions: Partial<CanvasResizeOptions> = {}): void {
       assertActive();
-
-      if (resizeOptions.width !== undefined) {
-        logicalWidth = resolvePositive(resizeOptions.width, "width");
-      }
-
-      if (resizeOptions.height !== undefined) {
-        logicalHeight = resolvePositive(resizeOptions.height, "height");
-      }
-
-      if (resizeOptions.pixelRatio !== undefined) {
-        pixelRatioOption = resizeOptions.pixelRatio;
-      }
-
+      const nextWidth = resolvePositive(resizeOptions.width ?? logicalWidth, "width");
+      const nextHeight = resolvePositive(
+        resizeOptions.height ?? logicalHeight,
+        "height",
+      );
+      const nextPixelRatioOption = resizeOptions.pixelRatio ?? pixelRatioOption;
+      resolvePixelRatio(nextPixelRatioOption, maxPixelRatio);
+      logicalWidth = nextWidth;
+      logicalHeight = nextHeight;
+      pixelRatioOption = nextPixelRatioOption;
       applyCanvasSize();
     },
     resizeToDisplaySize(): boolean {
@@ -284,12 +301,13 @@ export function createCanvasRuntime(options: CanvasRuntimeOptions): CanvasRuntim
         return false;
       }
 
-      const nextLogicalWidth = rect.width;
-      const nextLogicalHeight = rect.height;
+      const nextLogicalWidth = resolvePositive(rect.width, "display width");
+      const nextLogicalHeight = resolvePositive(rect.height, "display height");
       const nextPixelRatio = resolvePixelRatio(pixelRatioOption, maxPixelRatio);
       const nextBufferWidth = Math.round(nextLogicalWidth * nextPixelRatio);
       const nextBufferHeight = Math.round(nextLogicalHeight * nextPixelRatio);
       const changed =
+        pixelRatio !== nextPixelRatio ||
         canvas.width !== nextBufferWidth ||
         canvas.height !== nextBufferHeight ||
         logicalWidth !== nextLogicalWidth ||
@@ -301,7 +319,13 @@ export function createCanvasRuntime(options: CanvasRuntimeOptions): CanvasRuntim
 
       logicalWidth = nextLogicalWidth;
       logicalHeight = nextLogicalHeight;
+      const displayWidth = canvas.style.width;
+      const displayHeight = canvas.style.height;
       applyCanvasSize();
+      // Display-driven resizing must not replace a consumer's responsive CSS
+      // (percentages, viewport units, or stylesheet sizing) with fixed pixels.
+      canvas.style.width = displayWidth;
+      canvas.style.height = displayHeight;
 
       return true;
     },

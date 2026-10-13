@@ -24,6 +24,9 @@ export interface HowlerModuleLike {
     sprite?: Record<string, [number, number]>;
     src: string[];
     volume?: number;
+    mute?: boolean;
+    onloaderror?: (id: number, error: unknown) => void;
+    onplayerror?: (id: number, error: unknown) => void;
   }) => HowlLike;
   Howler: HowlerGlobalLike;
 }
@@ -52,15 +55,22 @@ export interface ToneTimeLike {
 }
 
 export interface ToneModuleLike {
-  AMSynth: new () => ToneInstrumentLike;
+  PolySynth: new (options: {
+    context: ToneContextLike;
+    voice: new (options?: { context: ToneContextLike }) => ToneInstrumentLike;
+  }) => ToneInstrumentLike;
+  Context: new () => ToneContextLike;
+  TimeClass: new (context: ToneContextLike, value: number | string) => ToneTimeLike;
+  AMSynth: new (options?: { context: ToneContextLike }) => ToneInstrumentLike;
   Destination: {
     volume: {
       value: number;
     };
   };
-  FMSynth: new () => ToneInstrumentLike;
-  MembraneSynth: new () => ToneInstrumentLike;
-  Part: new (
+  FMSynth: new (options?: { context: ToneContextLike }) => ToneInstrumentLike;
+  MembraneSynth: new (options?: { context: ToneContextLike }) => ToneInstrumentLike;
+  Part: new (options: {
+    context: ToneContextLike;
     callback: (
       time: number | string,
       value: {
@@ -70,16 +80,16 @@ export interface ToneModuleLike {
         time: number | string;
         velocity?: number;
       },
-    ) => void,
+    ) => void;
     events: Array<{
       duration?: number | string;
       instrumentId?: string;
       note: readonly string[] | string | null;
       time: number | string;
       velocity?: number;
-    }>,
-  ) => TonePartLike;
-  Synth: new () => ToneInstrumentLike;
+    }>;
+  }) => TonePartLike;
+  Synth: new (options?: { context: ToneContextLike }) => ToneInstrumentLike;
   Time(value: number | string): ToneTimeLike;
   Transport: {
     bpm: {
@@ -93,10 +103,19 @@ export interface ToneModuleLike {
   start(): Promise<void>;
 }
 
+export interface ToneContextLike {
+  now(): number;
+  transport: ToneModuleLike["Transport"] & { seconds?: number };
+  destination: ToneModuleLike["Destination"];
+  resume(): Promise<void>;
+  dispose(): unknown;
+}
+
 export async function loadHowlerModule(): Promise<HowlerModuleLike> {
   try {
     return (await import("howler")) as unknown as HowlerModuleLike;
-  } catch {
+  } catch (error) {
+    if (!isMissingModule(error, "howler")) throw error;
     throw createMissingPeerDependencyError("howler", "`grid-canvas-system/audio`");
   }
 }
@@ -104,7 +123,18 @@ export async function loadHowlerModule(): Promise<HowlerModuleLike> {
 export async function loadToneModule(): Promise<ToneModuleLike> {
   try {
     return (await import("tone")) as unknown as ToneModuleLike;
-  } catch {
+  } catch (error) {
+    if (!isMissingModule(error, "tone")) throw error;
     throw createMissingPeerDependencyError("tone", "`grid-canvas-system/audio`");
   }
+}
+
+function isMissingModule(error: unknown, dependency: string): boolean {
+  const value = error as { code?: string; message?: string };
+  return (
+    ["ERR_MODULE_NOT_FOUND", "MODULE_NOT_FOUND"].includes(value?.code ?? "") ||
+    (typeof value?.message === "string" &&
+      value.message.includes(dependency) &&
+      /Cannot find|module specifier/.test(value.message))
+  );
 }

@@ -1,11 +1,14 @@
 .playground-page {
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
   overflow: hidden;
   background: #050607;
 }
 
 .playground-topbar {
   display: flex;
+  flex-shrink: 0;
   height: 62px;
   align-items: center;
   justify-content: space-between;
@@ -152,7 +155,8 @@
 
 .playground-workbench {
   display: grid;
-  height: calc(100vh - 62px);
+  flex: 1;
+  height: auto;
   min-height: 0;
   grid-template-columns: 210px minmax(380px, 1.03fr) minmax(380px, 0.97fr);
 }
@@ -555,7 +559,7 @@
 
   .playground-workbench {
     display: block;
-    height: calc(100svh - 100px);
+    height: auto;
   }
 
   .workbench-pane {

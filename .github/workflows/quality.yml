@@ -1,0 +1,48 @@
+name: Shared quality checks
+
+on:
+  workflow_call:
+    inputs:
+      soak:
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@8912a9102ac27614460f54aedde9e1e7f9aec20d
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.21.0"
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Two consecutive checks without retries
+        run: pnpm run verify:release
+      - name: Real-time soak
+        if: inputs.soak
+        run: pnpm run test:soak
+      - name: Save verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-evidence
+          if-no-files-found: ignore
+          path: |
+            playwright-report/
+            test-results/
+            tests/__artifacts__/release-checks.json
+            tests/__artifacts__/performance.json
+            tests/__artifacts__/browser-versions.json
+            tests/__artifacts__/browser-runs/
+            tests/__artifacts__/soak-report.json
+            tests/__artifacts__/soak/
+            tests/__artifacts__/*.png

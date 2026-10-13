@@ -49,6 +49,7 @@ const GridCanvasSystemLibrary = Object.assign(GridCanvasSystem, {
 });
 
 export default GridCanvasSystemLibrary;
+export type { default as GridCanvasSystem } from "./core";
 export type {
   CanvasTarget,
   GridCanvasClearOptions,

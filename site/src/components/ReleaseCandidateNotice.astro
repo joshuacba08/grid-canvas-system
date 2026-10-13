@@ -1,0 +1,51 @@
+---
+import { libraryVersion } from "../data/siteRelease";
+interface Props {
+  locale?: "en" | "es" | "ja";
+}
+const { locale = "en" } = Astro.props;
+const copy = {
+  en: [
+    "Release candidate",
+    "This website runs the candidate. npm installation still uses the published release; certification is pending.",
+    "Device checks",
+  ],
+  es: [
+    "Candidato de versión",
+    "Esta web ejecuta el candidato. La instalación npm sigue usando la versión publicada; la certificación está pendiente.",
+    "Pruebas en dispositivo",
+  ],
+  ja: [
+    "リリース候補",
+    "このサイトは候補版を使用しています。npm では公開済みの版がインストールされます。認証は未完了です。",
+    "実機テスト",
+  ],
+}[locale];
+---
+
+<aside class="candidate-notice" data-release-candidate>
+  <strong>{copy[0]} {libraryVersion}</strong>
+  <span>{copy[1]}</span>
+  <a href="/qa/">{copy[2]}</a>
+</aside>
+<style>
+  .candidate-notice {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 12px 24px;
+    border-bottom: 1px solid #365b58;
+    background: #102c2a;
+    color: #f1f5f9;
+    font:
+      14px/1.5 system-ui,
+      sans-serif;
+  }
+  a {
+    color: #5eead4;
+    text-decoration: underline;
+  }
+</style>

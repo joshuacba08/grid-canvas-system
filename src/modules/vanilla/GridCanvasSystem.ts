@@ -703,6 +703,10 @@ class GridCanvasSystem {
     const fillColor = options?.fillColor ?? this.options.coordinateLabelColor;
     const strokeColor = options?.strokeColor ?? options?.color;
     const shouldConnectToCenter = options?.connectToCenter ?? true;
+    const lineWidth =
+      strokeColor === undefined
+        ? 1
+        : this.resolvePositiveNumber(options?.lineWidth, 1, "lineWidth");
 
     this.withManagedContext(() => {
       this.ctx.beginPath();
@@ -728,11 +732,7 @@ class GridCanvasSystem {
 
       if (strokeColor !== undefined) {
         this.ctx.strokeStyle = strokeColor;
-        this.ctx.lineWidth = this.resolvePositiveNumber(
-          options?.lineWidth,
-          1,
-          "lineWidth",
-        );
+        this.ctx.lineWidth = lineWidth;
         this.ctx.stroke();
       }
     });
@@ -784,6 +784,11 @@ class GridCanvasSystem {
     const resolvedCenter = this.resolvePoint(center, "center");
     const resolvedRadius = this.resolvePositiveNumber(radius, 1, "radius");
     const resolvedLife = this.resolveUnitInterval(life, "life");
+    const lineWidth = this.resolvePositiveNumber(
+      options?.lineWidth,
+      GridCanvasSystem.DEFAULT_PROJECTILE_LINE_WIDTH,
+      "lineWidth",
+    );
     const guideColor = options?.guideColor ?? GridCanvasSystem.DEFAULT_GUIDE_STROKE;
     const guideLineWidth = this.resolvePositiveNumber(
       options?.guideLineWidth,
@@ -812,11 +817,7 @@ class GridCanvasSystem {
         options?.strokeColor ??
         options?.color ??
         GridCanvasSystem.DEFAULT_PROJECTILE_STROKE;
-      this.ctx.lineWidth = this.resolvePositiveNumber(
-        options?.lineWidth,
-        GridCanvasSystem.DEFAULT_PROJECTILE_LINE_WIDTH,
-        "lineWidth",
-      );
+      this.ctx.lineWidth = lineWidth;
       this.ctx.beginPath();
       this.ctx.arc(resolvedCenter.x, resolvedCenter.y, resolvedRadius, 0, Math.PI * 2);
       this.ctx.closePath();
@@ -1034,6 +1035,8 @@ class GridCanvasSystem {
     );
     const minGuideRadius = Math.min(...radii);
     const maxGuideRadius = Math.max(...radii);
+    if (options?.guide && minGuideRadius < 0)
+      throw new Error("asteroid guide radii must be non-negative");
 
     this.withManagedContext(() => {
       this.ctx.translate(resolvedCenter.x, resolvedCenter.y);
@@ -1134,6 +1137,18 @@ class GridCanvasSystem {
       x: resolvedRadius * curve1 - resolvedRadius,
       y: 0,
     };
+    const lineWidth = this.resolvePositiveNumber(
+      options?.lineWidth,
+      GridCanvasSystem.DEFAULT_SHIP_LINE_WIDTH,
+      "lineWidth",
+    );
+    const thrusterLineWidth = options?.thruster
+      ? this.resolvePositiveNumber(
+          options.thrusterLineWidth,
+          Math.max(1, resolvedRadius * 0.06),
+          "thrusterLineWidth",
+        )
+      : 1;
 
     this.withManagedContext(() => {
       this.ctx.translate(resolvedCenter.x, resolvedCenter.y);
@@ -1154,11 +1169,7 @@ class GridCanvasSystem {
           options?.thrusterFillColor ?? GridCanvasSystem.DEFAULT_THRUSTER_FILL;
         this.ctx.strokeStyle =
           options?.thrusterStrokeColor ?? GridCanvasSystem.DEFAULT_THRUSTER_STROKE;
-        this.ctx.lineWidth = this.resolvePositiveNumber(
-          options?.thrusterLineWidth,
-          Math.max(1, resolvedRadius * 0.06),
-          "thrusterLineWidth",
-        );
+        this.ctx.lineWidth = thrusterLineWidth;
         this.ctx.beginPath();
         this.ctx.moveTo(
           Math.cos(Math.PI + halfAngle * 0.8) * (resolvedRadius / 2),
@@ -1178,11 +1189,7 @@ class GridCanvasSystem {
       this.ctx.fillStyle = options?.fillColor ?? GridCanvasSystem.DEFAULT_SHIP_FILL;
       this.ctx.strokeStyle =
         options?.strokeColor ?? options?.color ?? GridCanvasSystem.DEFAULT_SHIP_STROKE;
-      this.ctx.lineWidth = this.resolvePositiveNumber(
-        options?.lineWidth,
-        GridCanvasSystem.DEFAULT_SHIP_LINE_WIDTH,
-        "lineWidth",
-      );
+      this.ctx.lineWidth = lineWidth;
       this.ctx.beginPath();
       this.ctx.moveTo(resolvedRadius, 0);
       this.ctx.quadraticCurveTo(

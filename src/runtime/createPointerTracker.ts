@@ -3,6 +3,8 @@ import type { GridCanvasPoint } from "../modules/vanilla/GridCanvasSystem";
 export interface GridCanvasPointerTrackerOptions {
   capture?: boolean;
   preventDefault?: boolean;
+  logicalWidth?: number;
+  logicalHeight?: number;
 }
 
 export interface GridCanvasPointerTracker {
@@ -17,7 +19,8 @@ type PointerTarget = EventTarget & {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions,
   ): void;
-  getBoundingClientRect?: () => Pick<DOMRect, "left" | "top">;
+  getBoundingClientRect?: () => Pick<DOMRect, "left" | "top"> &
+    Partial<Pick<DOMRect, "width" | "height">>;
   removeEventListener(
     type: string,
     listener: EventListenerOrEventListenerObject,
@@ -46,7 +49,9 @@ function readClientPoint(event: Event): GridCanvasPoint | null {
 
   if (
     typeof pointerEvent.clientX !== "number" ||
-    typeof pointerEvent.clientY !== "number"
+    !Number.isFinite(pointerEvent.clientX) ||
+    typeof pointerEvent.clientY !== "number" ||
+    !Number.isFinite(pointerEvent.clientY)
   ) {
     return null;
   }
@@ -60,6 +65,7 @@ function readClientPoint(event: Event): GridCanvasPoint | null {
 function resolveRelativePoint(
   target: PointerTarget,
   event: Event,
+  options: GridCanvasPointerTrackerOptions,
 ): GridCanvasPoint | null {
   const clientPoint = readClientPoint(event);
 
@@ -74,8 +80,16 @@ function resolveRelativePoint(
   const rect = target.getBoundingClientRect();
 
   return {
-    x: clientPoint.x - rect.left,
-    y: clientPoint.y - rect.top,
+    x:
+      (clientPoint.x - rect.left) *
+      (options.logicalWidth !== undefined && (rect.width ?? 0) > 0
+        ? options.logicalWidth / rect.width!
+        : 1),
+    y:
+      (clientPoint.y - rect.top) *
+      (options.logicalHeight !== undefined && (rect.height ?? 0) > 0
+        ? options.logicalHeight / rect.height!
+        : 1),
   };
 }
 
@@ -84,11 +98,25 @@ export function createPointerTracker(
   options: GridCanvasPointerTrackerOptions = {},
 ): GridCanvasPointerTracker {
   const resolvedTarget = resolveTarget(target);
+  for (const [name, value] of Object.entries({
+    logicalWidth: options.logicalWidth,
+    logicalHeight: options.logicalHeight,
+  })) {
+    if (value !== undefined && (!Number.isFinite(value) || value <= 0))
+      throw new Error(`${name} must be positive and finite`);
+  }
   let down = false;
   let currentPosition: GridCanvasPoint | null = null;
+  const blur = (): void => {
+    down = false;
+    currentPosition = null;
+  };
+  const ownerWindow =
+    (target as { ownerDocument?: Document }).ownerDocument?.defaultView ??
+    (typeof window === "undefined" ? undefined : window);
 
   const updatePosition = (event: Event): void => {
-    const nextPosition = resolveRelativePoint(resolvedTarget, event);
+    const nextPosition = resolveRelativePoint(resolvedTarget, event, options);
 
     if (nextPosition !== null) {
       currentPosition = nextPosition;
@@ -128,6 +156,8 @@ export function createPointerTracker(
   resolvedTarget.addEventListener("pointerup", pointerup, options.capture);
   resolvedTarget.addEventListener("pointercancel", pointercancel, options.capture);
   resolvedTarget.addEventListener("pointerleave", pointerleave, options.capture);
+  resolvedTarget.addEventListener("lostpointercapture", pointercancel, options.capture);
+  ownerWindow?.addEventListener("blur", blur);
 
   return {
     destroy(): void {
@@ -140,6 +170,12 @@ export function createPointerTracker(
         options.capture,
       );
       resolvedTarget.removeEventListener("pointerleave", pointerleave, options.capture);
+      resolvedTarget.removeEventListener(
+        "lostpointercapture",
+        pointercancel,
+        options.capture,
+      );
+      ownerWindow?.removeEventListener("blur", blur);
       down = false;
       currentPosition = null;
     },

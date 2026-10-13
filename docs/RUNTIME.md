@@ -72,3 +72,9 @@ unsubscribe();
 - `reducedMotion: "ignore"`: default behavior.
 - `reducedMotion: "pause"`: start in a paused state when reduced motion is requested.
 - `reducedMotion: "lower-fps"`: throttle frame callbacks while reduced motion is requested.
+
+In the stabilization candidate, throttled callbacks receive accumulated elapsed time rather than a single RAF interval. `maxDeltaMs` clamps the accumulated delta when delivered. Pause/resume clears pending elapsed time.
+
+`resize()` validates all changes before applying them. Repeating the same size preserves pixels and context state. Display-size resize ignores hidden/zero-size canvases. CSS rotation/skew requires application-owned coordinate conversion; logical pointer scaling covers axis-aligned display resizing.
+
+Fixed-step loops and scene managers now support `destroy()`/`isDestroyed()`. Destroy the loop and scene manager owned by a component as well as its canvas runtime. Scene destroy calls the active scene's `exit` hook once with the current scene id.

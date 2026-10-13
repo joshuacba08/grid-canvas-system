@@ -55,6 +55,15 @@ export function createKeyTracker(
     (options.preventDefaultKeys ?? []).map(normalizeKeyIdentifier),
   );
   const pressedKeys = new Set<string>();
+  const clearKeys = (): void => pressedKeys.clear();
+  const ownerDocument = (target as { ownerDocument?: Document }).ownerDocument;
+  const targetWindow =
+    ownerDocument?.defaultView ?? (typeof window === "undefined" ? undefined : window);
+  const targetDocument =
+    ownerDocument ?? (typeof document === "undefined" ? undefined : document);
+  const visibilityChange = (): void => {
+    if (targetDocument?.hidden) clearKeys();
+  };
 
   const keydown = (event: Event): void => {
     const keyboardEvent = event as KeyboardEvent;
@@ -80,6 +89,9 @@ export function createKeyTracker(
 
   resolvedTarget.addEventListener("keydown", keydown, options.capture);
   resolvedTarget.addEventListener("keyup", keyup, options.capture);
+  resolvedTarget.addEventListener("blur", clearKeys, options.capture);
+  targetWindow?.addEventListener("blur", clearKeys);
+  targetDocument?.addEventListener("visibilitychange", visibilityChange);
 
   const focus = (): void => {
     if ("focus" in resolvedTarget && typeof resolvedTarget.focus === "function") {
@@ -103,6 +115,9 @@ export function createKeyTracker(
     destroy(): void {
       resolvedTarget.removeEventListener("keydown", keydown, options.capture);
       resolvedTarget.removeEventListener("keyup", keyup, options.capture);
+      resolvedTarget.removeEventListener("blur", clearKeys, options.capture);
+      targetWindow?.removeEventListener("blur", clearKeys);
+      targetDocument?.removeEventListener("visibilitychange", visibilityChange);
       pressedKeys.clear();
     },
     focus,

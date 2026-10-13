@@ -2,6 +2,7 @@
 import { BookOpen, Check, Copy, FileBraces, Play, RotateCcw } from "@lucide/astro";
 
 import { playgroundExamples } from "../../data/playgroundExamples";
+import ReleaseCandidateNotice from "../../components/ReleaseCandidateNotice.astro";
 import "../../styles/global.css";
 import "../../styles/playground.css";
 ---
@@ -25,6 +26,7 @@ import "../../styles/playground.css";
     />
   </head>
   <body class="playground-page">
+    <ReleaseCandidateNotice />
     <header class="playground-topbar">
       <a class="brand playground-brand" href="/" aria-label="Grid Canvas System home">
         <span class="brand-mark" aria-hidden="true"></span>

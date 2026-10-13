@@ -13,7 +13,7 @@ const runtimeEntry = fileURLToPath(new URL("./src/runtime/index.ts", import.meta
 export default defineConfig({
   build: {
     emptyOutDir: false,
-    minify: false,
+    minify: "esbuild",
     lib: {
       entry: {
         "audio/index": audioEntry,
