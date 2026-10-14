@@ -53,12 +53,13 @@ jobs:
 
   quality:
     needs: prepare
-    if: needs.prepare.outputs.publish == 'true'
+    if: needs.prepare.outputs.publish == 'true' || inputs.soak == true
     uses: ./.github/workflows/quality.yml
     with:
       soak: ${{ inputs.soak || false }}
   publish:
     name: Publish package
+    if: needs.prepare.outputs.publish == 'true'
     runs-on: ubuntu-24.04
     environment: npm-publish
     timeout-minutes: 20
@@ -112,9 +113,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Record registry receipt
-        run: |
-          npm view "grid-canvas-system@${RELEASE_VERSION}" version dist.integrity dist.attestations --json > tests/__artifacts__/npm-release/registry.json
-          echo "Published grid-canvas-system@${RELEASE_VERSION} to ${RELEASE_TAG}." >> "$GITHUB_STEP_SUMMARY"
+        run: node scripts/wait-for-npm-release.mjs
 
       - name: Save release artifact and receipt
         if: always()

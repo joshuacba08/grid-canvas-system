@@ -1,0 +1,81 @@
+{
+  "version": "1.2.0",
+  "channel": "latest",
+  "publishedAt": "2026-10-14T19:40:33.247Z",
+  "verifiedAt": "2026-10-14T19:43:04.270Z",
+  "sourceCommit": "18730431f03d047f93ed4c1dd83c6b3dc808d255",
+  "npm": "https://www.npmjs.com/package/grid-canvas-system/v/1.2.0",
+  "integrity": "sha512-5Ra4sJv02Gf/UjrdYe1VRwUkTbIChoFNIMvUxYOj8u2J3rP0k3q208UyR+lragyZqFjI/fqv9tlXH6HgHtrHfw==",
+  "provenance": {
+    "url": "https://registry.npmjs.org/-/npm/v1/attestations/grid-canvas-system@1.2.0",
+    "provenance": {
+      "predicateType": "https://slsa.dev/provenance/v1"
+    }
+  },
+  "workflow": "https://github.com/joshuacba08/grid-canvas-system/actions/runs/38624578042",
+  "initialReceiptCheck": "npm accepted publication, but the immediate registry query returned 404 during asynchronous processing. Visibility and integrity subsequently passed; the workflow now waits for version and dist-tag propagation without republishing.",
+  "automatedAcceptance": {
+    "node": "v24.21.0",
+    "completePasses": 2,
+    "checks": 22,
+    "unitTestsPerPass": 134,
+    "browserRuns": [
+      {
+        "startTime": "2026-10-14T19:34:40.912Z",
+        "duration": 99370.772,
+        "expected": 190,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      {
+        "startTime": "2026-10-14T19:36:54.489Z",
+        "duration": 98931.776,
+        "expected": 190,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    ]
+  },
+  "installedPackage": {
+    "version": "1.2.0",
+    "integrity": "sha512-5Ra4sJv02Gf/UjrdYe1VRwUkTbIChoFNIMvUxYOj8u2J3rP0k3q208UyR+lragyZqFjI/fqv9tlXH6HgHtrHfw==",
+    "provenance": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/grid-canvas-system@1.2.0",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "artifacts": {
+      "dist/audio-arcade/index.js": "a6f297fac163255fed63799371e16ddf09c8528214483a7a3782c513d5f848bf",
+      "dist/audio/index.js": "334bfe84e5f0c165250cc6712159cb03530f74b12ae9b7612896d371449fab1c",
+      "dist/chunks/shared-CmQ1q6Rp.js": "c4ca81b5378e7229e76d15540934090aebbbf0f9510095f540bd6cc311a53dd3",
+      "dist/grid-canvas-system.es.js": "1f0aee3a3197d64fae2167c79d68e514d25c18423b0029c0756a7be95f559d6f",
+      "dist/grid-canvas-system.umd.js": "429f52685c552088ea8852df074efefa6bb59bcd55ae49a9784d886719bf17ea",
+      "dist/runtime/index.js": "aa5a20f1b45e25ba7c8b3ce218be195c4eca53318609409b6f0fe67bf4ea5adf"
+    },
+    "esm": true,
+    "ssr": true,
+    "umd": true,
+    "strictTypes": ["NodeNext", "Bundler"],
+    "physicalCertification": "pending"
+  },
+  "cdn": {
+    "version": "1.2.0",
+    "url": "https://cdn.jsdelivr.net/npm/grid-canvas-system@1.2.0/dist/grid-canvas-system.umd.js",
+    "browser": "156.0.8078.4",
+    "constructor": true,
+    "defaultAlias": true,
+    "drawing": [255, 0, 0, 255],
+    "destroyed": true,
+    "errors": []
+  },
+  "soakEvidence": {
+    "file": "VALIDATION.json",
+    "originalVersion": "1.2.0-rc.1",
+    "interpretation": "All six published JavaScript hashes match the artifacts exercised by the recorded 30-minute soak. The cancelled release workflow's partial soak is not counted as acceptance."
+  },
+  "physicalCertification": "pending",
+  "audioClassification": "Experimental"
+}

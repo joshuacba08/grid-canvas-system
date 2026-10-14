@@ -2,6 +2,8 @@
 
 Estado: **versión 1.2.0 para npm `latest`; certificación completa pendiente**. Se conserva la compatibilidad 1.x. El audio sigue siendo Experimental. El usuario pidió expresamente publicar la versión actual en `latest` conservando los requisitos de aceptación pendientes. La publicación se gestiona con [el workflow de npm](../PUBLISHING.md).
 
+Publicación confirmada el 14 de octubre de 2026: [npm 1.2.0](https://www.npmjs.com/package/grid-canvas-system/v/1.2.0), con `latest` apuntando a esta versión. [PUBLICATION.json](./PUBLICATION.json) registra integridad, procedencia, dos pasadas completas de 134 pruebas de unidad y 190 casos de navegador, y comprobaciones del paquete descargado y del CDN. Los seis hashes JavaScript coinciden con los del informe histórico y su sesión de 30 minutos.
+
 La evidencia reproducible y los hashes del artefacto están en [VALIDATION.json](./VALIDATION.json). Referencia local: Windows, Node 24.21.0, pnpm 11.7.0, TypeScript 5.6.3 y Playwright 1.64.0; Chromium 156.0.8078.4, Firefox 157.0 y WebKit 27.2.
 
 | Control                                      | Resultado                                                                                                                                                     |

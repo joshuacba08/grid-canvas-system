@@ -20,6 +20,8 @@ The workflow uses npm publish --access public --provenance on a GitHub-hosted ru
 
 A matching tag (for example v1.2.0) or manual workflow dispatch triggers the same process. The version and tag must agree. Existing versions are skipped without rebuilding, republishing or moving dist-tags. Registry errors fail the workflow instead of being treated as a missing version. Publishing workflows are serialized.
 
+After npm accepts publication, the receipt step waits for the version and dist-tag to become visible and verifies that the registry integrity matches the packed artifact. This handles npm's asynchronous processing without retrying the publish operation.
+
 The manual soak input additionally runs the 30-minute real-time session. That session is already recorded for the stabilization binaries in [VALIDATION.json](./stability/VALIDATION.json); it remains available for future runtime changes. Normal continuous publication does not repeat that 30-minute session automatically.
 
 If authentication fails, correct the repository secret or npm permissions, then dispatch again. Investigate quality failures before rerunning. Published versions are immutable: subsequent package changes require a new version.
