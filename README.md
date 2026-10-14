@@ -29,7 +29,7 @@ It is built for small interactive products, education demos, toy engines, game p
 
 ## Current release
 
-The workspace candidate is **1.2.0-rc.1**, based on the `1.1.0` release. It is not yet certified for publication; see [the stabilization audit](./docs/stability/AUDIT.md).
+The newest candidate is **1.2.0-rc.1**, based on the stable `1.1.0` release. Candidates are published to npm's `next` channel; the `latest` channel retains the stable release until certification is complete. See [the stabilization audit](./docs/stability/AUDIT.md) and [the publishing workflow](./docs/PUBLISHING.md).
 
 The candidate repairs CDN construction, reduced-FPS timing, resize preservation, lifecycle cleanup, audio isolation and strict TypeScript declarations. It adds browser and framework integration tests. Audio remains Experimental until the certification requirements are complete.
 
@@ -42,6 +42,14 @@ The candidate repairs CDN construction, reduced-FPS timing, resize preservation,
 - Keeps audio available through subpaths and legacy runtime aliases compatible.
 
 ## Installation
+
+To install the stabilization candidate explicitly:
+
+```bash
+npm install grid-canvas-system@next
+```
+
+The unqualified commands below install the stable `latest` channel. Pin `@1.2.0-rc.1` in the CDN URL to test this candidate.
 
 ### CDN
 

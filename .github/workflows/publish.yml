@@ -2,19 +2,53 @@ name: Publish to npm
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: read
-  id-token: write
 
 concurrency:
   group: npm-publish
   cancel-in-progress: false
 
 jobs:
+  prepare:
+    name: Determine unpublished version
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    environment: npm-publish
+    timeout-minutes: 5
+    outputs:
+      publish: ${{ steps.release.outputs.publish }}
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24.21.0"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+      - name: Require source on main
+        run: git merge-base --is-ancestor HEAD origin/main
+      - name: Plan release without overwriting existing versions
+        id: release
+        run: node scripts/prepare-npm-release.mjs
+      - name: Check npm authentication before running release checks
+        if: steps.release.outputs.publish == 'true'
+        run: npm whoami --registry=https://registry.npmjs.org
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   quality:
+    needs: prepare
+    if: needs.prepare.outputs.publish == 'true'
     uses: ./.github/workflows/quality.yml
     with:
       soak: true
@@ -22,7 +56,14 @@ jobs:
     name: Publish package
     runs-on: ubuntu-24.04
     environment: npm-publish
-    needs: quality
+    timeout-minutes: 20
+    needs: [prepare, quality]
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
+      RELEASE_TAG: ${{ needs.prepare.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -38,15 +79,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           package-manager-cache: false
 
-      - name: Verify tag matches package version
-        shell: bash
-        run: |
-          PACKAGE_VERSION=$(node -p "JSON.parse(require('node:fs').readFileSync('package.json', 'utf8')).version")
-          if [ "v${PACKAGE_VERSION}" != "${GITHUB_REF_NAME}" ]; then
-            echo "Git tag ${GITHUB_REF_NAME} does not match package.json version v${PACKAGE_VERSION}."
-            exit 1
-          fi
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -54,7 +86,31 @@ jobs:
         run: pnpm build
 
       - name: Require reviewed physical-device and audio certification
+        if: needs.prepare.outputs.tag == 'latest'
         run: pnpm run verify:certification
 
+      - name: Verify installed package and strict consumer types
+        run: pnpm run verify:package-exports
+
+      - name: Pack the release
+        run: |
+          mkdir -p tests/__artifacts__/npm-release
+          npm pack --json --pack-destination tests/__artifacts__/npm-release > tests/__artifacts__/npm-release/pack.json
+
       - name: Publish to npm
-        run: npm publish
+        run: npm publish "./tests/__artifacts__/npm-release/grid-canvas-system-${RELEASE_VERSION}.tgz" --tag "$RELEASE_TAG" --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Record registry receipt
+        run: |
+          npm view "grid-canvas-system@${RELEASE_VERSION}" version dist.integrity dist.attestations --json > tests/__artifacts__/npm-release/registry.json
+          echo "Published grid-canvas-system@${RELEASE_VERSION} to ${RELEASE_TAG}." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Save release artifact and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-release
+          if-no-files-found: ignore
+          path: tests/__artifacts__/npm-release/

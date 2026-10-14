@@ -2,7 +2,7 @@
 
 All notable changes to `grid-canvas-system` are documented here.
 
-## 1.2.0-rc.1 — unpublished stabilization candidate
+## 1.2.0-rc.1 — stabilization candidate (npm `next`)
 
 ### Fixed
 
@@ -22,8 +22,9 @@ All notable changes to `grid-canvas-system` are documented here.
 - Browser, framework, property and lifecycle regression tests; controlled per-engine visual references; a 30-minute real-time soak test.
 - Contract inventory, reproducible performance baseline, shared CI/release checks and an explicit certification gate.
 - Device acceptance page with downloadable evidence and a multilingual candidate notice; patched site, framework fixture and build dependencies.
+- Continuous npm publishing from main and version tags, authenticated with the repository's `NPM_TOKEN`, with provenance and separate candidate/stable channels.
 
-Audio remains Experimental. Physical iOS/Android and Web Audio in a supported WebKit environment must be certified before promotion or publication.
+Audio remains Experimental. Physical iOS/Android, Web Audio in a supported WebKit environment and the complete promise review must be certified before promotion to stable. Prerelease publication does not certify these pending requirements.
 
 ## 1.1.0
 

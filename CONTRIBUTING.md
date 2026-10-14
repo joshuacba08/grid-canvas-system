@@ -9,6 +9,8 @@ Use Node.js 24 and pnpm 11, matching CI.
 
 The stabilization reference pins Node 24.21.0 and pnpm 11.7.0. Run `pnpm exec playwright install chromium firefox webkit` once, then `pnpm run verify:release` for two consecutive automated checks. `pnpm run test:soak` runs the separate 30-minute test. Physical certification lives in `docs/stability/certification.json`; never mark it passed from emulation or skipped tests.
 
+New package versions merged to main are published automatically after the shared release checks and soak pass. Prereleases use `next`; stable versions use `latest` and additionally require complete certification. See [publishing](./docs/PUBLISHING.md) for credentials, tag/manual triggers and release evidence.
+
 ```bash
 pnpm install --frozen-lockfile
 pnpm build
