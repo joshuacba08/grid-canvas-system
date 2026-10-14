@@ -40,5 +40,5 @@ for (let iteration = 1; iteration <= 2; iteration++) {
   }
 }
 console.log(
-  "Two consecutive automated release checks passed. Physical-device certification is a separate required gate.",
+  "Two consecutive automated release checks passed. Physical-device certification is tracked separately.",
 );

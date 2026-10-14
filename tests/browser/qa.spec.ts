@@ -15,7 +15,8 @@ test("device QA page renders, receives input, destroys resources and exports evi
   await page.locator("#qa-export").click();
   const download = await downloadEvent;
   const data = JSON.parse(await readFile((await download.path())!, "utf8"));
-  expect(data.version).toBe("1.2.0-rc.1");
+  const manifest = JSON.parse(await readFile("package.json", "utf8"));
+  expect(data.version).toBe(manifest.version);
   expect(data.destroyed).toBe(true);
   expect(data.cleanupVerified).toBe(true);
   expect(data.pointerEvents).toBeGreaterThan(0);

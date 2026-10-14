@@ -1,8 +1,8 @@
-export const libraryVersion = "1.2.0-rc.1";
+export const libraryVersion = "1.2.0";
 
 export const currentRelease = {
   version: libraryVersion,
-  title: "Stabilization release candidate",
+  title: "Stability and reliability release",
   summary:
     "Repairs CDN construction, animation timing, resize, cleanup and strict package types; adds browser verification. Physical-device certification remains pending.",
 } as const;
@@ -18,7 +18,7 @@ export const releaseTimeline: readonly ReleaseNote[] = [
   {
     version: currentRelease.version,
     summary:
-      "Stabilization candidate: CDN, timing, atomic resize, lifecycle cleanup, audio isolation and package types. Certification pending.",
+      "Stability and reliability: CDN, timing, atomic resize, lifecycle cleanup, audio isolation and package types. Audio remains Experimental.",
   },
   {
     version: "1.1.0",

@@ -4,11 +4,11 @@ Este directorio centraliza la documentacion tecnica de `grid-canvas-system`.
 
 ## Contenido
 
-- [Auditoría de estabilización](./stability/AUDIT.md): candidato, inventario, correcciones, evidencia y certificación pendiente.
+- [Auditoría de estabilización](./stability/AUDIT.md): inventario, correcciones, evidencia y certificación pendiente.
 
 - [Estudio tecnico](./ESTUDIO_TECNICO.md): arquitectura actual, API publica, flujo de renderizado y estado del empaquetado.
-- [Contrato de API publica](./PUBLIC_API.md): superficie Stable, Experimental y Legacy del candidato `1.2.0-rc.1`.
-- [Guia de migracion](./MIGRATION.md): compatibilidad desde `0.x` y cambios del candidato de estabilización.
+- [Contrato de API publica](./PUBLIC_API.md): superficie Stable, Experimental y Legacy de `1.2.0`.
+- [Guia de migracion](./MIGRATION.md): compatibilidad desde `0.x` y cambios de estabilización.
 - [Runtime](./RUNTIME.md): `createCanvasRuntime`, DPR, resize, pointer events y reduced motion.
 - [Sprite Animator](./SPRITE_ANIMATOR.md): animaciones loop, one-shot, eventos y cleanup.
 - [State Machine](./STATE_MACHINE.md): transiciones tipadas, hooks, eventos e historial.

@@ -1,6 +1,6 @@
 # Migration Guide
 
-## From 1.1.0 to the 1.2.0-rc.1 candidate
+## From 1.1.0 to 1.2.0
 
 Existing constructors, helper names and legacy aliases remain available. CDN users can again call `new GridCanvasSystem(...)`; `.default` remains a compatibility alias. Fixed-step loops and scene managers add `destroy()`/`isDestroyed()`; destroy invokes the active scene's exit hook once with its own id.
 

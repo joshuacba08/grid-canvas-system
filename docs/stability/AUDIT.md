@@ -1,6 +1,6 @@
-# Auditoría de estabilización — 1.2.0-rc.1
+# Auditoría de estabilización — 1.2.0
 
-El candidato conserva el contrato 1.x y añade controles de ciclo de vida. No está publicado ni certificado al 100 %. El audio conserva su clasificación Experimental hasta completar la evidencia pendiente.
+La versión conserva el contrato 1.x y añade controles de ciclo de vida. Se distribuye en npm como `1.2.0` por petición expresa del usuario; la certificación al 100 % sigue pendiente. El audio conserva su clasificación Experimental hasta completar la evidencia pendiente. Los informes históricos del candidato `1.2.0-rc.1` se conservan con su versión original.
 
 ## Inventario y aceptación
 

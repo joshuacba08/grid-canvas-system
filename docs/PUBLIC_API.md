@@ -1,6 +1,6 @@
 # Public API Contract
 
-This document defines the public surface for the unpublished `grid-canvas-system@1.2.0-rc.1` candidate, extending the stable `1.x` contract.
+This document defines the public surface for `grid-canvas-system@1.2.0`, extending the stable `1.x` contract. Audio remains Experimental; physical-device acceptance is tracked in the stabilization audit.
 
 ## Stable
 

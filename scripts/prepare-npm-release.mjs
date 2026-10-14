@@ -42,7 +42,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const manifest = JSON.parse(await readFile("package.json", "utf8"));
   const plan = await planNpmRelease({ manifest, ref: process.env.GITHUB_REF });
   const message = plan.publish
-    ? `Will publish ${manifest.name}@${plan.version} to ${plan.tag}. Stable releases require complete certification; prereleases retain pending certification.`
+    ? `Will publish ${manifest.name}@${plan.version} to ${plan.tag}. Physical-device acceptance remains recorded separately.`
     : `${manifest.name}@${plan.version} is already published; nothing to publish.`;
   console.log(message);
   if (process.env.GITHUB_OUTPUT)

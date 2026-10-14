@@ -16,4 +16,4 @@ Repite la misma secuencia en Chrome Android. La emulación Playwright no acredit
 
 La página registra métricas y observaciones, pero no valida automáticamente que los sonidos se escuchen ni que un dispositivo cumpla todo el contrato. La revisión del informe es necesaria.
 
-Después de completar todos los requisitos, registra también los hashes del build aceptado en `certification.json.artifacts` usando `node scripts/candidate-artifacts.mjs`. La publicación rechaza evidencia de otro artefacto aunque tenga la misma versión. No cambies estados a `passed` sin revisar los informes.
+Después de completar todos los requisitos, registra también los hashes del build aceptado en `certification.json.artifacts` usando `node scripts/candidate-artifacts.mjs`. `verify:certification` rechaza evidencia de otro artefacto aunque tenga la misma versión. La publicación solicitada de 1.2.0 no acredita estos resultados. No cambies estados a `passed` sin revisar los informes.

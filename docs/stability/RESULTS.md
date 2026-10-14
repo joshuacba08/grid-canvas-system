@@ -1,6 +1,6 @@
-# Informe de cumplimiento del candidato 1.2.0-rc.1
+# Informe de cumplimiento de 1.2.0
 
-Estado: **candidato preparado para el canal npm `next`; certificación completa pendiente**. Se conserva la compatibilidad 1.x. El audio sigue siendo Experimental. La publicación del candidato se gestiona con [el workflow de npm](../PUBLISHING.md); no supone promoción al canal estable `latest`.
+Estado: **versión 1.2.0 para npm `latest`; certificación completa pendiente**. Se conserva la compatibilidad 1.x. El audio sigue siendo Experimental. El usuario pidió expresamente publicar la versión actual en `latest` conservando los requisitos de aceptación pendientes. La publicación se gestiona con [el workflow de npm](../PUBLISHING.md).
 
 La evidencia reproducible y los hashes del artefacto están en [VALIDATION.json](./VALIDATION.json). Referencia local: Windows, Node 24.21.0, pnpm 11.7.0, TypeScript 5.6.3 y Playwright 1.64.0; Chromium 156.0.8078.4, Firefox 157.0 y WebKit 27.2.
 
@@ -21,6 +21,6 @@ Las comparaciones iniciales con medianas históricas fallaron bajo carga de otra
 
 La primera ejecución en Linux detectó bloqueos de `AudioContext.resume()` en Firefox sin salida de audio. Tras configurar un sink PulseAudio virtual, [CI pasó dos controles completos](https://github.com/joshuacba08/grid-canvas-system/actions/runs/38398357239), con 120 pruebas de unidad y 190 casos de navegador en cada ejecución, incluyendo todo el audio de WebKit 27.2, sin omisiones ni reintentos. Se conservan las trazas del fallo inicial. Los navegadores y los tres sistemas de audio ejecutan sus APIs reales con esa salida virtual.
 
-Quedan abiertos Safari físico en el iPhone 14 del usuario, Chrome Android físico y la revisión final de las aserciones de todas las promesas. Estos requisitos tienen criterios de cierre en [BACKLOG.md](./BACKLOG.md) y bloquean `verify:certification`. La publicación estable exige evidencia revisada del mismo artefacto. Por petición del usuario, se permite distribuir el candidato como prerelease `next`, conservando estos requisitos pendientes.
+Quedan abiertos Safari físico en el iPhone 14 del usuario, Chrome Android físico y la revisión final de las aserciones de todas las promesas. Estos requisitos tienen criterios de cierre en [BACKLOG.md](./BACKLOG.md) y bloquean `verify:certification`. La publicación solicitada por el usuario no cambia sus resultados ni acredita el 100 % del contrato.
 
 La web puede desplegarse para reunir esa evidencia. La página [de pruebas en dispositivo](https://grid-canvas-system-site.vercel.app/qa/) permite comprobar cada audio por separado y descargar un informe con versión y commit; consulta [DEVICE_TESTS.md](./DEVICE_TESTS.md). El despliegue de la web no publica el paquete npm ni acredita el 100 % del contrato.

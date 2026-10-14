@@ -29,9 +29,9 @@ It is built for small interactive products, education demos, toy engines, game p
 
 ## Current release
 
-The newest candidate is **1.2.0-rc.1**, based on the stable `1.1.0` release. Candidates are published to npm's `next` channel; the `latest` channel retains the stable release until certification is complete. See [the stabilization audit](./docs/stability/AUDIT.md) and [the publishing workflow](./docs/PUBLISHING.md).
+The current release is **1.2.0**, published to npm's `latest` channel. It preserves the stable `1.x` contract. See [the stabilization audit](./docs/stability/AUDIT.md) and [the publishing workflow](./docs/PUBLISHING.md).
 
-The candidate repairs CDN construction, reduced-FPS timing, resize preservation, lifecycle cleanup, audio isolation and strict TypeScript declarations. It adds browser and framework integration tests. Audio remains Experimental until the certification requirements are complete.
+This release repairs CDN construction, reduced-FPS timing, resize preservation, lifecycle cleanup, audio isolation and strict TypeScript declarations. It adds browser and framework integration tests. Audio remains Experimental; physical-device acceptance and the complete promise review remain tracked separately.
 
 `1.1.0` adds a reactive, framework-friendly runtime for long-lived Canvas components:
 
@@ -43,13 +43,7 @@ The candidate repairs CDN construction, reduced-FPS timing, resize preservation,
 
 ## Installation
 
-To install the stabilization candidate explicitly:
-
-```bash
-npm install grid-canvas-system@next
-```
-
-The unqualified commands below install the stable `latest` channel. Pin `@1.2.0-rc.1` in the CDN URL to test this candidate.
+The commands below install the `latest` channel. Pin `@1.2.0` in the CDN URL for a reproducible version.
 
 ### CDN
 

@@ -6,24 +6,24 @@ interface Props {
 const { locale = "en" } = Astro.props;
 const copy = {
   en: [
-    "Release candidate",
-    "This website runs the candidate. Install it with npm install grid-canvas-system@next. Stable certification is pending.",
+    "Version",
+    "Install this version with npm install grid-canvas-system.",
     "Device checks",
   ],
   es: [
-    "Candidato de versión",
-    "Esta web ejecuta el candidato. Instálalo con npm install grid-canvas-system@next. La certificación estable está pendiente.",
+    "Versión",
+    "Instala esta versión con npm install grid-canvas-system.",
     "Pruebas en dispositivo",
   ],
   ja: [
-    "リリース候補",
-    "このサイトは候補版を使用しています。npm install grid-canvas-system@next で導入できます。安定版の認証は未完了です。",
+    "バージョン",
+    "npm install grid-canvas-system でこのバージョンを導入できます。",
     "実機テスト",
   ],
 }[locale];
 ---
 
-<aside class="candidate-notice" data-release-candidate>
+<aside class="candidate-notice" data-release-version>
   <strong>{copy[0]} {libraryVersion}</strong>
   <span>{copy[1]}</span>
   <a href="/qa/">{copy[2]}</a>
